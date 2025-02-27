@@ -1,5 +1,5 @@
 import {ColumnDef} from '@tanstack/react-table';
-import dayjs from 'dayjs';
+import {format} from 'date-fns';
 import {ArrowUpDown} from 'lucide-react';
 
 import {CategoryBadge} from '@/components/shared/category-badge';
@@ -55,7 +55,7 @@ export const transactionsTableColumns: ColumnDef<Transaction>[] = [
       );
     },
     cell: ({row}) => {
-      return <p>{dayjs(row.original.startedAt).format('DD/MM/YYYY')}</p>;
+      return <p>{format(new Date(row.original.startedAt), 'dd/MM/yyyy')}</p>;
     },
   },
   {
@@ -73,7 +73,7 @@ export const transactionsTableColumns: ColumnDef<Transaction>[] = [
       );
     },
     cell: ({row}) => {
-      return <p>{dayjs(row.original.completedAt).format('DD/MM/YYYY')}</p>;
+      return <p>{format(new Date(row.original.completedAt), 'dd/MM/yyyy')}</p>;
     },
   },
   {

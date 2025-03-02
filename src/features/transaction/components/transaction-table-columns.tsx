@@ -4,40 +4,17 @@ import {ArrowUpDown} from 'lucide-react';
 
 import {CategoryBadge} from '@/components/shared/category-badge';
 import {Button} from '@/components/ui/button';
-import {Category} from '@/types/category';
 import {Transaction} from '@/types/transaction';
 import {cn} from '@/utils/cn';
-
-const categoryOrder = Object.values(Category).reduce(
-  (acc, category, index) => {
-    acc[category] = index;
-    return acc;
-  },
-  {} as Record<Category, number>,
-);
 
 export const transactionsTableColumns: ColumnDef<Transaction>[] = [
   {
     accessorKey: 'category',
-    header: ({column}) => {
-      return (
-        <Button
-          variant='ghost'
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className='flex h-12 w-full justify-start px-3'
-        >
-          <span>Category</span>
-          <ArrowUpDown className='ml-2 h-4 w-4' />
-        </Button>
-      );
+    header: () => {
+      return <p className='px-3'>Category</p>;
     },
     cell: ({row}) => {
       return <CategoryBadge category={row.original.category} />;
-    },
-    sortingFn: (rowA, rowB) => {
-      const categoryA = rowA.original.category;
-      const categoryB = rowB.original.category;
-      return categoryOrder[categoryA] - categoryOrder[categoryB];
     },
   },
   {
@@ -56,24 +33,6 @@ export const transactionsTableColumns: ColumnDef<Transaction>[] = [
     },
     cell: ({row}) => {
       return <p>{format(new Date(row.original.startedAt), 'dd/MM/yyyy')}</p>;
-    },
-  },
-  {
-    accessorKey: 'completedAt',
-    header: ({column}) => {
-      return (
-        <Button
-          variant='ghost'
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-          className='flex h-12 w-full justify-start px-3'
-        >
-          Completed at
-          <ArrowUpDown className='ml-2 h-4 w-4' />
-        </Button>
-      );
-    },
-    cell: ({row}) => {
-      return <p>{format(new Date(row.original.completedAt), 'dd/MM/yyyy')}</p>;
     },
   },
   {

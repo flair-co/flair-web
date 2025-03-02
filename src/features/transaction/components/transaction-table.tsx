@@ -1,3 +1,4 @@
+import {useNavigate} from '@tanstack/react-router';
 import {flexRender, getCoreRowModel, useReactTable} from '@tanstack/react-table';
 import {CreditCard} from 'lucide-react';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
@@ -43,6 +44,8 @@ export function TransactionsTable({
   sort,
   setSort,
 }: TransactionsTableProps) {
+  const navigate = useNavigate({from: '/transactions'});
+
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
@@ -58,7 +61,7 @@ export function TransactionsTable({
     manualPagination: true,
     state: {pagination, sorting: mapSortToSortingState(sort)},
     rowCount: totalTransactions,
-    onSortingChange: createSortingHandler(setSort),
+    onSortingChange: createSortingHandler(setSort, navigate),
   });
 
   const isFilteringApplied = Object.values(filters).some((filter) => {

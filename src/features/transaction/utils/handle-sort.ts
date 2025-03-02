@@ -1,16 +1,20 @@
+import {UseNavigateResult} from '@tanstack/react-router';
 import {SortingState} from '@tanstack/react-table';
 
 import {SortField, SortOrder, TransactionSortParams} from '../types/search-params';
 
 export function createSortingHandler(
   setSort: React.Dispatch<React.SetStateAction<TransactionSortParams>>,
+  navigate: UseNavigateResult<'/transactions'>,
 ) {
   return (updaterOrValue: SortingState | ((prev: SortingState) => SortingState)) => {
     setSort((prevSort) => {
       const currentSortingState = mapSortToSortingState(prevSort);
       const newSortingState =
         typeof updaterOrValue === 'function' ? updaterOrValue(currentSortingState) : updaterOrValue;
-      return mapSortingStateToSort(newSortingState);
+      const newSort = mapSortingStateToSort(newSortingState);
+      void navigate({search: (prev) => ({...prev, sort: newSort})});
+      return newSort;
     });
   };
 }
@@ -27,5 +31,4 @@ function mapSortingStateToSort(sortingState: SortingState): TransactionSortParam
     const s = sortingState[0];
     return {by: s.id as SortField, order: s.desc ? SortOrder.DESC : SortOrder.ASC};
   }
-  return {by: SortField.STARTED_AT, order: SortOrder.DESC};
 }

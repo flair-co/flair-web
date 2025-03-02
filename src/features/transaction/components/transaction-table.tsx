@@ -11,7 +11,8 @@ import {PaginationParams} from '@/types/pagination';
 import {Transaction} from '@/types/transaction';
 import {cn} from '@/utils/cn';
 
-import {TransactionFilterParams} from '../types/search-params';
+import {TransactionFilterParams, TransactionSortParams} from '../types/search-params';
+import {createSortingHandler, mapSortToSortingState} from '../utils/handle-sort';
 import {TransactionCategoryFilter} from './transaction-category-filter';
 import {TransactionClearAllFilters} from './transaction-clear-all-filters';
 import {TransactionDateFilter} from './transaction-date-filter';
@@ -26,6 +27,8 @@ type TransactionsTableProps = {
   setPagination: Dispatch<SetStateAction<PaginationParams>>;
   filters: TransactionFilterParams;
   setFilters: React.Dispatch<React.SetStateAction<TransactionFilterParams>>;
+  sort: TransactionSortParams;
+  setSort: React.Dispatch<React.SetStateAction<TransactionSortParams>>;
 };
 
 export function TransactionsTable({
@@ -37,6 +40,8 @@ export function TransactionsTable({
   setPagination,
   filters,
   setFilters,
+  sort,
+  setSort,
 }: TransactionsTableProps) {
   const [progress, setProgress] = useState(0);
 
@@ -51,8 +56,9 @@ export function TransactionsTable({
     manualSorting: true,
     manualFiltering: true,
     manualPagination: true,
-    state: {pagination},
+    state: {pagination, sorting: mapSortToSortingState(sort)},
     rowCount: totalTransactions,
+    onSortingChange: createSortingHandler(setSort),
   });
 
   const isFilteringApplied = Object.values(filters).some((filter) => {

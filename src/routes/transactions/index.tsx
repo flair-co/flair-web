@@ -20,8 +20,17 @@ export const Route = createFileRoute('/transactions/')({
 
 function TransactionsIndex() {
   const searchParams = Route.useSearch();
-  const {data, isPending, isPlaceholderData, pagination, setPagination, filters, setFilters} =
-    useGetAllTransactions(searchParams);
+  const {
+    data,
+    isPending,
+    isPlaceholderData,
+    pagination,
+    setPagination,
+    filters,
+    setFilters,
+    sort,
+    setSort,
+  } = useGetAllTransactions(searchParams);
 
   return (
     <>
@@ -38,6 +47,8 @@ function TransactionsIndex() {
           setPagination={setPagination}
           filters={filters}
           setFilters={setFilters}
+          sort={sort}
+          setSort={setSort}
         />
       </AppBody>
     </>

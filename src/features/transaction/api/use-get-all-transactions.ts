@@ -29,27 +29,24 @@ export const useGetAllTransactions = (searchParams: TransactionSearchParams) => 
   }>({
     queryKey: ['transactions', pagination, filters, sort],
     queryFn: async () => {
-      const params = new URLSearchParams({
-        pageIndex: pagination.pageIndex.toString(),
-        pageSize: pagination.pageSize.toString(),
-      });
+      const params = new URLSearchParams();
+
+      params.append('pagination[pageIndex]', pagination.pageIndex.toString());
+      params.append('pagination[pageSize]', pagination.pageSize.toString());
 
       if (filters.categories) {
-        filters.categories.forEach((category) => params.append('categories[]', category));
+        filters.categories.forEach((category) => params.append('filter[categories][]', category));
       }
-
       if (filters.startedAt) {
-        params.append('startedAt[from]', filters.startedAt.from.toISOString());
+        params.append('filter[startedAt][from]', filters.startedAt.from.toISOString());
         if (filters.startedAt.to) {
-          params.append('startedAt[to]', filters.startedAt.to.toISOString());
+          params.append('filter[startedAt][to]', filters.startedAt.to.toISOString());
         }
       }
 
-      if (sort) {
-        sort.forEach((sort, index) => {
-          params.append(`params[${index}][by]`, sort.by);
-          params.append(`params[${index}][order]`, sort.order);
-        });
+      if (sort && sort.by && sort.order) {
+        params.append('sort[by]', sort.by);
+        params.append('sort[order]', sort.order);
       }
 
       const response = await api.get(`/transactions?${params.toString()}`);

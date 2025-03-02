@@ -23,7 +23,12 @@ export const transactionSearchParamsSchema = paginationSearchParamsSchema.extend
       to: z.preprocess(toDate, z.date()).optional(),
     })
     .optional(),
-  sort: z.array(z.object({by: z.nativeEnum(SortField), order: z.nativeEnum(SortOrder)})).optional(),
+  sort: z
+    .object({
+      by: z.nativeEnum(SortField),
+      order: z.nativeEnum(SortOrder),
+    })
+    .optional(),
 });
 
 export type TransactionSearchParams = z.infer<typeof transactionSearchParamsSchema>;

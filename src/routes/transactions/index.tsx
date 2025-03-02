@@ -3,6 +3,7 @@ import {zodValidator} from '@tanstack/zod-adapter';
 
 import {AppBody} from '@/components/shared/layout/app-body';
 import {AppHeader} from '@/components/shared/layout/app-header';
+import {LoadingBar} from '@/components/shared/loading-bar';
 import {useGetAllTransactions} from '@/features/transaction/api/use-get-all-transactions';
 import {TransactionBreadcrumb} from '@/features/transaction/components/transaction-breadcrumb';
 import {TransactionsTable} from '@/features/transaction/components/transaction-table';
@@ -34,6 +35,7 @@ function TransactionsIndex() {
 
   return (
     <>
+      <LoadingBar isPending={isPending} />
       <AppHeader>
         <TransactionBreadcrumb />
       </AppHeader>

@@ -4,11 +4,19 @@ import {Button} from '@/components/ui/button';
 
 import {TransactionFilterParams} from '../types/search-params';
 
-type TransactionClearAllFiltersProps = {
+type TransactionClearAllFiltersButtonProps = {
   setFilters: React.Dispatch<React.SetStateAction<TransactionFilterParams>>;
+  variant?: 'link' | 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost';
+  size?: 'default' | 'sm' | 'lg' | 'icon';
+  className?: string;
 };
 
-export function TransactionClearAllFilters({setFilters}: TransactionClearAllFiltersProps) {
+export function TransactionClearAllFiltersButton({
+  setFilters,
+  variant,
+  size,
+  className,
+}: TransactionClearAllFiltersButtonProps) {
   const navigate = useNavigate({from: '/transactions'});
 
   const handleClear = async () => {
@@ -17,7 +25,7 @@ export function TransactionClearAllFilters({setFilters}: TransactionClearAllFilt
   };
 
   return (
-    <Button variant='secondary' size='sm' className='h-8' onClick={handleClear}>
+    <Button variant={variant} size={size} className={className} onClick={handleClear}>
       Clear all filters
     </Button>
   );

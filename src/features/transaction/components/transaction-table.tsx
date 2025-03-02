@@ -1,11 +1,11 @@
 import {useNavigate} from '@tanstack/react-router';
 import {flexRender, getCoreRowModel, useReactTable} from '@tanstack/react-table';
-import {CreditCard} from 'lucide-react';
-import {Dispatch, SetStateAction, useEffect, useState} from 'react';
+import {CreditCard, SearchX} from 'lucide-react';
+import {Dispatch, SetStateAction} from 'react';
 
+import {LoadingBar} from '@/components/shared/loading-bar';
 import {TablePagination} from '@/components/shared/table-pagination';
 import {Button} from '@/components/ui/button';
-import {Progress} from '@/components/ui/progress';
 import {Skeleton} from '@/components/ui/skeleton';
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/components/ui/table';
 import {PaginationParams} from '@/types/pagination';
@@ -15,7 +15,7 @@ import {cn} from '@/utils/cn';
 import {TransactionFilterParams, TransactionSortParams} from '../types/search-params';
 import {createSortingHandler, mapSortToSortingState} from '../utils/handle-sort';
 import {TransactionCategoryFilter} from './transaction-category-filter';
-import {TransactionClearAllFilters} from './transaction-clear-all-filters';
+import {TransactionClearAllFiltersButton} from './transaction-clear-all-filters';
 import {TransactionDateFilter} from './transaction-date-filter';
 import {transactionsTableColumns} from './transaction-table-columns';
 
@@ -45,12 +45,6 @@ export function TransactionsTable({
   setSort,
 }: TransactionsTableProps) {
   const navigate = useNavigate({from: '/transactions'});
-
-  const [progress, setProgress] = useState(0);
-
-  useEffect(() => {
-    isPlaceholderData ? setProgress(100) : setProgress(0);
-  }, [isPlaceholderData]);
 
   const table = useReactTable({
     data: transactions,
@@ -90,13 +84,17 @@ export function TransactionsTable({
       <div className='my-4 flex gap-4'>
         <TransactionCategoryFilter filters={filters} setFilters={setFilters} />
         <TransactionDateFilter filters={filters} setFilters={setFilters} />
-        {isFilteringApplied && <TransactionClearAllFilters setFilters={setFilters} />}
+        {isFilteringApplied && (
+          <TransactionClearAllFiltersButton
+            setFilters={setFilters}
+            size='sm'
+            className='h-8'
+            variant='secondary'
+          />
+        )}
       </div>
       <div className='relative mb-10'>
-        <Progress
-          value={progress}
-          className='absolute left-0 right-0 top-0 z-10 h-[2px] rounded-b-none rounded-t-md bg-transparent'
-        />
+        <LoadingBar isPending={isPlaceholderData} />
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -112,7 +110,7 @@ export function TransactionsTable({
             ))}
           </TableHeader>
           <TableBody>
-            {isPending ? (
+            {isPending &&
               Array.from({length: pagination.pageSize}).map((_, index) => (
                 <TableRow key={index}>
                   {transactionsTableColumns.map((column, colIndex) => (
@@ -135,11 +133,20 @@ export function TransactionsTable({
                     </TableCell>
                   ))}
                 </TableRow>
-              ))
-            ) : table.getRowModel().rows.length === 0 ? (
+              ))}
+            {totalTransactions === 0 && isFilteringApplied ? (
               <TableRow>
                 <TableCell colSpan={transactionsTableColumns.length} className='h-24 text-center'>
-                  No results.
+                  <div className='my-4 flex flex-col items-center gap-4'>
+                    <SearchX className='h-12 w-12 text-muted-foreground' />
+                    <div>
+                      <p className='mb-2 text-base'>No transactions found</p>
+                      <p className='text-muted-foreground'>
+                        The applied filters did not match any transactions.
+                      </p>
+                    </div>
+                    <TransactionClearAllFiltersButton setFilters={setFilters} />
+                  </div>
                 </TableCell>
               </TableRow>
             ) : (

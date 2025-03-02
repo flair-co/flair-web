@@ -1,5 +1,4 @@
 import {useParams} from '@tanstack/react-router';
-import {PaginationState} from '@tanstack/react-table';
 import {FileUp} from 'lucide-react';
 import {useCallback, useMemo} from 'react';
 import {ErrorCode, FileRejection, useDropzone} from 'react-dropzone';
@@ -10,6 +9,7 @@ import {ScrollArea} from '@/components/ui/scroll-area';
 import {Separator} from '@/components/ui/separator';
 import {useMediaQuery} from '@/hooks/use-media-query';
 import {MimeType} from '@/types/mime-type';
+import {PaginationParams} from '@/types/pagination';
 import {cn} from '@/utils/cn';
 
 import {useUploadBankStatement} from '../../api/use-upload-bank-statement';
@@ -21,7 +21,7 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024;
 const acceptTypes = Object.fromEntries(Object.values(MimeType).map((type) => [type, []]));
 
 type BankStatementUploadInputProps = {
-  pagination: PaginationState;
+  pagination: PaginationParams;
   files: FileState[];
   setFiles: React.Dispatch<React.SetStateAction<FileState[]>>;
 };

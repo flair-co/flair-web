@@ -1,15 +1,15 @@
 import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {PaginationState} from '@tanstack/react-table';
 import {toast} from 'sonner';
 
 import {Account} from '@/types/account';
 import {BankStatement} from '@/types/bank-statement';
+import {PaginationParams} from '@/types/pagination';
 import {api} from '@/utils/api';
 
 export const useDeleteBankStatement = (
   accountId: Account['id'],
   bankStatementId: BankStatement['id'],
-  pagination: PaginationState,
+  pagination: PaginationParams,
 ) => {
   const queryClient = useQueryClient();
 

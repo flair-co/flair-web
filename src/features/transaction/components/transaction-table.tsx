@@ -1,11 +1,4 @@
-import {
-  PaginationState,
-  SortingState,
-  flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from '@tanstack/react-table';
+import {flexRender, getCoreRowModel, useReactTable} from '@tanstack/react-table';
 import {CreditCard} from 'lucide-react';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
@@ -14,10 +7,11 @@ import {Button} from '@/components/ui/button';
 import {Progress} from '@/components/ui/progress';
 import {Skeleton} from '@/components/ui/skeleton';
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/components/ui/table';
+import {PaginationParams} from '@/types/pagination';
 import {Transaction} from '@/types/transaction';
 import {cn} from '@/utils/cn';
 
-import {TransactionFilter} from '../api/use-get-all-transactions';
+import {TransactionFilterParams} from '../types/search-params';
 import {TransactionCategoryFilter} from './transaction-category-filter';
 import {TransactionClearAllFilters} from './transaction-clear-all-filters';
 import {TransactionDateFilter} from './transaction-date-filter';
@@ -28,10 +22,10 @@ type TransactionsTableProps = {
   totalTransactions: number;
   isPending: boolean;
   isPlaceholderData: boolean;
-  pagination: PaginationState;
-  setPagination: Dispatch<SetStateAction<PaginationState>>;
-  filters: TransactionFilter;
-  setFilters: React.Dispatch<React.SetStateAction<TransactionFilter>>;
+  pagination: PaginationParams;
+  setPagination: Dispatch<SetStateAction<PaginationParams>>;
+  filters: TransactionFilterParams;
+  setFilters: React.Dispatch<React.SetStateAction<TransactionFilterParams>>;
 };
 
 export function TransactionsTable({
@@ -44,7 +38,6 @@ export function TransactionsTable({
   filters,
   setFilters,
 }: TransactionsTableProps) {
-  const [sorting, setSorting] = useState<SortingState>([]);
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
@@ -55,11 +48,10 @@ export function TransactionsTable({
     data: transactions,
     columns: transactionsTableColumns,
     getCoreRowModel: getCoreRowModel(),
-    onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
-    onPaginationChange: setPagination,
+    manualSorting: true,
+    manualFiltering: true,
     manualPagination: true,
-    state: {sorting, pagination},
+    state: {pagination},
     rowCount: totalTransactions,
   });
 

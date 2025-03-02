@@ -1,39 +1,33 @@
 import {keepPreviousData, useQuery} from '@tanstack/react-query';
-import {PaginationState} from '@tanstack/react-table';
 import {useState} from 'react';
 import {toast} from 'sonner';
 
-import {Category} from '@/types/category';
+import {PaginationParams} from '@/types/pagination';
 import {Transaction} from '@/types/transaction';
 import {api} from '@/utils/api';
 
-import {TransactionSearchParams} from '../types/search-params';
-
-export type DateRangeDto = {
-  from: Date;
-  to?: Date;
-};
-
-export type TransactionFilter = {
-  categories?: Category[];
-  startedAt?: DateRangeDto;
-};
+import {
+  TransactionFilterParams,
+  TransactionSearchParams,
+  TransactionSortParams,
+} from '../types/search-params';
 
 export const useGetAllTransactions = (searchParams: TransactionSearchParams) => {
-  const [pagination, setPagination] = useState<PaginationState>({
+  const [pagination, setPagination] = useState<PaginationParams>({
     pageIndex: searchParams.pageIndex,
     pageSize: searchParams.pageSize,
   });
-  const [filters, setFilters] = useState<TransactionFilter>({
+  const [filters, setFilters] = useState<TransactionFilterParams>({
     categories: searchParams.categories,
     startedAt: searchParams.startedAt,
   });
+  const [sort, setSort] = useState<TransactionSortParams>(searchParams.sort);
 
   const {data, isPending, isError, isPlaceholderData} = useQuery<{
     transactions: Transaction[];
     total: number;
   }>({
-    queryKey: ['transactions', pagination, filters],
+    queryKey: ['transactions', pagination, filters, sort],
     queryFn: async () => {
       const params = new URLSearchParams({
         pageIndex: pagination.pageIndex.toString(),
@@ -49,6 +43,13 @@ export const useGetAllTransactions = (searchParams: TransactionSearchParams) => 
         if (filters.startedAt.to) {
           params.append('startedAt[to]', filters.startedAt.to.toISOString());
         }
+      }
+
+      if (sort) {
+        sort.forEach((sort, index) => {
+          params.append(`params[${index}][by]`, sort.by);
+          params.append(`params[${index}][order]`, sort.order);
+        });
       }
 
       const response = await api.get(`/transactions?${params.toString()}`);
@@ -71,5 +72,7 @@ export const useGetAllTransactions = (searchParams: TransactionSearchParams) => 
     setPagination,
     filters,
     setFilters,
+    sort,
+    setSort,
   };
 };

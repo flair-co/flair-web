@@ -2,10 +2,10 @@ import {useNavigate} from '@tanstack/react-router';
 
 import {Button} from '@/components/ui/button';
 
-import {TransactionFilter} from '../api/use-get-all-transactions';
+import {TransactionFilterParams} from '../types/search-params';
 
 type TransactionClearAllFiltersProps = {
-  setFilters: React.Dispatch<React.SetStateAction<TransactionFilter>>;
+  setFilters: React.Dispatch<React.SetStateAction<TransactionFilterParams>>;
 };
 
 export function TransactionClearAllFilters({setFilters}: TransactionClearAllFiltersProps) {

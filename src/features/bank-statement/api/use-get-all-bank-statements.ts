@@ -1,10 +1,10 @@
 import {keepPreviousData, useQuery} from '@tanstack/react-query';
-import {PaginationState} from '@tanstack/react-table';
 import {useState} from 'react';
 import {toast} from 'sonner';
 
 import {Account} from '@/types/account';
 import {BankStatement} from '@/types/bank-statement';
+import {PaginationParams} from '@/types/pagination';
 import {api} from '@/utils/api';
 
 export type PaginatedBankStatementsResponse = {
@@ -14,9 +14,9 @@ export type PaginatedBankStatementsResponse = {
 
 export const useGetAllBankStatements = (
   accountId: Account['id'],
-  {pageIndex = 0, pageSize = 10}: PaginationState,
+  {pageIndex = 0, pageSize = 10}: PaginationParams,
 ) => {
-  const [pagination, setPagination] = useState<PaginationState>({pageIndex, pageSize});
+  const [pagination, setPagination] = useState<PaginationParams>({pageIndex, pageSize});
 
   const {data, isPending, isError, isPlaceholderData} = useQuery<PaginatedBankStatementsResponse>({
     queryKey: ['bank-statements', pagination, accountId],

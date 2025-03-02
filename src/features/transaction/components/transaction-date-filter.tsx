@@ -9,11 +9,11 @@ import {Calendar} from '@/components/ui/calendar';
 import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover';
 import {Separator} from '@/components/ui/separator';
 
-import {TransactionFilter} from '../api/use-get-all-transactions';
+import {TransactionFilterParams} from '../types/search-params';
 
 type TransactionDateFilterProps = {
-  filters: TransactionFilter;
-  setFilters: React.Dispatch<React.SetStateAction<TransactionFilter>>;
+  filters: TransactionFilterParams;
+  setFilters: React.Dispatch<React.SetStateAction<TransactionFilterParams>>;
 };
 
 export function TransactionDateFilter({filters, setFilters}: TransactionDateFilterProps) {
@@ -58,7 +58,6 @@ export function TransactionDateFilter({filters, setFilters}: TransactionDateFilt
           defaultMonth={filters?.startedAt?.from}
           selected={filters?.startedAt}
           onSelect={handleSelect}
-          numberOfMonths={2}
           disabled={{after: new Date()}}
         />
       </PopoverContent>

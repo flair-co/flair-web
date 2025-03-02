@@ -19,11 +19,11 @@ import {Separator} from '@/components/ui/separator';
 import {Category} from '@/types/category';
 import {cn} from '@/utils/cn';
 
-import {TransactionFilter} from '../api/use-get-all-transactions';
+import {TransactionFilterParams} from '../types/search-params';
 
 interface TransactionCategoryFilterProps {
-  filters: TransactionFilter;
-  setFilters: React.Dispatch<React.SetStateAction<TransactionFilter>>;
+  filters: TransactionFilterParams;
+  setFilters: React.Dispatch<React.SetStateAction<TransactionFilterParams>>;
 }
 
 export function TransactionCategoryFilter({filters, setFilters}: TransactionCategoryFilterProps) {

@@ -1,9 +1,9 @@
 import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {PaginationState} from '@tanstack/react-table';
 import {toast} from 'sonner';
 
 import {Account} from '@/types/account';
 import {BankStatement} from '@/types/bank-statement';
+import {PaginationParams} from '@/types/pagination';
 import {HttpError, api} from '@/utils/api';
 
 import {FileState} from '../types/file-state';
@@ -15,7 +15,7 @@ type UploadBankStatementHttpError = HttpError & {
 
 export const useUploadBankStatement = (
   accountId: Account['id'],
-  pagination: PaginationState,
+  pagination: PaginationParams,
   setFiles: React.Dispatch<React.SetStateAction<FileState[]>>,
 ) => {
   const queryClient = useQueryClient();

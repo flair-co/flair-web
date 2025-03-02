@@ -1,6 +1,6 @@
 import {ColumnDef} from '@tanstack/react-table';
 import {format} from 'date-fns';
-import {ArrowUpDown} from 'lucide-react';
+import {ArrowDown, ArrowDownUp, ArrowUp} from 'lucide-react';
 
 import {CategoryBadge} from '@/components/shared/category-badge';
 import {Button} from '@/components/ui/button';
@@ -20,14 +20,25 @@ export const transactionsTableColumns: ColumnDef<Transaction>[] = [
   {
     accessorKey: 'startedAt',
     header: ({column}) => {
+      const sortDirection = column.getIsSorted();
       return (
         <Button
           variant='ghost'
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          onClick={() => {
+            if (sortDirection === 'desc') {
+              column.toggleSorting(false);
+            } else if (sortDirection === 'asc') {
+              column.clearSorting();
+            } else {
+              column.toggleSorting(true);
+            }
+          }}
           className='flex h-12 w-full justify-start px-3'
         >
           Started at
-          <ArrowUpDown className='ml-2 h-4 w-4' />
+          {!sortDirection && <ArrowDownUp className='text-muted-foreground' />}
+          {sortDirection === 'asc' && <ArrowUp className='h-4 w-4 text-secondary-foreground' />}
+          {sortDirection === 'desc' && <ArrowDown className='h-4 w-4 text-secondary-foreground' />}
         </Button>
       );
     },
@@ -42,7 +53,7 @@ export const transactionsTableColumns: ColumnDef<Transaction>[] = [
     },
     cell: ({row}) => {
       return (
-        <p className='max-w-[6rem] overflow-hidden text-ellipsis whitespace-nowrap xl:max-w-[22rem] 2xl:max-w-[38rem]'>
+        <p className='max-w-[6rem] overflow-hidden text-ellipsis whitespace-nowrap md:lg:max-w-[20rem] lg:max-w-[22rem] xl:max-w-[38rem] 2xl:max-w-[52rem]'>
           {row.original.description}
         </p>
       );
@@ -51,20 +62,31 @@ export const transactionsTableColumns: ColumnDef<Transaction>[] = [
   {
     accessorKey: 'amount',
     header: ({column}) => {
+      const sortDirection = column.getIsSorted();
       return (
         <Button
           variant='ghost'
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          onClick={() => {
+            if (sortDirection === 'desc') {
+              column.toggleSorting(false);
+            } else if (sortDirection === 'asc') {
+              column.clearSorting();
+            } else {
+              column.toggleSorting(true);
+            }
+          }}
           className='flex h-12 w-full justify-end px-3'
         >
+          {!sortDirection && <ArrowDownUp className='text-muted-foreground' />}
+          {sortDirection === 'asc' && <ArrowUp className='h-4 w-4 text-secondary-foreground' />}
+          {sortDirection === 'desc' && <ArrowDown className='h-4 w-4 text-secondary-foreground' />}
           Amount
-          <ArrowUpDown className='mx-2 h-4 w-4' />
         </Button>
       );
     },
     cell: ({row}) => {
       return (
-        <p className={cn('px-2 py-1 text-right', row.original.amount > 0 && 'text-success')}>
+        <p className={cn('text-right', row.original.amount > 0 && 'text-success')}>
           {row.original.amount}
         </p>
       );

@@ -30,9 +30,9 @@ export const useUploadBankStatement = (
       });
       const bankStatement = (await response.json()) as BankStatement;
 
-      queryClient.setQueryData(
+      queryClient.setQueryData<PaginatedBankStatementsResponse>(
         ['bank-statements', pagination, accountId],
-        (prevData: PaginatedBankStatementsResponse) => ({
+        (prevData) => ({
           bankStatements: [...(prevData?.bankStatements ?? []), bankStatement],
           total: (prevData?.total ?? 0) + 1,
         }),

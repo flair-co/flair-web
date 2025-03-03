@@ -1,3 +1,4 @@
+import {Account} from './account';
 import {Category} from './category';
 
 export type Transaction = {
@@ -10,4 +11,5 @@ export type Transaction = {
   createdAt: Date;
   updatedAt: Date;
   category: Category;
+  account: Account;
 };

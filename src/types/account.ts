@@ -5,4 +5,5 @@ export type Account = {
   alias: string | null;
   balance: number;
   bank: Bank;
+  currency: string;
 };

@@ -1,7 +1,8 @@
 import {Link} from '@tanstack/react-router';
-import {EllipsisVertical} from 'lucide-react';
 
+import {CurrencyAmount} from '@/components/shared/currency-amount';
 import {DynamicBankIcon} from '@/components/shared/dynamic-bank-icon';
+import {Card} from '@/components/ui/card';
 import {Account} from '@/types/account';
 
 type AccountCardProps = {
@@ -11,29 +12,22 @@ type AccountCardProps = {
 export function AccountCard({account}: AccountCardProps) {
   return (
     <Link to='/accounts/$accountId' params={{accountId: account.id}}>
-      <div className='flex items-center justify-between p-4 hover:bg-card'>
+      <Card className='flex items-center justify-between p-4 hover:bg-accent'>
         <div className='flex items-center'>
           <div className='rounded-md bg-muted p-2'>
             <DynamicBankIcon bank={account.bank} className='w-7' />
           </div>
           <div className='ml-4 flex flex-col'>
-            <div>
-              {account.alias ? (
-                <>
-                  <p>{account.alias}</p>
-                  <p className='text-muted-foreground'>{account.bank}</p>
-                </>
-              ) : (
-                <p>{account.bank}</p>
-              )}
-            </div>
+            <p>
+              {account.bank}{' '}
+              {account.alias && <span className='text-muted-foreground'>({account.alias})</span>}
+            </p>
+            <p className='font-mono'>
+              <CurrencyAmount amount={account.balance} currency={account.currency} />
+            </p>
           </div>
         </div>
-        <div className='flex gap-10'>
-          <div>{account.balance}</div>
-          <EllipsisVertical className='w-5' />
-        </div>
-      </div>
+      </Card>
     </Link>
   );
 }

@@ -3,16 +3,22 @@ import {format} from 'date-fns';
 import {CopyToClipboardButton} from '@/components/shared/copy-to-clipboard-button';
 import {CurrencyAmount} from '@/components/shared/currency-amount';
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
+import {Skeleton} from '@/components/ui/skeleton';
 import {Transaction} from '@/types/transaction';
 
 import {TransactionAccountLink} from './transaction-account-link';
 import {TransactionCategoryCombobox} from './transaction-category-combobox';
 
 type TransactionCardProps = {
-  transaction: Transaction;
+  transaction?: Transaction;
+  isPending: boolean;
 };
 
-export function TransactionCard({transaction}: TransactionCardProps) {
+export function TransactionCard({transaction, isPending}: TransactionCardProps) {
+  if (!transaction || isPending) {
+    return <Skeleton className='mt-4 h-[23.1rem] w-full rounded-lg bg-card' />;
+  }
+
   return (
     <Card className='mt-4'>
       <CardHeader>

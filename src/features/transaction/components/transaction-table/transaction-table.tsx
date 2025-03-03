@@ -1,11 +1,11 @@
 import {Link, useNavigate} from '@tanstack/react-router';
 import {flexRender, getCoreRowModel, useReactTable} from '@tanstack/react-table';
-import {CreditCard, SearchX} from 'lucide-react';
+import {SearchX} from 'lucide-react';
 import {Dispatch, SetStateAction} from 'react';
 
+import CreditCards from '@/components/shared/illustrations/credit-cards';
 import {LoadingBar} from '@/components/shared/loading-bar';
 import {TablePagination} from '@/components/shared/table-pagination';
-import {Button} from '@/components/ui/button';
 import {Skeleton} from '@/components/ui/skeleton';
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/components/ui/table';
 import {PaginationParams} from '@/types/pagination';
@@ -66,14 +66,11 @@ export function TransactionsTable({
 
   if (isEmptyState) {
     return (
-      <div className='flex flex-col items-center gap-4'>
-        <div className='flex flex-col items-center'>
-          <CreditCard className='h-24 w-24 text-muted' />
-          <p>No transactions.</p>
-        </div>
-        <div className='flex gap-4'>
-          <Button variant='outline'>Add transaction</Button>
-          <Button>Upload bank statement</Button>
+      <div className='mt-8 flex flex-col items-center'>
+        <CreditCards className='h-60' />
+        <div className='flex flex-col items-center text-base'>
+          <p className='mb-2 text-2xl'>No transactions</p>
+          <p className='text-muted-foreground'>You do not have any transactions yet.</p>
         </div>
       </div>
     );

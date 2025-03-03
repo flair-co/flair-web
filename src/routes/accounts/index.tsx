@@ -1,9 +1,11 @@
 import {createFileRoute, redirect} from '@tanstack/react-router';
 
+import {BackButton} from '@/components/shared/back-button';
 import {AppBody} from '@/components/shared/layout/app-body';
 import {AppHeader} from '@/components/shared/layout/app-header';
 import {LoadingBar} from '@/components/shared/loading-bar';
 import {useGetAllAccounts} from '@/features/account/api/use-get-all-accounts';
+import {AccountAddDialog} from '@/features/account/components/account-add/account-add-dialog';
 import {AccountBreadcrumb} from '@/features/account/components/account-breadcrumb';
 import {AccountList} from '@/features/account/components/account-list';
 
@@ -26,7 +28,11 @@ function AccountsIndex() {
         <AccountBreadcrumb />
       </AppHeader>
       <AppBody>
-        <AccountList accounts={accounts || []} />
+        <div className='mt-4 flex justify-between'>
+          <BackButton />
+          {accounts && accounts.length !== 0 && <AccountAddDialog />}
+        </div>
+        <AccountList accounts={accounts || []} isPending={isPending} />
       </AppBody>
     </>
   );

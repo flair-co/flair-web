@@ -29,7 +29,7 @@ export function AccountAddDialog() {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button variant='outline'>Add account</Button>
+          <Button>Add account</Button>
         </DialogTrigger>
         <DialogContent className='max-w-96' aria-describedby='Add account'>
           <DialogHeader>
@@ -44,7 +44,7 @@ export function AccountAddDialog() {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant='outline'>Add account</Button>
+        <Button>Add account</Button>
       </DrawerTrigger>
       <DrawerContent aria-describedby='Add account'>
         <DrawerHeader className='text-left'>

@@ -16,5 +16,9 @@ export function CurrencyAmount({amount, currency}: CurrencyAmountProps) {
   const symbol = currencySymbols[currency] || currency;
   const formattedAmount = amount < 0 ? `-${symbol}${Math.abs(amount)}` : `${symbol}${amount}`;
 
-  return <span className={cn('font-mono', amount > 0 && 'text-success')}>{formattedAmount}</span>;
+  return (
+    <span className={cn('whitespace-nowrap font-mono', amount > 0 && 'text-success')}>
+      {formattedAmount}
+    </span>
+  );
 }

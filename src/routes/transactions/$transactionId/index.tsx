@@ -5,7 +5,7 @@ import {AppHeader} from '@/components/shared/layout/app-header';
 import {LoadingBar} from '@/components/shared/loading-bar';
 import {useGetTransaction} from '@/features/transaction/api/use-get-transaction';
 import {TransactionBreadcrumb} from '@/features/transaction/components/transaction-breadcrumb';
-import {TransactionCard} from '@/features/transaction/components/transaction-card';
+import {TransactionCard} from '@/features/transaction/components/transaction-card/transaction-card';
 
 export const Route = createFileRoute('/transactions/$transactionId/')({
   component: TransactionIndex,

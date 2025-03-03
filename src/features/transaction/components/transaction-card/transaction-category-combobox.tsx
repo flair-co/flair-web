@@ -9,7 +9,7 @@ import {Category} from '@/types/category';
 import {Transaction} from '@/types/transaction';
 import {cn} from '@/utils/cn';
 
-import {usePatchTransaction} from '../api/use-patch-transaction';
+import {usePatchTransaction} from '../../api/use-patch-transaction';
 
 type TransactionCategoryComboboxProps = {
   transaction: Transaction;
@@ -36,7 +36,7 @@ export function TransactionCategoryCombobox({transaction}: TransactionCategoryCo
           <CategoryBadge category={selectedCategory} variant='lg' />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className='w-[14rem] p-0' align='start'>
+      <PopoverContent className='w-[15rem] p-0' align='start'>
         <Command>
           <CommandList>
             <CommandGroup>

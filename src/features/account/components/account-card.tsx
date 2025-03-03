@@ -14,7 +14,7 @@ export function AccountCard({account}: AccountCardProps) {
       <div className='flex items-center justify-between p-4 hover:bg-card'>
         <div className='flex items-center'>
           <div className='rounded-md bg-muted p-2'>
-            <DynamicBankIcon bank={account.bank} className='w-7 fill-foreground' />
+            <DynamicBankIcon bank={account.bank} className='w-7' />
           </div>
           <div className='ml-4 flex flex-col'>
             <div>

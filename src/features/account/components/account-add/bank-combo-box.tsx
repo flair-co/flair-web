@@ -44,7 +44,7 @@ export function BankComboBox({onChange, isPending, error}: BankComboBoxProps) {
               {selectedBank ? (
                 <div className='flex items-center'>
                   <div className='mr-2 rounded-md bg-muted p-[0.35rem]'>
-                    <DynamicBankIcon bank={selectedBank} className='w-4 fill-foreground' />
+                    <DynamicBankIcon bank={selectedBank} className='w-4' />
                   </div>
                   <p>{selectedBank}</p>
                 </div>

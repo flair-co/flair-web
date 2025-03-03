@@ -1,6 +1,6 @@
 import {useNavigate} from '@tanstack/react-router';
 import {format} from 'date-fns';
-import {CalendarIcon} from 'lucide-react';
+import {CalendarIcon, ChevronDown} from 'lucide-react';
 import * as React from 'react';
 import {DateRange} from 'react-day-picker';
 
@@ -33,6 +33,11 @@ export function TransactionDateFilter({filters, setFilters}: TransactionDateFilt
     setFilters((prev) => ({...prev, startedAt}));
   };
 
+  const handleReset = async () => {
+    await navigate({search: (prev) => ({...prev, startedAt: undefined})});
+    setFilters((prev) => ({...prev, startedAt: undefined}));
+  };
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -49,6 +54,7 @@ export function TransactionDateFilter({filters, setFilters}: TransactionDateFilt
               </span>
             </>
           )}
+          <ChevronDown />
         </Button>
       </PopoverTrigger>
       <PopoverContent className='w-auto p-0' align='start'>
@@ -60,6 +66,16 @@ export function TransactionDateFilter({filters, setFilters}: TransactionDateFilt
           onSelect={handleSelect}
           disabled={{after: new Date()}}
         />
+        {filters.startedAt !== undefined && (
+          <>
+            <Separator className='w-full' />
+            <div className='p-1'>
+              <Button className='h-8 w-full rounded-sm' variant='ghost' onClick={handleReset}>
+                Reset
+              </Button>
+            </div>
+          </>
+        )}
       </PopoverContent>
     </Popover>
   );

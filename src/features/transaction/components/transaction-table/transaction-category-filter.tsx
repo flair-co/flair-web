@@ -1,5 +1,5 @@
 import {useNavigate} from '@tanstack/react-router';
-import {Check, Shapes} from 'lucide-react';
+import {Check, ChevronDown, Shapes} from 'lucide-react';
 import * as React from 'react';
 
 import {CategoryBadge} from '@/components/shared/category-badge';
@@ -46,7 +46,7 @@ export function TransactionCategoryFilter({filters, setFilters}: TransactionCate
     setFilters((prev) => ({...prev, categories: newSelectedValues}));
   };
 
-  const handleClear = async () => {
+  const handleReset = async () => {
     await navigate({search: (prev) => ({...prev, categories: undefined})});
     setFilters((prev) => ({...prev, categories: []}));
   };
@@ -54,7 +54,11 @@ export function TransactionCategoryFilter({filters, setFilters}: TransactionCate
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant='outline' size='sm' className='h-8 border-dashed'>
+        <Button
+          variant='outline'
+          size='sm'
+          className={cn('h-8', selectedValues.length === 0 ? 'border-dashed' : 'border')}
+        >
           <Shapes />
           Category
           {selectedValues.length > 0 && (
@@ -76,6 +80,7 @@ export function TransactionCategoryFilter({filters, setFilters}: TransactionCate
               </div>
             </>
           )}
+          <ChevronDown />
         </Button>
       </PopoverTrigger>
       <PopoverContent className='w-[14rem] p-0' align='start'>
@@ -107,8 +112,8 @@ export function TransactionCategoryFilter({filters, setFilters}: TransactionCate
                 <>
                   <CommandSeparator />
                   <CommandGroup>
-                    <CommandItem onSelect={handleClear} className='justify-center text-center'>
-                      Clear filters
+                    <CommandItem onSelect={handleReset} className='justify-center text-center'>
+                      Reset
                     </CommandItem>
                   </CommandGroup>
                 </>

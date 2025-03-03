@@ -26,7 +26,7 @@ export function TransactionClearAllFiltersButton({
 
   return (
     <Button variant={variant} size={size} className={className} onClick={handleClear}>
-      Clear all filters
+      Clear filters
     </Button>
   );
 }

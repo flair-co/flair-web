@@ -1,4 +1,4 @@
-import {useNavigate} from '@tanstack/react-router';
+import {Link, useNavigate} from '@tanstack/react-router';
 import {flexRender, getCoreRowModel, useReactTable} from '@tanstack/react-table';
 import {CreditCard, SearchX} from 'lucide-react';
 import {Dispatch, SetStateAction} from 'react';
@@ -12,8 +12,8 @@ import {PaginationParams} from '@/types/pagination';
 import {Transaction} from '@/types/transaction';
 import {cn} from '@/utils/cn';
 
-import {TransactionFilterParams, TransactionSortParams} from '../types/search-params';
-import {createSortingHandler, mapSortToSortingState} from '../utils/handle-sort';
+import {TransactionFilterParams, TransactionSortParams} from '../../types/search-params';
+import {createSortingHandler, mapSortToSortingState} from '../../utils/handle-sort';
 import {TransactionCategoryFilter} from './transaction-category-filter';
 import {TransactionClearAllFiltersButton} from './transaction-clear-all-filters';
 import {TransactionDateFilter} from './transaction-date-filter';
@@ -151,12 +151,22 @@ export function TransactionsTable({
               </TableRow>
             ) : (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className='p-3'>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
-                  ))}
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && 'selected'}
+                  className='cursor-pointer hover:bg-card'
+                >
+                  <Link
+                    to='/transactions/$transactionId'
+                    params={{transactionId: row.original.id}}
+                    style={{all: 'unset', display: 'contents'}}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id} className='p-3'>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </TableCell>
+                    ))}
+                  </Link>
                 </TableRow>
               ))
             )}

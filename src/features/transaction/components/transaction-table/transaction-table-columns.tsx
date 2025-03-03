@@ -3,9 +3,9 @@ import {format} from 'date-fns';
 import {ArrowDown, ArrowDownUp, ArrowUp} from 'lucide-react';
 
 import {CategoryBadge} from '@/components/shared/category-badge';
+import {CurrencyAmount} from '@/components/shared/currency-amount';
 import {Button} from '@/components/ui/button';
 import {Transaction} from '@/types/transaction';
-import {cn} from '@/utils/cn';
 
 export const transactionsTableColumns: ColumnDef<Transaction>[] = [
   {
@@ -43,7 +43,7 @@ export const transactionsTableColumns: ColumnDef<Transaction>[] = [
       );
     },
     cell: ({row}) => {
-      return <p>{format(new Date(row.original.startedAt), 'dd/MM/yyyy')}</p>;
+      return <p>{format(new Date(row.original.startedAt), 'MMM d, yyyy')}</p>;
     },
   },
   {
@@ -86,8 +86,8 @@ export const transactionsTableColumns: ColumnDef<Transaction>[] = [
     },
     cell: ({row}) => {
       return (
-        <p className={cn('text-right', row.original.amount > 0 && 'text-success')}>
-          {row.original.amount}
+        <p className='text-right'>
+          <CurrencyAmount amount={row.original.amount} currency={row.original.currency} />
         </p>
       );
     },

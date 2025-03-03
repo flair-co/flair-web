@@ -19,7 +19,7 @@ import {Separator} from '@/components/ui/separator';
 import {Category} from '@/types/category';
 import {cn} from '@/utils/cn';
 
-import {TransactionFilterParams} from '../types/search-params';
+import {TransactionFilterParams} from '../../types/search-params';
 
 interface TransactionCategoryFilterProps {
   filters: TransactionFilterParams;
@@ -84,10 +84,10 @@ export function TransactionCategoryFilter({filters, setFilters}: TransactionCate
             <CommandList>
               <CommandEmpty>No results found.</CommandEmpty>
               <CommandGroup>
-                {Object.values(Category).map((option) => {
-                  const isSelected = selectedValues.includes(option);
+                {Object.values(Category).map((category) => {
+                  const isSelected = selectedValues.includes(category);
                   return (
-                    <CommandItem key={option} onSelect={() => handleSelect(option)}>
+                    <CommandItem key={category} onSelect={() => handleSelect(category)}>
                       <div
                         className={cn(
                           'mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary',
@@ -98,7 +98,7 @@ export function TransactionCategoryFilter({filters, setFilters}: TransactionCate
                       >
                         <Check />
                       </div>
-                      <CategoryBadge category={option} />
+                      <CategoryBadge category={category} />
                     </CommandItem>
                   );
                 })}

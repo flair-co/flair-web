@@ -9,7 +9,7 @@ import {Calendar} from '@/components/ui/calendar';
 import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover';
 import {Separator} from '@/components/ui/separator';
 
-import {TransactionFilterParams} from '../types/search-params';
+import {TransactionFilterParams} from '../../types/search-params';
 
 type TransactionDateFilterProps = {
   filters: TransactionFilterParams;

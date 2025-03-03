@@ -6,7 +6,7 @@ import {AppHeader} from '@/components/shared/layout/app-header';
 import {LoadingBar} from '@/components/shared/loading-bar';
 import {useGetAllTransactions} from '@/features/transaction/api/use-get-all-transactions';
 import {TransactionBreadcrumb} from '@/features/transaction/components/transaction-breadcrumb';
-import {TransactionsTable} from '@/features/transaction/components/transaction-table';
+import {TransactionsTable} from '@/features/transaction/components/transaction-table/transaction-table';
 import {transactionSearchParamsSchema} from '@/features/transaction/types/search-params';
 
 export const Route = createFileRoute('/transactions/')({

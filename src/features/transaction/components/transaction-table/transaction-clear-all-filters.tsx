@@ -2,7 +2,7 @@ import {useNavigate} from '@tanstack/react-router';
 
 import {Button} from '@/components/ui/button';
 
-import {TransactionFilterParams} from '../types/search-params';
+import {TransactionFilterParams} from '../../types/search-params';
 
 type TransactionClearAllFiltersButtonProps = {
   setFilters: React.Dispatch<React.SetStateAction<TransactionFilterParams>>;

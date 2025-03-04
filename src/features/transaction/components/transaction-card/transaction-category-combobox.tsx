@@ -1,4 +1,4 @@
-import {Check} from 'lucide-react';
+import {Check, ChevronDown} from 'lucide-react';
 import {useState} from 'react';
 
 import {CategoryBadge} from '@/components/shared/category-badge';
@@ -34,6 +34,7 @@ export function TransactionCategoryCombobox({transaction}: TransactionCategoryCo
       <PopoverTrigger asChild>
         <Button variant='outline' role='combobox' aria-expanded={open} className='pl-2'>
           <CategoryBadge category={selectedCategory} variant='lg' />
+          <ChevronDown />
         </Button>
       </PopoverTrigger>
       <PopoverContent className='w-[15rem] p-0' align='start'>

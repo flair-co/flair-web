@@ -35,7 +35,7 @@ export function CopyToClipboardButton({value}: CopyToClipboardButton) {
       }}
     >
       <span className='sr-only'>Copy</span>
-      {hasCopied ? <CheckIcon /> : <ClipboardIcon />}
+      {hasCopied ? <CheckIcon className='text-success' /> : <ClipboardIcon />}
     </Button>
   );
 }

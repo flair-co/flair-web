@@ -8,6 +8,7 @@ import {Button} from '@/components/ui/button';
 import {Calendar} from '@/components/ui/calendar';
 import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover';
 import {Separator} from '@/components/ui/separator';
+import {cn} from '@/utils/cn';
 
 import {TransactionFilterParams} from '../../types/search-params';
 
@@ -41,7 +42,11 @@ export function TransactionDateFilter({filters, setFilters}: TransactionDateFilt
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant='outline' size='sm' className='h-8 border-dashed'>
+        <Button
+          variant='outline'
+          size='sm'
+          className={cn('h-8', filters.startedAt ? 'border' : 'border-dashed')}
+        >
           <CalendarIcon />
           Started at
           {filters?.startedAt?.from && (

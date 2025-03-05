@@ -44,6 +44,7 @@
     "date-fns": "^3.6.0",
     "lucide-react": "^0.396.0",
     "mime-types": "^2.1.35",
+    "motion": "^12.4.10",
     "next-themes": "^0.3.0",
     "papaparse": "^5.4.1",
     "pretty-bytes": "^6.1.1",

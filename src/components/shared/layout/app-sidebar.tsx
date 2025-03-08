@@ -127,8 +127,10 @@ export function AppSidebar({user}: AppSidebarProps) {
                     Account
                   </DropdownMenuItem>
                   <DropdownMenuItem>
-                    <Settings className='mr-2 h-4 w-4' />
-                    Settings
+                    <Link to='/settings' className='flex items-center'>
+                      <Settings className='mr-2 h-4 w-4' />
+                      Settings
+                    </Link>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />

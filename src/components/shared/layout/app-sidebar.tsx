@@ -31,6 +31,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar';
+import {useLogOut} from '@/hooks/use-logout';
 import {User} from '@/types/user';
 import {cn} from '@/utils/cn';
 
@@ -58,6 +59,7 @@ type AppSidebarProps = {
 
 export function AppSidebar({user}: AppSidebarProps) {
   const {isMobile} = useSidebar();
+  const logOut = useLogOut();
   const matchRoute = useMatchRoute();
 
   return (
@@ -134,7 +136,7 @@ export function AppSidebar({user}: AppSidebarProps) {
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={() => logOut()}>
                   <LogOut className='mr-2 h-4 w-4' />
                   Log out
                 </DropdownMenuItem>

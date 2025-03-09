@@ -22,9 +22,12 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
-      - name: Clear npm cache
-        run: npm cache clean --force
-
+      - name: Set up environment variables
+        run: |
+          echo "
+          VITE_API_URL=${{ secrets.VITE_API_URL }}
+          " >> $GITHUB_ENV
+      - run: npm ci
       - name: Debug environment
         run: |
           echo "ESLint version:"
@@ -37,13 +40,6 @@ jobs:
           npm list @typescript-eslint/eslint-plugin
           echo "@typescript-eslint/parser version:"
           npm list @typescript-eslint/parser
-
-      - name: Set up environment variables
-        run: |
-          echo "
-          VITE_API_URL=${{ secrets.VITE_API_URL }}
-          " >> $GITHUB_ENV
-      - run: npm ci
       - run: npm run lint:check
       - run: npm run format:check
       - run: npm run build

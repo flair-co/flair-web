@@ -30,6 +30,8 @@ jobs:
       - run: npm ci
       - name: Debug environment
         run: |
+          echo "TypeScript version:"
+          npx tsc --version
           echo "ESLint version:"
           npx eslint --version
           echo "Node version:"

@@ -27,7 +27,7 @@ export function mapSortToSortingState(sort: TransactionSortParams): SortingState
   return [];
 }
 
-function mapSortingStateToSort(sortingState: SortingState): TransactionSortParams {
+function mapSortingStateToSort(sortingState: SortingState): TransactionSortParams | undefined {
   if (sortingState.length > 0) {
     const s = sortingState[0];
     return {by: s.id as SortField, order: s.desc ? SortOrder.DESC : SortOrder.ASC};

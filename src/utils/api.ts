@@ -1,3 +1,5 @@
+import {toast} from 'sonner';
+
 export class HttpError extends Error {
   constructor(
     public status: number,
@@ -15,11 +17,28 @@ const request = async (resource: string, init?: RequestInit) => {
   const url = API_BASE_URL + resource;
   const headers = {...{'Content-Type': 'application/json'}, ...init?.headers};
 
-  const response = await fetch(url, {headers, credentials: 'include', ...init});
+  const response = await fetch(url, {headers, credentials: 'include', ...init}).catch(() => {
+    throw toast.error('No network connection', {
+      description: 'Please check your internet connection and try again.',
+    });
+  });
 
   if (!response.ok) {
     if (response.status === 401 && !NO_REDIRECT_ENDPOINTS.has(resource)) {
+      toast.error('Your session has expired', {
+        description: 'Please log in again to continue using the app.',
+      });
       throw (window.location.href = '/login');
+    }
+    if (response.status == 429) {
+      throw toast.error('Rate limit exceeded', {
+        description: 'Too many requests. Please try again later.',
+      });
+    }
+    if (response.status === 500) {
+      throw toast.error('Server error', {
+        description: 'Your request could not be completed. Please try again.',
+      });
     }
 
     const error = (await response.json()) as Error;

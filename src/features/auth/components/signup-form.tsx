@@ -2,7 +2,6 @@ import {zodResolver} from '@hookform/resolvers/zod';
 import {Eye, EyeOff, Loader} from 'lucide-react';
 import {useState} from 'react';
 import {useForm} from 'react-hook-form';
-import {toast} from 'sonner';
 
 import {Button} from '@/components/ui/button';
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from '@/components/ui/form';
@@ -34,10 +33,6 @@ export function SignUpForm() {
             {message: 'This email address is already in use.'},
             {shouldFocus: true},
           );
-        } else if (error.status === 400) {
-          toast.error('Validation failed.', {
-            description: 'Please check your input and try again.',
-          });
         }
       },
     });

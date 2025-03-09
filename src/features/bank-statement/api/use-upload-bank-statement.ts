@@ -9,10 +9,6 @@ import {HttpError, api} from '@/utils/api';
 import {FileState} from '../types/file-state';
 import {PaginatedBankStatementsResponse} from './use-get-all-bank-statements';
 
-type UploadBankStatementHttpError = HttpError & {
-  status: 400 | 409 | 422;
-};
-
 export const useUploadBankStatement = (
   accountId: Account['id'],
   pagination: PaginationParams,
@@ -20,7 +16,7 @@ export const useUploadBankStatement = (
 ) => {
   const queryClient = useQueryClient();
 
-  const {mutateAsync} = useMutation<BankStatement, UploadBankStatementHttpError, File>({
+  const {mutateAsync} = useMutation<BankStatement, HttpError, File>({
     mutationFn: async (file: File) => {
       const formData = new FormData();
       formData.append('file', file);
@@ -54,7 +50,7 @@ export const useUploadBankStatement = (
           );
           return bankStatement;
         })
-        .catch((error: UploadBankStatementHttpError) => {
+        .catch((error: HttpError) => {
           setFiles((prev) =>
             prev.map((fs) =>
               fs.file === file ? {...fs, isPending: false, error: error.message} : fs,
@@ -65,7 +61,7 @@ export const useUploadBankStatement = (
       {
         loading: 'Uploading file...',
         success: 'Bank statement uploaded successfully',
-        error: (error: UploadBankStatementHttpError) => error.message || 'Error uploading file',
+        error: (error: HttpError) => error.message || 'Error uploading file',
       },
     );
   };

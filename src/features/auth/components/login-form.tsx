@@ -3,7 +3,6 @@ import {Link} from '@tanstack/react-router';
 import {Eye, EyeOff, Loader} from 'lucide-react';
 import {useEffect, useState} from 'react';
 import {useForm} from 'react-hook-form';
-import {toast} from 'sonner';
 
 import {Button} from '@/components/ui/button';
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from '@/components/ui/form';
@@ -44,13 +43,7 @@ export function LogInForm() {
         if (error.status === 401) {
           form.setError('email', {message: ''});
           form.setError('password', {message: 'Invalid email or password.'});
-          return setHasUnauthorizedError(true);
-        }
-
-        if (error.status === 400) {
-          toast.error('Validation failed.', {
-            description: 'Please input a valid email and password.',
-          });
+          setHasUnauthorizedError(true);
         }
       },
     });

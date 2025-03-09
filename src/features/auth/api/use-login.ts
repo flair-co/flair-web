@@ -1,5 +1,5 @@
 import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {useNavigate} from '@tanstack/react-router';
+import {useNavigate, useRouter} from '@tanstack/react-router';
 import {toast} from 'sonner';
 
 import {User} from '@/types/user';
@@ -10,12 +10,17 @@ import {LogInDto} from '../types/login.dto';
 export const useLogIn = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const router = useRouter();
 
-  const {mutate: logIn, isPending} = useMutation<void, HttpError, LogInDto>({
+  const {mutate: logIn, isPending} = useMutation<User, HttpError, LogInDto>({
     mutationFn: async (logInDto: LogInDto) => {
       const response = await api.post('/auth/login', JSON.stringify(logInDto));
       const user = (await response.json()) as User;
-      await queryClient.setQueryData(['currentUser'], user);
+      return user;
+    },
+    onSuccess: (user) => {
+      queryClient.setQueryData(['currentUser'], user);
+      router.update({context: {isAuthenticated: true, currentUser: user}});
       return navigate({to: '/home'});
     },
     onError: (error) => {

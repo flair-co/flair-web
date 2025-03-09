@@ -1,5 +1,5 @@
 import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {useNavigate} from '@tanstack/react-router';
+import {useNavigate, useRouter} from '@tanstack/react-router';
 import {toast} from 'sonner';
 
 import {User} from '@/types/user';
@@ -10,17 +10,22 @@ import {SignUpDto} from '../types/signup.dto';
 export const useSignUp = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const router = useRouter();
 
-  const {mutate: signUp, isPending} = useMutation<void, HttpError, SignUpDto>({
+  const {mutate: signUp, isPending} = useMutation<User, HttpError, SignUpDto>({
     mutationFn: async (signUpDto: SignUpDto) => {
       const response = await api.post('/auth/signup', JSON.stringify(signUpDto));
       const user = (await response.json()) as User;
-      await queryClient.setQueryData(['currentUser'], user);
+      return user;
+    },
+    onSuccess: (user) => {
+      queryClient.setQueryData(['currentUser'], user);
+      router.update({context: {isAuthenticated: true, currentUser: user}});
       return navigate({to: '/home'});
     },
     onError: (error) => {
       if (error.status === 400) {
-        toast.error('Validation failed.', {
+        return toast.error('Validation failed.', {
           description: 'Please check your input and try again.',
         });
       }

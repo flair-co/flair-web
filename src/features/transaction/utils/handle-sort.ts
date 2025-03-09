@@ -9,10 +9,11 @@ export function createSortingHandler(
 ) {
   return (updaterOrValue: SortingState | ((prev: SortingState) => SortingState)) => {
     setSort((prevSort) => {
-      const currentSortingState = mapSortToSortingState(prevSort);
-      const newSortingState =
-        typeof updaterOrValue === 'function' ? updaterOrValue(currentSortingState) : updaterOrValue;
-      const newSort = mapSortingStateToSort(newSortingState);
+      const currentSorting = mapSortToSortingState(prevSort);
+      const updatedSorting =
+        typeof updaterOrValue === 'function' ? updaterOrValue(currentSorting) : updaterOrValue;
+      const newSort = mapSortingStateToSort(updatedSorting);
+
       void navigate({search: (prev) => ({...prev, sort: newSort})});
       return newSort;
     });
@@ -31,4 +32,5 @@ function mapSortingStateToSort(sortingState: SortingState): TransactionSortParam
     const s = sortingState[0];
     return {by: s.id as SortField, order: s.desc ? SortOrder.DESC : SortOrder.ASC};
   }
+  return undefined;
 }

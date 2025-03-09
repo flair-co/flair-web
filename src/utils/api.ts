@@ -9,13 +9,19 @@ export class HttpError extends Error {
 
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
+const NO_REDIRECT_ENDPOINTS = new Set(['/users/me', '/auth/login']);
+
 const request = async (resource: string, init?: RequestInit) => {
   const url = API_BASE_URL + resource;
-
   const headers = {...{'Content-Type': 'application/json'}, ...init?.headers};
 
   const response = await fetch(url, {headers, credentials: 'include', ...init});
+
   if (!response.ok) {
+    if (response.status === 401 && !NO_REDIRECT_ENDPOINTS.has(resource)) {
+      throw (window.location.href = '/login');
+    }
+
     const error = (await response.json()) as Error;
     throw new HttpError(response.status, error.message);
   }

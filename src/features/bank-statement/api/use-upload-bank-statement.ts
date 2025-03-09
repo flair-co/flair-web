@@ -10,7 +10,7 @@ import {FileState} from '../types/file-state';
 import {PaginatedBankStatementsResponse} from './use-get-all-bank-statements';
 
 type UploadBankStatementHttpError = HttpError & {
-  status: 400 | 401 | 409 | 422;
+  status: 400 | 409 | 422;
 };
 
 export const useUploadBankStatement = (

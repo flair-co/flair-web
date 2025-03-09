@@ -27,21 +27,8 @@ jobs:
           echo "
           VITE_API_URL=${{ secrets.VITE_API_URL }}
           " >> $GITHUB_ENV
+
       - run: npm ci
-      - name: Debug environment
-        run: |
-          echo "TypeScript version:"
-          npx tsc --version
-          echo "ESLint version:"
-          npx eslint --version
-          echo "Node version:"
-          node --version
-          echo "NPM version:"
-          npm --version
-          echo "@typescript-eslint/eslint-plugin version:"
-          npm list @typescript-eslint/eslint-plugin
-          echo "@typescript-eslint/parser version:"
-          npm list @typescript-eslint/parser
       - run: npm run generate-routes
       - run: npm run lint:check
       - run: npm run format:check

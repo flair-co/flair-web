@@ -25,16 +25,13 @@ export const useLogIn = () => {
     },
     onError: (error) => {
       if (error.status === 400) {
-        return toast.error('Validation failed.', {
+        return toast.error('Validation failed', {
           description: 'Please input a valid email and password.',
         });
       }
       if (error.status === 401) {
         throw error;
       }
-      toast.error('There was a problem with your request.', {
-        description: 'You could not be logged in. Please try again.',
-      });
     },
   });
   return {logIn, isPending};

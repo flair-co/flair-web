@@ -25,16 +25,13 @@ export const useSignUp = () => {
     },
     onError: (error) => {
       if (error.status === 400) {
-        return toast.error('Validation failed.', {
+        return toast.error('Validation failed', {
           description: 'Please check your input and try again.',
         });
       }
       if (error.status === 409) {
         throw error;
       }
-      toast.error('There was a problem with your request.', {
-        description: 'Your account could not be created. Please try again.',
-      });
     },
   });
   return {signUp, isPending};

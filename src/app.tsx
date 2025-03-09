@@ -41,8 +41,10 @@ export function App() {
 
 function LoadingScreen() {
   return (
-    <div className='flex h-screen w-screen items-center justify-center bg-current'>
-      <Loader className='h-10 w-10 animate-spin' />
-    </div>
+    <ThemeProvider defaultTheme='dark' storageKey='vite-ui-theme'>
+      <div className='flex h-screen w-screen items-center justify-center bg-background'>
+        <Loader className='h-14 w-14 animate-spin' />
+      </div>
+    </ThemeProvider>
   );
 }

@@ -1,4 +1,4 @@
-import {Outlet, createRootRouteWithContext, useRouteContext} from '@tanstack/react-router';
+import {Outlet, createRootRouteWithContext} from '@tanstack/react-router';
 import {TanStackRouterDevtools} from '@tanstack/router-devtools';
 
 import {AppSidebar} from '@/components/shared/layout/app-sidebar';
@@ -10,7 +10,7 @@ export const Route = createRootRouteWithContext<{isAuthenticated: boolean; curre
 });
 
 function Root() {
-  const {isAuthenticated, currentUser} = useRouteContext({from: '__root__'});
+  const {isAuthenticated, currentUser} = Route.useRouteContext();
 
   if (!isAuthenticated) {
     return (

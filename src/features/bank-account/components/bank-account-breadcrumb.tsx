@@ -9,16 +9,16 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
-import {Account} from '@/types/account';
+import {BankAccount} from '@/types/bank-account';
 import {BankStatement} from '@/types/bank-statement';
 
-type AccountBreadcrumbProps = {
-  account?: Account;
+type BankAccountBreadcrumbProps = {
+  bankAccount?: BankAccount;
   bankStatements?: boolean;
   bankStatement?: BankStatement;
 };
 
-export function AccountBreadcrumb({account, bankStatements}: AccountBreadcrumbProps) {
+export function BankAccountBreadcrumb({bankAccount, bankStatements}: BankAccountBreadcrumbProps) {
   return (
     <Breadcrumb>
       <BreadcrumbList>
@@ -29,41 +29,41 @@ export function AccountBreadcrumb({account, bankStatements}: AccountBreadcrumbPr
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          {account ? (
+          {bankAccount ? (
             <BreadcrumbLink asChild>
-              <Link to='/accounts'>Accounts</Link>
+              <Link to='/bank-accounts'>Bank accounts</Link>
             </BreadcrumbLink>
           ) : (
-            <BreadcrumbPage>Accounts</BreadcrumbPage>
+            <BreadcrumbPage>Bank accounts</BreadcrumbPage>
           )}
         </BreadcrumbItem>
-        {account && !bankStatements && (
+        {bankAccount && !bankStatements && (
           <>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbPage className='flex items-center'>
                 <div className='mr-1 rounded-md bg-muted p-[0.2rem]'>
-                  <DynamicBankIcon bank={account.bank} className='h-3 w-3' />
+                  <DynamicBankIcon bank={bankAccount.bank} className='h-3 w-3' />
                 </div>
-                {account.alias ? account.alias : account.bank}
+                {bankAccount.alias ? bankAccount.alias : bankAccount.bank}
               </BreadcrumbPage>
             </BreadcrumbItem>
           </>
         )}
-        {account && bankStatements && (
+        {bankAccount && bankStatements && (
           <>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
                 <Link
-                  to={`/accounts/$accountId`}
-                  params={{accountId: account.id}}
+                  to={`/bank-accounts/$bankAccountId`}
+                  params={{bankAccountId: bankAccount.id}}
                   className='flex items-center'
                 >
                   <div className='mr-1 rounded-md bg-muted p-[0.2rem]'>
-                    <DynamicBankIcon bank={account.bank} className='h-3 w-3' />
+                    <DynamicBankIcon bank={bankAccount.bank} className='h-3 w-3' />
                   </div>
-                  {account.alias ? account.alias : account.bank}
+                  {bankAccount.alias ? bankAccount.alias : bankAccount.bank}
                 </Link>
               </BreadcrumbLink>
             </BreadcrumbItem>

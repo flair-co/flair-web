@@ -1,7 +1,7 @@
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {toast} from 'sonner';
 
-import {Account} from '@/types/account';
+import {BankAccount} from '@/types/bank-account';
 import {BankStatement} from '@/types/bank-statement';
 import {PaginationParams} from '@/types/pagination';
 import {HttpError, api} from '@/utils/api';
@@ -10,7 +10,7 @@ import {FileState} from '../types/file-state';
 import {PaginatedBankStatementsResponse} from './use-get-all-bank-statements';
 
 export const useUploadBankStatement = (
-  accountId: Account['id'],
+  bankAccountId: BankAccount['id'],
   pagination: PaginationParams,
   setFiles: React.Dispatch<React.SetStateAction<FileState[]>>,
 ) => {
@@ -21,13 +21,15 @@ export const useUploadBankStatement = (
       const formData = new FormData();
       formData.append('file', file);
 
-      const response = await api.post(`/accounts/${accountId}/bank-statements/upload`, formData, {
-        headers: {},
-      });
+      const response = await api.post(
+        `/bank-accounts/${bankAccountId}/bank-statements/upload`,
+        formData,
+        {headers: {}},
+      );
       const bankStatement = (await response.json()) as BankStatement;
 
       queryClient.setQueryData<PaginatedBankStatementsResponse>(
-        ['bank-statements', pagination, accountId],
+        ['bank-statements', pagination, bankAccountId],
         (prevData) => ({
           bankStatements: [...(prevData?.bankStatements ?? []), bankStatement],
           total: (prevData?.total ?? 0) + 1,

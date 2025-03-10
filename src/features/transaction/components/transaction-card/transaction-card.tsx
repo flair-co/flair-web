@@ -6,7 +6,7 @@ import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/compo
 import {Skeleton} from '@/components/ui/skeleton';
 import {Transaction} from '@/types/transaction';
 
-import {TransactionAccountLink} from './transaction-account-link';
+import {TransactionBankAccountLink} from './transaction-account-link';
 import {TransactionCategoryCombobox} from './transaction-category-combobox';
 
 type TransactionCardProps = {
@@ -54,7 +54,7 @@ export function TransactionCard({transaction, isPending}: TransactionCardProps) 
                   {transaction.amount > 0 ? (
                     <>{transaction.description}</>
                   ) : (
-                    <TransactionAccountLink transaction={transaction} />
+                    <TransactionBankAccountLink transaction={transaction} />
                   )}
                 </div>
                 <div>
@@ -68,7 +68,7 @@ export function TransactionCard({transaction, isPending}: TransactionCardProps) 
                 <div>
                   <p className='text-sm text-muted-foreground'>To</p>
                   {transaction.amount > 0 ? (
-                    <TransactionAccountLink transaction={transaction} />
+                    <TransactionBankAccountLink transaction={transaction} />
                   ) : (
                     <>{transaction.description}</>
                   )}

@@ -1,6 +1,6 @@
 import {Bank} from './bank';
 
-export type Account = {
+export type BankAccount = {
   id: string;
   alias: string | null;
   balance: number;

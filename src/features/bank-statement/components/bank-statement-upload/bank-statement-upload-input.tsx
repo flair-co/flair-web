@@ -31,11 +31,11 @@ export function BankStatementUploadInput({
   files,
   setFiles,
 }: BankStatementUploadInputProps) {
-  const {accountId} = useParams({from: '/accounts/$accountId/bank-statements/'});
+  const {bankAccountId} = useParams({from: '/bank-accounts/$bankAccountId/bank-statements/'});
 
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const formattedFileTypes = useMemo(() => Object.keys(MimeType).join(', '), []);
-  const {upload} = useUploadBankStatement(accountId, pagination, setFiles);
+  const {upload} = useUploadBankStatement(bankAccountId, pagination, setFiles);
 
   const onDrop = useCallback(
     (acceptedFiles: File[], fileRejections: FileRejection[]) => {

@@ -118,7 +118,7 @@ export function BankStatementTable({
           totalItems={totalBankStatements}
           pagination={pagination}
           setPagination={setPagination}
-          navigateOptions={{from: '/accounts/$accountId/bank-statements'}}
+          navigateOptions={{from: '/bank-accounts/$bankAccountId/bank-statements'}}
         />
       )}
     </>

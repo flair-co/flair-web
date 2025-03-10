@@ -3,15 +3,15 @@ import {zodValidator} from '@tanstack/zod-adapter';
 
 import {AppBody} from '@/components/shared/layout/app-body';
 import {AppHeader} from '@/components/shared/layout/app-header';
-import {useGetAccount} from '@/features/account/api/use-get-account';
-import {AccountBreadcrumb} from '@/features/account/components/account-breadcrumb';
+import {useGetBankAccount} from '@/features/bank-account/api/use-get-bank-account';
+import {BankAccountBreadcrumb} from '@/features/bank-account/components/bank-account-breadcrumb';
 import {useGetAllBankStatements} from '@/features/bank-statement/api/use-get-all-bank-statements';
 import {BankStatementCalendarView} from '@/features/bank-statement/components/bank-statement-calendar-view';
 import {BankStatementTable} from '@/features/bank-statement/components/bank-statement-table/bank-statement-table';
 import {BankStatementUploadDialog} from '@/features/bank-statement/components/bank-statement-upload/bank-statement-upload-dialog';
 import {paginationSearchParamsSchema} from '@/types/pagination';
 
-export const Route = createFileRoute('/accounts/$accountId/bank-statements/')({
+export const Route = createFileRoute('/bank-accounts/$bankAccountId/bank-statements/')({
   component: BankStatementsIndex,
   validateSearch: zodValidator(paginationSearchParamsSchema),
   beforeLoad: ({context}) => {
@@ -22,23 +22,23 @@ export const Route = createFileRoute('/accounts/$accountId/bank-statements/')({
 });
 
 function BankStatementsIndex() {
-  const {accountId} = Route.useParams();
+  const {bankAccountId} = Route.useParams();
   const {pageIndex, pageSize} = Route.useSearch();
 
-  const {account, isPending: isAccountPending} = useGetAccount(accountId);
+  const {bankAccount, isPending: isBankAccountPending} = useGetBankAccount(bankAccountId);
   const {
     data,
     isPending: isBankStatementsPending,
     pagination,
     setPagination,
     isPlaceholderData,
-  } = useGetAllBankStatements(accountId, {pageIndex, pageSize});
+  } = useGetAllBankStatements(bankAccountId, {pageIndex, pageSize});
 
   return (
     <>
       <AppHeader>
-        {isAccountPending && <AccountBreadcrumb />}
-        {account && <AccountBreadcrumb account={account} bankStatements />}
+        {isBankAccountPending && <BankAccountBreadcrumb />}
+        {bankAccount && <BankAccountBreadcrumb bankAccount={bankAccount} bankStatements />}
       </AppHeader>
       <AppBody>
         {data && <BankStatementCalendarView bankStatements={data.bankStatements} />}

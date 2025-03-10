@@ -15,26 +15,29 @@ import {
 import {Input} from '@/components/ui/input';
 import {cn} from '@/utils/cn';
 
-import {useCreateAccount} from '../../api/use-create-account';
-import {AccountCreateDto, accountCreateDtoSchema} from '../../types/account-create.dto';
+import {useCreateBankAccount} from '../../api/use-create-bank-account';
+import {
+  BankAccountCreateDto,
+  bankAccountCreateDtoSchema,
+} from '../../types/bank-account-create.dto';
 import {BankComboBox} from './bank-combo-box';
 
-type AccountAddFormProps = {
+type BankAccountAddFormProps = {
   className?: string;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export function AccountAddForm({className, setOpen}: AccountAddFormProps) {
-  const {createAccount, isPending} = useCreateAccount();
+export function BankAccountAddForm({className, setOpen}: BankAccountAddFormProps) {
+  const {createBankAccount, isPending} = useCreateBankAccount();
 
-  const form = useForm<AccountCreateDto>({
-    resolver: zodResolver(accountCreateDtoSchema),
+  const form = useForm<BankAccountCreateDto>({
+    resolver: zodResolver(bankAccountCreateDtoSchema),
     mode: 'onTouched',
     reValidateMode: 'onChange',
   });
 
-  function onSubmit(formData: AccountCreateDto) {
-    createAccount(formData);
+  function onSubmit(formData: BankAccountCreateDto) {
+    createBankAccount(formData);
     setOpen(false);
   }
 
@@ -81,7 +84,7 @@ export function AccountAddForm({className, setOpen}: AccountAddFormProps) {
                   className={cn(fieldState.invalid && 'border-destructive')}
                 />
               </FormControl>
-              <FormDescription>A unique name to easily identify this account.</FormDescription>
+              <FormDescription>A unique name to easily identify this bank account.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -89,11 +92,11 @@ export function AccountAddForm({className, setOpen}: AccountAddFormProps) {
         <Button type='submit' disabled={isPending} className='mt-4'>
           {isPending ? (
             <>
-              <span>Adding account...</span>
+              <span>Adding bank account...</span>
               <Loader className='ml-2 h-4 w-4 animate-slow-spin' />
             </>
           ) : (
-            <span>Add account</span>
+            <span>Add bank account</span>
           )}
         </Button>
       </form>

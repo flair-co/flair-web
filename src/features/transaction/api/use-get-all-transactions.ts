@@ -1,6 +1,5 @@
 import {keepPreviousData, useQuery} from '@tanstack/react-query';
 import {useState} from 'react';
-import {toast} from 'sonner';
 
 import {PaginationParams} from '@/types/pagination';
 import {Transaction} from '@/types/transaction';
@@ -23,7 +22,7 @@ export const useGetAllTransactions = (searchParams: TransactionSearchParams) => 
   });
   const [sort, setSort] = useState<TransactionSortParams>(searchParams.sort);
 
-  const {data, isPending, isError, isPlaceholderData} = useQuery<{
+  const {data, isPending, isPlaceholderData} = useQuery<{
     transactions: Transaction[];
     total: number;
   }>({
@@ -54,12 +53,6 @@ export const useGetAllTransactions = (searchParams: TransactionSearchParams) => 
     },
     placeholderData: keepPreviousData,
   });
-
-  if (isError) {
-    toast.error('There was a problem with your request.', {
-      description: 'Your transactions could not be loaded. Please try again.',
-    });
-  }
 
   return {
     data,

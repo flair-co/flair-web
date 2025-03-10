@@ -1,6 +1,7 @@
 import {Link, useMatchRoute} from '@tanstack/react-router';
 import {
   BadgeCheck,
+  ChevronRightIcon,
   ChevronsUpDown,
   CreditCard,
   Home,
@@ -10,6 +11,7 @@ import {
 } from 'lucide-react';
 
 import {Avatar, AvatarFallback} from '@/components/ui/avatar';
+import {Collapsible, CollapsibleContent, CollapsibleTrigger} from '@/components/ui/collapsible';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,6 +31,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubItem,
+  SidebarSeparator,
   useSidebar,
 } from '@/components/ui/sidebar';
 import {useLogOut} from '@/hooks/use-logout';
@@ -42,8 +47,8 @@ const links = [
     icon: Home,
   },
   {
-    title: 'Accounts',
-    url: '/accounts',
+    title: 'Bank Accounts',
+    url: '/bank-accounts',
     icon: WalletCards,
   },
   {
@@ -82,6 +87,32 @@ export function AppSidebar({user}: AppSidebarProps) {
                   </SidebarMenuItem>
                 );
               })}
+            </SidebarMenu>
+            <SidebarSeparator className='my-2' />
+            <SidebarMenu>
+              <Collapsible className='group/collapsible' asChild>
+                <SidebarMenuItem>
+                  <CollapsibleTrigger asChild>
+                    <SidebarMenuButton>
+                      <Settings className='h-4 w-4' />
+                      Settings
+                      <ChevronRightIcon className='ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90' />
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <SidebarMenuSub>
+                      <SidebarMenuSubItem>
+                        <SidebarMenuButton>Account</SidebarMenuButton>
+                      </SidebarMenuSubItem>
+                    </SidebarMenuSub>
+                    <SidebarMenuSub>
+                      <SidebarMenuSubItem>
+                        <SidebarMenuButton>Theme</SidebarMenuButton>
+                      </SidebarMenuSubItem>
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
+                </SidebarMenuItem>
+              </Collapsible>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

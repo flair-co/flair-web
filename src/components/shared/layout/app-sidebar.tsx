@@ -1,7 +1,6 @@
 import {Link, useMatchRoute} from '@tanstack/react-router';
 import {
   BadgeCheck,
-  ChevronRightIcon,
   ChevronsUpDown,
   CreditCard,
   Home,
@@ -11,7 +10,6 @@ import {
 } from 'lucide-react';
 
 import {Avatar, AvatarFallback} from '@/components/ui/avatar';
-import {Collapsible, CollapsibleContent, CollapsibleTrigger} from '@/components/ui/collapsible';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,151 +29,110 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubItem,
-  SidebarSeparator,
   useSidebar,
 } from '@/components/ui/sidebar';
+import {useCurrentUser} from '@/hooks/use-current-user';
 import {useLogOut} from '@/hooks/use-logout';
-import {User} from '@/types/user';
 import {cn} from '@/utils/cn';
 
-const links = [
-  {
-    title: 'Home',
-    url: '/',
-    icon: Home,
-  },
-  {
-    title: 'Bank Accounts',
-    url: '/bank-accounts',
-    icon: WalletCards,
-  },
-  {
-    title: 'Transactions',
-    url: '/transactions',
-    icon: CreditCard,
-  },
+const navItems = [
+  {label: 'Home', route: '/', icon: Home},
+  {label: 'Bank Accounts', route: '/bank-accounts', icon: WalletCards},
+  {label: 'Transactions', route: '/transactions', icon: CreditCard},
 ];
 
-type AppSidebarProps = {
-  user: User;
-};
-
-export function AppSidebar({user}: AppSidebarProps) {
+export function AppSidebar() {
   const {isMobile} = useSidebar();
   const logOut = useLogOut();
   const matchRoute = useMatchRoute();
 
-  return (
-    <Sidebar collapsible='icon'>
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Flair</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {links.map((item) => {
-                const isActive = matchRoute({to: item.url});
-                return (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
-                      <Link to={item.url} className={cn(isActive && 'bg-sidebar-accent')}>
-                        <item.icon />
-                        <span>{item.title}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                );
-              })}
-            </SidebarMenu>
-            <SidebarSeparator className='my-2' />
-            <SidebarMenu>
-              <Collapsible className='group/collapsible' asChild>
-                <SidebarMenuItem>
-                  <CollapsibleTrigger asChild>
-                    <SidebarMenuButton>
-                      <Settings className='h-4 w-4' />
-                      Settings
-                      <ChevronRightIcon className='ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90' />
-                    </SidebarMenuButton>
-                  </CollapsibleTrigger>
-                  <CollapsibleContent>
-                    <SidebarMenuSub>
-                      <SidebarMenuSubItem>
-                        <SidebarMenuButton>Account</SidebarMenuButton>
-                      </SidebarMenuSubItem>
-                    </SidebarMenuSub>
-                    <SidebarMenuSub>
-                      <SidebarMenuSubItem>
-                        <SidebarMenuButton>Theme</SidebarMenuButton>
-                      </SidebarMenuSubItem>
-                    </SidebarMenuSub>
-                  </CollapsibleContent>
-                </SidebarMenuItem>
-              </Collapsible>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-      <SidebarFooter>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <SidebarMenuButton
-                  size='lg'
-                  className='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground'
-                >
-                  <Avatar className='h-8 w-8 rounded-lg'>
-                    <AvatarFallback className='rounded-lg'>CN</AvatarFallback>
-                  </Avatar>
-                  <div className='grid flex-1 text-left text-sm leading-tight'>
-                    <span className='truncate font-semibold'>{user.name}</span>
-                    <span className='truncate text-xs'>{user.email}</span>
-                  </div>
-                  <ChevronsUpDown className='ml-auto size-4' />
-                </SidebarMenuButton>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                className='w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg'
-                side={isMobile ? 'bottom' : 'right'}
-                align='end'
-                sideOffset={4}
-              >
-                <DropdownMenuLabel className='p-0 font-normal'>
-                  <div className='flex items-center gap-2 px-1 py-1.5 text-left text-sm'>
+  const {currentUser} = useCurrentUser({skipFetch: true});
+
+  if (currentUser) {
+    return (
+      <Sidebar collapsible='icon'>
+        <SidebarContent>
+          <SidebarGroup>
+            <SidebarGroupLabel>Flair</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {navItems.map((item) => {
+                  const isActive = matchRoute({to: item.route, fuzzy: true}) as boolean;
+                  return (
+                    <SidebarMenuItem key={item.label}>
+                      <SidebarMenuButton asChild>
+                        <Link to={item.route} className={cn(isActive && 'bg-sidebar-accent')}>
+                          <item.icon />
+                          <span>{item.label}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </SidebarContent>
+        <SidebarFooter>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <SidebarMenuButton
+                    size='lg'
+                    className='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground'
+                  >
                     <Avatar className='h-8 w-8 rounded-lg'>
                       <AvatarFallback className='rounded-lg'>CN</AvatarFallback>
                     </Avatar>
                     <div className='grid flex-1 text-left text-sm leading-tight'>
-                      <span className='truncate font-semibold'>{user.name}</span>
-                      <span className='truncate text-xs'>{user.email}</span>
+                      <span className='truncate font-semibold'>{currentUser.name}</span>
+                      <span className='truncate text-xs'>{currentUser.email}</span>
                     </div>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <DropdownMenuItem>
-                    <BadgeCheck className='mr-2 h-4 w-4' />
-                    Account
+                    <ChevronsUpDown className='ml-auto size-4' />
+                  </SidebarMenuButton>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  className='w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg'
+                  side={isMobile ? 'bottom' : 'right'}
+                  align='end'
+                  sideOffset={4}
+                >
+                  <DropdownMenuLabel className='p-0 font-normal'>
+                    <div className='flex items-center gap-2 px-1 py-1.5 text-left text-sm'>
+                      <Avatar className='h-8 w-8 rounded-lg'>
+                        <AvatarFallback className='rounded-lg'>CN</AvatarFallback>
+                      </Avatar>
+                      <div className='grid flex-1 text-left text-sm leading-tight'>
+                        <span className='truncate font-semibold'>{currentUser.name}</span>
+                        <span className='truncate text-xs'>{currentUser.email}</span>
+                      </div>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem>
+                      <BadgeCheck className='mr-2 h-4 w-4' />
+                      Account
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to='/settings/account' className='cursor-pointer'>
+                        <Settings className='mr-2 h-4 w-4' />
+                        Settings
+                      </Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => logOut()}>
+                    <LogOut className='mr-2 h-4 w-4' />
+                    Log out
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Link to='/settings' className='flex items-center'>
-                      <Settings className='mr-2 h-4 w-4' />
-                      Settings
-                    </Link>
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => logOut()}>
-                  <LogOut className='mr-2 h-4 w-4' />
-                  Log out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
-    </Sidebar>
-  );
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarFooter>
+      </Sidebar>
+    );
+  }
 }

@@ -3,14 +3,13 @@ import {TanStackRouterDevtools} from '@tanstack/router-devtools';
 
 import {AppSidebar} from '@/components/shared/layout/app-sidebar';
 import {SidebarProvider} from '@/components/ui/sidebar';
-import {User} from '@/types/user';
 
-export const Route = createRootRouteWithContext<{isAuthenticated: boolean; currentUser: User}>()({
+export const Route = createRootRouteWithContext<{isAuthenticated: boolean}>()({
   component: Root,
 });
 
 function Root() {
-  const {isAuthenticated, currentUser} = Route.useRouteContext();
+  const {isAuthenticated} = Route.useRouteContext();
 
   if (!isAuthenticated) {
     return (
@@ -26,7 +25,7 @@ function Root() {
   return (
     <>
       <SidebarProvider>
-        <AppSidebar user={currentUser} />
+        <AppSidebar />
         <main className='flex-1'>
           <Outlet />
         </main>

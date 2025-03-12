@@ -33,6 +33,7 @@ export const useLogIn = () => {
         throw error;
       }
     },
+    retry: false,
   });
   return {logIn, isPending};
 };

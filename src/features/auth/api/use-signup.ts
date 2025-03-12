@@ -33,6 +33,7 @@ export const useSignUp = () => {
         throw error;
       }
     },
+    retry: false,
   });
   return {signUp, isPending};
 };

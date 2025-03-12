@@ -18,6 +18,7 @@ export const useCreateBankAccount = () => {
         bankAccount,
       ]);
     },
+    retry: false,
   });
   return {createBankAccount, isPending};
 };

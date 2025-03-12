@@ -1,14 +1,15 @@
 import {useMutation} from '@tanstack/react-query';
-import {useNavigate, useRouteContext} from '@tanstack/react-router';
+import {useNavigate} from '@tanstack/react-router';
 import {useEffect} from 'react';
 import {toast} from 'sonner';
 
+import {useCurrentUser} from '@/hooks/use-current-user';
 import {HttpError, api} from '@/utils/api';
 
 import {EmailVerifyDto, emailVerifySchema} from '../types/email-verify.dto';
 
 export const useVerifyEmail = (dto: EmailVerifyDto) => {
-  const {currentUser} = useRouteContext({from: '/verify'});
+  const {currentUser} = useCurrentUser({skipFetch: true});
   const navigate = useNavigate();
 
   const {mutate, isPending, error} = useMutation<void, HttpError, EmailVerifyDto>({
@@ -37,6 +38,7 @@ export const useVerifyEmail = (dto: EmailVerifyDto) => {
       }
       throw error;
     },
+    retry: false,
   });
 
   useEffect(() => {

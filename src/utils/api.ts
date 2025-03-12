@@ -11,7 +11,11 @@ export class HttpError extends Error {
 
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
-const NO_REDIRECT_ENDPOINTS = new Set(['/users/me', '/auth/login']);
+const isNoRedirectRequest = (resource: string, method?: string) => {
+  if (resource === '/auth/login') return true;
+  if (resource === '/users/me' && method === 'GET') return true;
+  return false;
+};
 
 const request = async (resource: string, init?: RequestInit) => {
   const url = API_BASE_URL + resource;
@@ -24,7 +28,7 @@ const request = async (resource: string, init?: RequestInit) => {
   });
 
   if (!response.ok) {
-    if (response.status === 401 && !NO_REDIRECT_ENDPOINTS.has(resource)) {
+    if (response.status === 401 && !isNoRedirectRequest(resource, init?.method)) {
       toast.error('Your session has expired', {
         description: 'Please log in again to continue using the app.',
       });

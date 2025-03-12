@@ -20,7 +20,7 @@ export const useLogIn = () => {
     },
     onSuccess: (user) => {
       queryClient.setQueryData(['currentUser'], user);
-      router.update({context: {isAuthenticated: true, currentUser: user}});
+      router.update({context: {isAuthenticated: true}});
       return navigate({to: '/home'});
     },
     onError: (error) => {

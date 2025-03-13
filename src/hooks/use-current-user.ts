@@ -18,6 +18,7 @@ export const useCurrentUser = ({skipFetch = false} = {}) => {
       return response.json();
     },
     enabled: !skipFetch || !cachedUser,
+    retry: false,
   });
 
   const isAuthenticated = !isPending && !!currentUser && !error;

@@ -4,6 +4,7 @@ import {PencilLine, Trash2} from 'lucide-react';
 import {Button} from '@/components/ui/button';
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
 import {Separator} from '@/components/ui/separator';
+import {Skeleton} from '@/components/ui/skeleton';
 import {useCurrentUser} from '@/hooks/use-current-user';
 
 export const Route = createFileRoute('/settings/security/')({
@@ -14,7 +15,7 @@ function SettingsSecurityIndex() {
   const {currentUser} = useCurrentUser({skipFetch: true});
 
   if (!currentUser) {
-    return <p>Loading...</p>;
+    return <Skeleton className='h-[19.5rem] w-full rounded-lg bg-card' />;
   }
 
   return (
@@ -26,11 +27,11 @@ function SettingsSecurityIndex() {
       <CardContent>
         <Separator className='mb-6 bg-muted' />
         <div className='mt-4'>
-          <div className='flex items-center justify-between'>
+          <div className='flex flex-col items-start justify-between sm:flex-row sm:items-center'>
             <div>
               <h2 className='text-lg font-medium'>Password</h2>
             </div>
-            <Button variant='outline'>
+            <Button variant='outline' className='mt-4 w-full sm:mt-0 sm:w-fit'>
               <PencilLine />
               Change password
             </Button>
@@ -38,14 +39,14 @@ function SettingsSecurityIndex() {
         </div>
         <Separator className='my-6 bg-muted' />
         <div className='mt-4'>
-          <div className='flex items-center justify-between'>
+          <div className='flex flex-col items-start justify-between sm:flex-row sm:items-center'>
             <div>
               <h2 className='mb-1 text-lg font-medium'>Delete account</h2>
-              <p className='text-sm text-muted-foreground'>
+              <p className='mr-8 text-sm text-muted-foreground'>
                 Deleting your account cannot be undone. Please be certain.
               </p>
             </div>
-            <Button variant='destructive' className='text-foreground'>
+            <Button variant='destructive' className='mt-4 w-full text-foreground sm:mt-0 sm:w-fit'>
               <Trash2 />
               Delete account
             </Button>

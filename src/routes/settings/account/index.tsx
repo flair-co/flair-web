@@ -6,6 +6,7 @@ import {Badge} from '@/components/ui/badge';
 import {Button} from '@/components/ui/button';
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
 import {Separator} from '@/components/ui/separator';
+import {Skeleton} from '@/components/ui/skeleton';
 import {NameChangeForm} from '@/features/settings/components/name-change-form';
 import {useCurrentUser} from '@/hooks/use-current-user';
 
@@ -17,7 +18,7 @@ function SettingsAccountIndex() {
   const {currentUser} = useCurrentUser({skipFetch: true});
 
   if (!currentUser) {
-    return <p>Loading...</p>;
+    return <Skeleton className='h-[23.3rem] w-full rounded-lg bg-card' />;
   }
 
   return (
@@ -35,17 +36,17 @@ function SettingsAccountIndex() {
           </div>
         </div>
         <Separator className='my-6 bg-muted' />
-        <div className='flex items-center justify-between'>
+        <div className='flex flex-col items-start justify-between md:flex-row md:items-center'>
           <div>
             <h2 className='mb-1 text-lg font-medium'>Email address</h2>
-            <p className='text-sm text-muted-foreground'>
+            <p className='mr-8 text-sm text-muted-foreground'>
               Your email is used to log in to your account.
             </p>
           </div>
-          <div className='flex items-center gap-10'>
-            <div className='text-right'>
+          <div className='flex w-full flex-col items-start gap-4 md:w-fit md:flex-row md:items-center lg:gap-5 xl:gap-10'>
+            <div className='mt-4 flex md:mt-0 md:block md:text-right'>
               <p className='mb-1'>{currentUser.email}</p>
-              <div className='flex items-center justify-end text-success'>
+              <div className='ml-2 flex items-center justify-end text-success sm:ml-0'>
                 {currentUser.isEmailVerified ? (
                   <Badge className='h-fit whitespace-nowrap bg-success-foreground hover:bg-success-foreground'>
                     <ShieldCheck className='mr-1 h-4 w-4' />
@@ -59,7 +60,7 @@ function SettingsAccountIndex() {
                 )}
               </div>
             </div>
-            <Button variant='outline'>
+            <Button variant='outline' className='w-full md:w-fit'>
               <PencilLine />
               Change email
             </Button>
@@ -73,7 +74,7 @@ function SettingsAccountIndex() {
               <span className='text-muted-foreground'>
                 Verify your email to unlock all features and ensure your account&apos;s security.
               </span>
-              <Button className='mt-2 w-fit' variant='default'>
+              <Button className='mt-4 w-full sm:mt-2 sm:w-fit' variant='default'>
                 Send verification link
               </Button>
             </AlertDescription>

@@ -38,7 +38,11 @@ export function NameChangeForm({currentName}: NameChangeFormProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} noValidate className='flex gap-2'>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        noValidate
+        className='flex flex-col gap-2 sm:flex-row'
+      >
         <FormField
           control={form.control}
           name='name'
@@ -58,13 +62,13 @@ export function NameChangeForm({currentName}: NameChangeFormProps) {
                 />
               </FormControl>
               <FormMessage />
-              <FormDescription className='mr-10'>
+              <FormDescription className='sm:mr-10'>
                 This is your display name. It can be your real name or an alias.
               </FormDescription>
             </FormItem>
           )}
         />
-        <Button type='submit' disabled={isPending} className='w-fit'>
+        <Button type='submit' disabled={isPending} className='mt-2 w-full sm:mt-0 sm:w-fit'>
           {isPending ? (
             <>
               <span>Saving...</span>

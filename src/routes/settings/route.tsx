@@ -26,14 +26,14 @@ function SettingsIndex() {
         <SettingsBreadcrumb route='/account' />
       </AppHeader>
       <AppBody>
-        <div className='mt-4 flex gap-4'>
-          <div className='flex flex-col items-start gap-1'>
+        <div className='mt-4 flex flex-col gap-4 xl:flex-row'>
+          <div className='flex w-full flex-row gap-1 md:w-auto md:items-start xl:flex-col'>
             {navItems.map((item) => {
               const isActive = matchRoute({to: item.route, fuzzy: true}) as boolean;
               return (
                 <Button
                   key={item.label}
-                  className='h-fit w-32 p-3'
+                  className='h-fit flex-1 p-3 md:w-32 md:flex-none'
                   variant='ghost'
                   size='lg'
                   asChild
@@ -41,12 +41,12 @@ function SettingsIndex() {
                   <Link
                     to={item.route}
                     className={cn(
-                      'flex items-center !justify-start',
+                      'flex items-center justify-center md:flex-row md:!justify-start',
                       isActive && 'bg-sidebar-accent',
                     )}
                   >
-                    <item.icon />
-                    {item.label}
+                    <item.icon className='mb-1 md:mb-0 md:mr-2' />
+                    <span>{item.label}</span>
                   </Link>
                 </Button>
               );

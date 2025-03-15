@@ -7,7 +7,11 @@ import {HttpError, api} from '@/utils/api';
 
 import {LogInDto} from '../types/login.dto';
 
-export const useLogIn = () => {
+type useLogInProps = {
+  returnTo?: string;
+};
+
+export const useLogIn = ({returnTo}: useLogInProps) => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const router = useRouter();
@@ -20,7 +24,16 @@ export const useLogIn = () => {
     },
     onSuccess: (user) => {
       queryClient.setQueryData(['currentUser'], user);
-      router.update({context: {isAuthenticated: true}});
+      router.update({context: {isAuthenticated: true, isEmailVerified: user.isEmailVerified}});
+      if (!user.isEmailVerified) {
+        return navigate({to: '/verify'});
+      }
+      if (returnTo) {
+        if (returnTo == '/verify') {
+          toast.info('Your email has already been verified.');
+        }
+        return navigate({to: returnTo});
+      }
       return navigate({to: '/home'});
     },
     onError: (error) => {

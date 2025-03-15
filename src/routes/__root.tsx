@@ -4,14 +4,17 @@ import {TanStackRouterDevtools} from '@tanstack/router-devtools';
 import {AppSidebar} from '@/components/shared/layout/app-sidebar';
 import {SidebarProvider} from '@/components/ui/sidebar';
 
-export const Route = createRootRouteWithContext<{isAuthenticated: boolean}>()({
+export const Route = createRootRouteWithContext<{
+  isAuthenticated: boolean;
+  isEmailVerified: boolean;
+}>()({
   component: Root,
 });
 
 function Root() {
-  const {isAuthenticated} = Route.useRouteContext();
+  const {isAuthenticated, isEmailVerified} = Route.useRouteContext();
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated || !isEmailVerified) {
     return (
       <>
         <main>

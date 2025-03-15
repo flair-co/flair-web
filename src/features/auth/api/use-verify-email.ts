@@ -1,50 +1,34 @@
-import {useMutation} from '@tanstack/react-query';
-import {useNavigate} from '@tanstack/react-router';
-import {useEffect} from 'react';
+import {useMutation, useQueryClient} from '@tanstack/react-query';
+import {useNavigate, useRouter} from '@tanstack/react-router';
 import {toast} from 'sonner';
 
-import {useCurrentUser} from '@/hooks/use-current-user';
+import {User} from '@/types/user';
 import {HttpError, api} from '@/utils/api';
 
-import {EmailVerifyDto, emailVerifySchema} from '../types/email-verify.dto';
+import {EmailVerifyDto} from '../types/email-verify.dto';
 
-export const useVerifyEmail = (dto: EmailVerifyDto) => {
-  const {currentUser} = useCurrentUser({skipFetch: true});
+export const useVerifyEmail = () => {
+  const queryClient = useQueryClient();
+  const router = useRouter();
   const navigate = useNavigate();
 
-  const {mutate, isPending, error} = useMutation<void, HttpError, EmailVerifyDto>({
+  const {mutateAsync: verifyEmail, isPending} = useMutation<User, HttpError, EmailVerifyDto>({
     mutationFn: async (dto: EmailVerifyDto) => {
-      const validation = emailVerifySchema.safeParse(dto);
-      if (!validation.success) {
-        throw new HttpError(400, 'Invalid request parameters');
-      }
-
-      await api.post('/auth/verify-email', JSON.stringify(dto));
+      const response = await api.post('/auth/verify', JSON.stringify(dto));
+      const user = (await response.json()) as User;
+      return user;
     },
-    onSuccess: () => {
+    onSuccess: async (user) => {
       toast.success('Email verified', {
         description: 'Your email has been successfully verified.',
       });
 
+      queryClient.setQueryData(['currentUser'], user);
+      router.update({context: {isAuthenticated: true, isEmailVerified: user.isEmailVerified}});
       return navigate({to: '/home'});
-    },
-    onError: (error) => {
-      if (currentUser && currentUser.isEmailVerified) {
-        toast.info('Email verified', {
-          description: 'Your email has already been verified.',
-        });
-
-        return navigate({to: '/home'});
-      }
-      throw error;
     },
     retry: false,
   });
 
-  useEffect(() => {
-    dto && mutate(dto);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  return {isPending, error};
+  return {verifyEmail, isPending};
 };

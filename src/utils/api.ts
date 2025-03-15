@@ -1,3 +1,4 @@
+import {redirect} from '@tanstack/react-router';
 import {toast} from 'sonner';
 
 export class HttpError extends Error {
@@ -11,10 +12,10 @@ export class HttpError extends Error {
 
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
-const isNoRedirectRequest = (resource: string, method?: string) => {
-  if (resource === '/auth/login') return true;
-  if (resource === '/users/me' && method === 'GET') return true;
-  return false;
+const shouldRedirect = (resource: string, method?: string) => {
+  if (resource === '/auth/login') return false;
+  if (resource === '/users/me' && method === 'GET') return false;
+  return true;
 };
 
 const request = async (resource: string, init?: RequestInit) => {
@@ -28,13 +29,21 @@ const request = async (resource: string, init?: RequestInit) => {
   });
 
   if (!response.ok) {
-    if (response.status === 401 && !isNoRedirectRequest(resource, init?.method)) {
+    if (response.status === 401 && shouldRedirect(resource, init?.method)) {
       toast.error('Your session has expired', {
         description: 'Please log in again to continue using the app.',
       });
-      throw (window.location.href = '/login');
+      throw redirect({to: '/login'});
     }
-    if (response.status == 429) {
+
+    if (response.status === 403 && resource === '/users/me') {
+      toast.error('Email not verified', {
+        description: 'Please verify your email to continue using the app.',
+      });
+      throw redirect({to: '/verify'});
+    }
+
+    if (response.status === 429) {
       throw toast.error('Rate limit exceeded', {
         description: 'Too many requests. Please try again later.',
       });

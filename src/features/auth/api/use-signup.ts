@@ -12,7 +12,7 @@ export const useSignUp = () => {
   const navigate = useNavigate();
   const router = useRouter();
 
-  const {mutate: signUp, isPending} = useMutation<User, HttpError, SignUpDto>({
+  const {mutateAsync: signUp, isPending} = useMutation<User, HttpError, SignUpDto>({
     mutationFn: async (signUpDto: SignUpDto) => {
       const response = await api.post('/auth/signup', JSON.stringify(signUpDto));
       const user = (await response.json()) as User;
@@ -20,8 +20,8 @@ export const useSignUp = () => {
     },
     onSuccess: (user) => {
       queryClient.setQueryData(['currentUser'], user);
-      router.update({context: {isAuthenticated: true}});
-      return navigate({to: '/home'});
+      router.update({context: {isAuthenticated: true, isEmailVerified: user.isEmailVerified}});
+      return navigate({to: '/verify'});
     },
     onError: (error) => {
       if (error.status === 400) {

@@ -1,12 +1,9 @@
-import {useQuery, useQueryClient} from '@tanstack/react-query';
+import {useQuery} from '@tanstack/react-query';
 
 import {User} from '@/types/user';
 import {HttpError, api} from '@/utils/api';
 
 export const useCurrentUser = ({skipFetch = false} = {}) => {
-  const queryClient = useQueryClient();
-  const cachedUser = queryClient.getQueryData<User>(['currentUser']);
-
   const {
     data: currentUser,
     isPending,
@@ -17,11 +14,11 @@ export const useCurrentUser = ({skipFetch = false} = {}) => {
       const response = await api.get('/users/me');
       return response.json();
     },
-    enabled: !skipFetch || !cachedUser,
+    enabled: !skipFetch,
     retry: false,
   });
-
   const isAuthenticated = !isPending && !!currentUser && !error;
+  const isEmailVerified = !isPending && !!currentUser && !error && currentUser?.isEmailVerified;
 
-  return {currentUser, isPending, isAuthenticated};
+  return {currentUser, isPending, isAuthenticated, isEmailVerified};
 };

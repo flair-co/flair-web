@@ -24,8 +24,8 @@ export function SignUpForm() {
     defaultValues: {email: '', name: '', password: ''},
   });
 
-  function onSubmit(formData: SignUpDto) {
-    signUp(formData, {
+  async function onSubmit(formData: SignUpDto) {
+    await signUp(formData, {
       onError: (error) => {
         if (error.status === 409) {
           form.setError(

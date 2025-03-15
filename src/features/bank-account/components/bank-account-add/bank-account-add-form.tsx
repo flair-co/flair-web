@@ -36,8 +36,8 @@ export function BankAccountAddForm({className, setOpen}: BankAccountAddFormProps
     reValidateMode: 'onChange',
   });
 
-  function onSubmit(formData: BankAccountCreateDto) {
-    createBankAccount(formData);
+  async function onSubmit(formData: BankAccountCreateDto) {
+    await createBankAccount(formData);
     setOpen(false);
   }
 

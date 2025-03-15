@@ -19,8 +19,8 @@ export const useVerifyEmail = () => {
       return user;
     },
     onSuccess: async (user) => {
-      toast.success('Email verified', {
-        description: 'Your email has been successfully verified.',
+      toast.success('Welcome to Flair!', {
+        description: 'Your email has been verified.',
       });
 
       queryClient.setQueryData(['currentUser'], user);

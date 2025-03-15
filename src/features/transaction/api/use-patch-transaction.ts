@@ -25,7 +25,7 @@ export const usePatchTransaction = () => {
   const patchTransaction = (variables: PatchTransactionVariables) => {
     return toast.promise(mutateAsync(variables), {
       loading: 'Updating transaction...',
-      success: 'Transaction updated successfully.',
+      success: 'Transaction updated.',
       error: (error: HttpError) => error.message || 'Error updating transaction',
     });
   };

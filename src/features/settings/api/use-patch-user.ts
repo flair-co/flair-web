@@ -22,7 +22,7 @@ export const usePatchUser = () => {
   const patchUser = (dto: NameDto) => {
     return toast.promise(mutateAsync(dto), {
       loading: 'Saving name...',
-      success: 'Name saved successfully.',
+      success: 'Name saved.',
       error: 'Your name could not be saved. Please try again',
     });
   };

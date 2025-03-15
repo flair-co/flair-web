@@ -62,7 +62,7 @@ export const useUploadBankStatement = (
         }),
       {
         loading: 'Uploading file...',
-        success: 'Bank statement uploaded successfully',
+        success: 'Bank statement uploaded.',
         error: (error: HttpError) => error.message || 'Error uploading file',
       },
     );

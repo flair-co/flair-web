@@ -6,9 +6,13 @@ import {AppHeader} from '@/components/shared/layout/app-header';
 import {Button} from '@/components/ui/button';
 import {SettingsBreadcrumb} from '@/features/settings/components/settings-breadcrumb';
 import {cn} from '@/utils/cn';
+import {handleAuthenticatedRedirect} from '@/utils/handle-redirect';
 
 export const Route = createFileRoute('/settings')({
   component: SettingsIndex,
+  beforeLoad: ({context}) => {
+    handleAuthenticatedRedirect(context);
+  },
 });
 
 const navItems = [

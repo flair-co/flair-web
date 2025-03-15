@@ -1,4 +1,4 @@
-import {createFileRoute, redirect} from '@tanstack/react-router';
+import {createFileRoute} from '@tanstack/react-router';
 import {zodValidator} from '@tanstack/zod-adapter';
 
 import {AppBody} from '@/components/shared/layout/app-body';
@@ -10,14 +10,13 @@ import {BankStatementCalendarView} from '@/features/bank-statement/components/ba
 import {BankStatementTable} from '@/features/bank-statement/components/bank-statement-table/bank-statement-table';
 import {BankStatementUploadDialog} from '@/features/bank-statement/components/bank-statement-upload/bank-statement-upload-dialog';
 import {paginationSearchParamsSchema} from '@/types/pagination';
+import {handleAuthenticatedRedirect} from '@/utils/handle-redirect';
 
 export const Route = createFileRoute('/bank-accounts/$bankAccountId/bank-statements/')({
   component: BankStatementsIndex,
   validateSearch: zodValidator(paginationSearchParamsSchema),
   beforeLoad: ({context}) => {
-    if (!context.isAuthenticated) {
-      throw redirect({to: '/login'});
-    }
+    handleAuthenticatedRedirect(context);
   },
 });
 

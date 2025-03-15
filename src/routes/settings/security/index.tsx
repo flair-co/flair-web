@@ -6,9 +6,13 @@ import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/compo
 import {Separator} from '@/components/ui/separator';
 import {Skeleton} from '@/components/ui/skeleton';
 import {useCurrentUser} from '@/hooks/use-current-user';
+import {handleAuthenticatedRedirect} from '@/utils/handle-redirect';
 
 export const Route = createFileRoute('/settings/security/')({
   component: SettingsSecurityIndex,
+  beforeLoad: ({context}) => {
+    handleAuthenticatedRedirect(context);
+  },
 });
 
 function SettingsSecurityIndex() {

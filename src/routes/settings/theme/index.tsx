@@ -3,9 +3,13 @@ import {createFileRoute} from '@tanstack/react-router';
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
 import {Separator} from '@/components/ui/separator';
 import {ThemeSwitcher} from '@/features/settings/components/theme-switcher';
+import {handleAuthenticatedRedirect} from '@/utils/handle-redirect';
 
 export const Route = createFileRoute('/settings/theme/')({
   component: SettingsThemeIndex,
+  beforeLoad: ({context}) => {
+    handleAuthenticatedRedirect(context);
+  },
 });
 
 function SettingsThemeIndex() {

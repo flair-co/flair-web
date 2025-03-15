@@ -1,4 +1,4 @@
-import {createFileRoute, redirect} from '@tanstack/react-router';
+import {createFileRoute} from '@tanstack/react-router';
 import {zodValidator} from '@tanstack/zod-adapter';
 
 import {AppBody} from '@/components/shared/layout/app-body';
@@ -8,14 +8,13 @@ import {useGetAllTransactions} from '@/features/transaction/api/use-get-all-tran
 import {TransactionBreadcrumb} from '@/features/transaction/components/transaction-breadcrumb';
 import {TransactionsTable} from '@/features/transaction/components/transaction-table/transaction-table';
 import {transactionSearchParamsSchema} from '@/features/transaction/types/search-params';
+import {handleAuthenticatedRedirect} from '@/utils/handle-redirect';
 
 export const Route = createFileRoute('/transactions/')({
   component: TransactionsIndex,
   validateSearch: zodValidator(transactionSearchParamsSchema),
   beforeLoad: ({context}) => {
-    if (!context.isAuthenticated) {
-      throw redirect({to: '/login', search: {redirect: location.href}});
-    }
+    handleAuthenticatedRedirect(context);
   },
 });
 

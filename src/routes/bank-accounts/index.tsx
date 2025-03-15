@@ -1,4 +1,4 @@
-import {createFileRoute, redirect} from '@tanstack/react-router';
+import {createFileRoute} from '@tanstack/react-router';
 
 import {BackButton} from '@/components/shared/back-button';
 import {AppBody} from '@/components/shared/layout/app-body';
@@ -8,13 +8,12 @@ import {useGetAllBankAccounts} from '@/features/bank-account/api/use-get-all-acc
 import {BankAccountAddDialog} from '@/features/bank-account/components/bank-account-add/bank-account-add-dialog';
 import {BankAccountBreadcrumb} from '@/features/bank-account/components/bank-account-breadcrumb';
 import {BankAccountList} from '@/features/bank-account/components/bank-account-list';
+import {handleAuthenticatedRedirect} from '@/utils/handle-redirect';
 
 export const Route = createFileRoute('/bank-accounts/')({
   component: BankAccountsIndex,
   beforeLoad: ({context}) => {
-    if (!context.isAuthenticated) {
-      throw redirect({to: '/login'});
-    }
+    handleAuthenticatedRedirect(context);
   },
 });
 

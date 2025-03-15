@@ -1,4 +1,4 @@
-import {createFileRoute, redirect} from '@tanstack/react-router';
+import {createFileRoute} from '@tanstack/react-router';
 
 import {BackButton} from '@/components/shared/back-button';
 import {AppBody} from '@/components/shared/layout/app-body';
@@ -7,13 +7,12 @@ import {LoadingBar} from '@/components/shared/loading-bar';
 import {useGetTransaction} from '@/features/transaction/api/use-get-transaction';
 import {TransactionBreadcrumb} from '@/features/transaction/components/transaction-breadcrumb';
 import {TransactionCard} from '@/features/transaction/components/transaction-card/transaction-card';
+import {handleAuthenticatedRedirect} from '@/utils/handle-redirect';
 
 export const Route = createFileRoute('/transactions/$transactionId/')({
   component: TransactionIndex,
   beforeLoad: ({context}) => {
-    if (!context.isAuthenticated) {
-      throw redirect({to: '/login'});
-    }
+    handleAuthenticatedRedirect(context);
   },
 });
 

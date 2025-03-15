@@ -9,9 +9,13 @@ import {Separator} from '@/components/ui/separator';
 import {Skeleton} from '@/components/ui/skeleton';
 import {NameChangeForm} from '@/features/settings/components/name-change-form';
 import {useCurrentUser} from '@/hooks/use-current-user';
+import {handleAuthenticatedRedirect} from '@/utils/handle-redirect';
 
 export const Route = createFileRoute('/settings/account/')({
   component: SettingsAccountIndex,
+  beforeLoad: ({context}) => {
+    handleAuthenticatedRedirect(context);
+  },
 });
 
 function SettingsAccountIndex() {
@@ -46,7 +50,7 @@ function SettingsAccountIndex() {
           <div className='flex w-full flex-col items-start gap-4 md:w-fit md:flex-row md:items-center lg:gap-5 xl:gap-10'>
             <div className='mt-4 flex md:mt-0 md:block md:text-right'>
               <p className='mb-1'>{currentUser.email}</p>
-              <div className='ml-2 flex items-center justify-end text-success sm:ml-0'>
+              <div className='ml-2 flex items-center justify-end text-success md:ml-0'>
                 {currentUser.isEmailVerified ? (
                   <Badge className='h-fit whitespace-nowrap bg-success-foreground hover:bg-success-foreground'>
                     <ShieldCheck className='mr-1 h-4 w-4' />
@@ -60,7 +64,11 @@ function SettingsAccountIndex() {
                 )}
               </div>
             </div>
-            <Button variant='outline' className='w-full md:w-fit'>
+            <Button
+              variant='outline'
+              className='w-full md:w-fit'
+              disabled={!currentUser.isEmailVerified}
+            >
               <PencilLine />
               Change email
             </Button>

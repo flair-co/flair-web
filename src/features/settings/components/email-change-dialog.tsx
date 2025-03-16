@@ -62,7 +62,7 @@ export function EmailChangeDialog({currentEmail}: EmailChangeDialogProps) {
       ) : (
         <>
           We&apos;ve sent a 6-digit verification code to{' '}
-          <span className='text-foreground'>eduard.ciociu22@gmail.com</span>
+          <span className='text-foreground'>{currentEmail}</span>
         </>
       ),
   };

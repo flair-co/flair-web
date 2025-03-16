@@ -1,8 +1,7 @@
 import {createFileRoute} from '@tanstack/react-router';
-import {ShieldCheck, ShieldX} from 'lucide-react';
+import {ShieldX} from 'lucide-react';
 
 import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert';
-import {Badge} from '@/components/ui/badge';
 import {Button} from '@/components/ui/button';
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
 import {Separator} from '@/components/ui/separator';
@@ -44,29 +43,9 @@ function SettingsAccountIndex() {
         <div className='flex flex-col items-start justify-between md:flex-row md:items-center'>
           <div>
             <h2 className='mb-1 text-lg font-medium'>Email address</h2>
-            <p className='mr-8 text-sm text-muted-foreground'>
-              Your email is used to log in to your account.
-            </p>
+            <p className='mr-8 text-sm text-muted-foreground'>{currentUser.email}</p>
           </div>
-          <div className='flex w-full flex-col items-start gap-4 md:w-fit md:flex-row md:items-center lg:gap-5 xl:gap-10'>
-            <div className='mt-4 flex md:mt-0 md:block md:text-right'>
-              <p className='mb-1'>{currentUser.email}</p>
-              <div className='ml-2 flex items-center justify-end text-success md:ml-0'>
-                {currentUser.isEmailVerified ? (
-                  <Badge className='h-fit whitespace-nowrap bg-success-foreground hover:bg-success-foreground'>
-                    <ShieldCheck className='mr-1 h-4 w-4' />
-                    Verified
-                  </Badge>
-                ) : (
-                  <Badge className='h-fit whitespace-nowrap bg-warning-foreground hover:bg-warning-foreground'>
-                    <ShieldX className='mr-1 h-4 w-4' />
-                    Unverified
-                  </Badge>
-                )}
-              </div>
-            </div>
-            <EmailChangeDialog currentEmail={currentUser.email} />
-          </div>
+          <EmailChangeDialog currentEmail={currentUser.email} />
         </div>
         {!currentUser.isEmailVerified && (
           <Alert className='mt-6 border-warning bg-warning-foreground'>

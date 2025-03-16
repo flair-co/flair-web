@@ -4,12 +4,12 @@ import {toast} from 'sonner';
 import {User} from '@/types/user';
 import {HttpError, api} from '@/utils/api';
 
-import {NameDto} from '../types/name.dto';
+import {NameChangeDto} from '../types/name-change.dto';
 
 export const usePatchUser = () => {
   const queryClient = useQueryClient();
 
-  const {mutateAsync, isPending} = useMutation<User, HttpError, NameDto>({
+  const {mutateAsync, isPending} = useMutation<User, HttpError, NameChangeDto>({
     mutationFn: async (dto) => {
       const response = await api.patch('/users/me', JSON.stringify(dto));
       return response.json();
@@ -19,7 +19,7 @@ export const usePatchUser = () => {
     },
   });
 
-  const patchUser = (dto: NameDto) => {
+  const patchUser = (dto: NameChangeDto) => {
     return toast.promise(mutateAsync(dto), {
       loading: 'Saving name...',
       success: 'Name saved.',

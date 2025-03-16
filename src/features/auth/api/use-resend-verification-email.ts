@@ -18,7 +18,7 @@ export const useResendVerificationEmail = () => {
       if (!isAuthenticated) {
         throw navigate({to: '/login', search: {returnTo: location.pathname}});
       }
-      await api.post('/auth/resend');
+      await api.post('/auth/signup/resend');
     },
     onSuccess: () => {
       toast.success('New verification code sent', {

@@ -1,5 +1,5 @@
 import {createFileRoute} from '@tanstack/react-router';
-import {PencilLine, ShieldCheck, ShieldX} from 'lucide-react';
+import {ShieldCheck, ShieldX} from 'lucide-react';
 
 import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert';
 import {Badge} from '@/components/ui/badge';
@@ -7,6 +7,7 @@ import {Button} from '@/components/ui/button';
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
 import {Separator} from '@/components/ui/separator';
 import {Skeleton} from '@/components/ui/skeleton';
+import {EmailChangeDialog} from '@/features/settings/components/email-change-dialog';
 import {NameChangeForm} from '@/features/settings/components/name-change-form';
 import {useCurrentUser} from '@/hooks/use-current-user';
 import {handleAuthenticatedRedirect} from '@/utils/handle-redirect';
@@ -64,14 +65,7 @@ function SettingsAccountIndex() {
                 )}
               </div>
             </div>
-            <Button
-              variant='outline'
-              className='w-full md:w-fit'
-              disabled={!currentUser.isEmailVerified}
-            >
-              <PencilLine />
-              Change email
-            </Button>
+            <EmailChangeDialog currentEmail={currentUser.email} />
           </div>
         </div>
         {!currentUser.isEmailVerified && (

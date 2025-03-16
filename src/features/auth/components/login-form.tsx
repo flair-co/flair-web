@@ -122,6 +122,7 @@ export function LogInForm({returnTo}: LogInFormProps) {
                                 'rounded-l-none border-l-0',
                                 fieldState.error && 'border-destructive',
                               )}
+                              disabled={isPending}
                             >
                               {isPasswordVisible ? (
                                 <EyeOff className='w-4 text-muted-foreground' />

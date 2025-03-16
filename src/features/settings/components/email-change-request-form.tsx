@@ -21,6 +21,7 @@ type EmailChangeRequestFormProps = {
   setStep: React.Dispatch<React.SetStateAction<'change' | 'verify'>>;
   resendCooldown: number;
   setResendCooldown: React.Dispatch<React.SetStateAction<number>>;
+  resetAfterSuccess: () => void;
 };
 
 export function EmailChangeRequestForm({
@@ -30,6 +31,7 @@ export function EmailChangeRequestForm({
   setStep,
   resendCooldown,
   setResendCooldown,
+  resetAfterSuccess,
 }: EmailChangeRequestFormProps) {
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
   const isDesktop = useMediaQuery('(min-width: 768px)');
@@ -195,6 +197,7 @@ export function EmailChangeRequestForm({
           emailChangeFormData={form.getValues()}
           resendCooldown={resendCooldown}
           setResendCooldown={setResendCooldown}
+          resetAfterSuccess={resetAfterSuccess}
         />
       )}
     </div>

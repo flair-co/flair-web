@@ -19,7 +19,7 @@ export const emailChangeDtoSchema = z
       .max(255, 'Too long. Must be less than 256 characters.'),
   })
   .refine((data) => data.newEmail === data.confirmNewEmail, {
-    message: 'Email addresses do not match.',
+    message: 'Emails do not match.',
     path: ['confirmNewEmail'],
   });
 

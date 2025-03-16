@@ -39,6 +39,12 @@ export function EmailChangeDialog({currentEmail}: EmailChangeDialogProps) {
   const [resendCooldown, setResendCooldown] = useState(0);
   const isDesktop = useMediaQuery('(min-width: 768px)');
 
+  const resetAfterSuccess = () => {
+    form.reset();
+    setStep('change');
+    setResendCooldown(0);
+  };
+
   const form = useForm<EmailChangeDto>({
     resolver: zodResolver(emailChangeDtoSchema),
     mode: 'onChange',
@@ -75,8 +81,10 @@ export function EmailChangeDialog({currentEmail}: EmailChangeDialogProps) {
       setStep={setStep}
       resendCooldown={resendCooldown}
       setResendCooldown={setResendCooldown}
+      resetAfterSuccess={resetAfterSuccess}
     />
   );
+
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>

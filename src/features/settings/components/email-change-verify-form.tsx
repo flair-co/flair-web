@@ -19,6 +19,7 @@ type EmailChangeVerifyFormProps = {
   emailChangeFormData: EmailChangeDto;
   resendCooldown: number;
   setResendCooldown: React.Dispatch<React.SetStateAction<number>>;
+  resetAfterSuccess: () => void;
 };
 
 export function EmailChangeVerifyForm({
@@ -26,6 +27,7 @@ export function EmailChangeVerifyForm({
   emailChangeFormData,
   resendCooldown,
   setResendCooldown,
+  resetAfterSuccess,
 }: EmailChangeVerifyFormProps) {
   const {changeEmailVerify, isPending: isVerifying} = useChangeEmailVerify();
   const {changeEmailRequest, isPending: isRequesting} = useChangeEmailRequest();
@@ -57,9 +59,8 @@ export function EmailChangeVerifyForm({
         }
       },
       onSuccess: () => {
-        toast.success('Email verified', {
-          description: `Your email has been changed to ${emailChangeFormData.newEmail}.`,
-        });
+        form.reset();
+        resetAfterSuccess();
         setOpen(false);
       },
     });

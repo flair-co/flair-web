@@ -1,18 +1,16 @@
 import {zodResolver} from '@hookform/resolvers/zod';
-import {Eye, EyeOff, Loader} from 'lucide-react';
-import {useState} from 'react';
+import {Loader} from 'lucide-react';
 import {useForm} from 'react-hook-form';
 
 import {Button} from '@/components/ui/button';
 import {DialogClose, DialogFooter} from '@/components/ui/dialog';
-import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from '@/components/ui/form';
-import {Input} from '@/components/ui/input';
-import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from '@/components/ui/tooltip';
+import {Form, FormField} from '@/components/ui/form';
 import {useMediaQuery} from '@/hooks/use-media-query';
 import {cn} from '@/utils/cn';
 
 import {useChangePassword} from '../api/use-change-password';
 import {PasswordChangeDto, passwordChangeDtoSchema} from '../types/password-change.dto';
+import {PasswordField} from './password-field';
 
 type PasswordChangeFormProps = {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -20,7 +18,6 @@ type PasswordChangeFormProps = {
 
 export function PasswordChangeForm({setOpen}: PasswordChangeFormProps) {
   const isDesktop = useMediaQuery('(min-width: 768px)');
-  const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
 
   const form = useForm<PasswordChangeDto>({
     resolver: zodResolver(passwordChangeDtoSchema),
@@ -59,165 +56,42 @@ export function PasswordChangeForm({setOpen}: PasswordChangeFormProps) {
             control={form.control}
             name='currentPassword'
             render={({field, fieldState}) => (
-              <FormItem>
-                <FormLabel>Current Password</FormLabel>
-                <FormControl>
-                  <div className='flex'>
-                    <Input
-                      {...field}
-                      id='current-password'
-                      type={isPasswordVisible ? 'text' : 'password'}
-                      autoCapitalize='none'
-                      autoComplete='current-password'
-                      autoCorrect='off'
-                      disabled={isPending}
-                      className={cn(
-                        'z-10',
-                        field.value && 'rounded-r-none border-r-0',
-                        fieldState.error && 'border-destructive',
-                      )}
-                    />
-                    {field.value && (
-                      <TooltipProvider delayDuration={500}>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              onClick={() => setIsPasswordVisible(!isPasswordVisible)}
-                              variant='outline'
-                              type='button'
-                              className={cn(
-                                'rounded-l-none border-l-0',
-                                fieldState.error && 'border-destructive',
-                              )}
-                              disabled={isPending}
-                            >
-                              {isPasswordVisible ? (
-                                <EyeOff className='w-4 text-muted-foreground' />
-                              ) : (
-                                <Eye className='w-4 text-muted-foreground' />
-                              )}
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>{isPasswordVisible ? 'Hide password' : 'Show password'}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    )}
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+              <PasswordField<PasswordChangeDto, 'currentPassword'>
+                field={field}
+                fieldState={fieldState}
+                label='Current Password'
+                id='current-password'
+                autoComplete='current-password'
+                disabled={isPending}
+              />
             )}
           />
           <FormField
             control={form.control}
             name='newPassword'
             render={({field, fieldState}) => (
-              <FormItem>
-                <FormLabel>New password</FormLabel>
-                <FormControl>
-                  <div className='flex'>
-                    <Input
-                      {...field}
-                      id='new-password'
-                      type={isPasswordVisible ? 'text' : 'password'}
-                      autoCapitalize='none'
-                      autoComplete='new-password'
-                      autoCorrect='off'
-                      disabled={isPending}
-                      className={cn(
-                        'z-10',
-                        field.value && 'rounded-r-none border-r-0',
-                        fieldState.error && 'border-destructive',
-                      )}
-                    />
-                    {field.value && (
-                      <TooltipProvider delayDuration={500}>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              onClick={() => setIsPasswordVisible(!isPasswordVisible)}
-                              variant='outline'
-                              type='button'
-                              className={cn(
-                                'rounded-l-none border-l-0',
-                                fieldState.error && 'border-destructive',
-                              )}
-                              disabled={isPending}
-                            >
-                              {isPasswordVisible ? (
-                                <EyeOff className='w-4 text-muted-foreground' />
-                              ) : (
-                                <Eye className='w-4 text-muted-foreground' />
-                              )}
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>{isPasswordVisible ? 'Hide password' : 'Show password'}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    )}
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+              <PasswordField<PasswordChangeDto, 'newPassword'>
+                field={field}
+                fieldState={fieldState}
+                label='New password'
+                id='new-password'
+                autoComplete='new-password'
+                disabled={isPending}
+              />
             )}
           />
           <FormField
             control={form.control}
             name='confirmNewPassword'
             render={({field, fieldState}) => (
-              <FormItem>
-                <FormLabel>Confirm new password</FormLabel>
-                <FormControl>
-                  <div className='flex'>
-                    <Input
-                      {...field}
-                      id='confirm-new-password'
-                      type={isPasswordVisible ? 'text' : 'password'}
-                      autoCapitalize='none'
-                      autoComplete='new-password'
-                      autoCorrect='off'
-                      disabled={isPending}
-                      className={cn(
-                        'z-10',
-                        field.value && 'rounded-r-none border-r-0',
-                        fieldState.error && 'border-destructive',
-                      )}
-                    />
-                    {field.value && (
-                      <TooltipProvider delayDuration={500}>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              onClick={() => setIsPasswordVisible(!isPasswordVisible)}
-                              variant='outline'
-                              type='button'
-                              className={cn(
-                                'rounded-l-none border-l-0',
-                                fieldState.error && 'border-destructive',
-                              )}
-                              disabled={isPending}
-                            >
-                              {isPasswordVisible ? (
-                                <EyeOff className='w-4 text-muted-foreground' />
-                              ) : (
-                                <Eye className='w-4 text-muted-foreground' />
-                              )}
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>{isPasswordVisible ? 'Hide password' : 'Show password'}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    )}
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+              <PasswordField<PasswordChangeDto, 'confirmNewPassword'>
+                field={field}
+                fieldState={fieldState}
+                label='Confirm new password'
+                id='confirm-new-password'
+                autoComplete='new-password'
+                disabled={isPending}
+              />
             )}
           />
           <div className='mt-4 flex w-full gap-4'>

@@ -8,7 +8,7 @@ import {Input} from '@/components/ui/input';
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from '@/components/ui/tooltip';
 import {cn} from '@/utils/cn';
 
-type PasswordFieldProps<T extends FieldValues, K extends FieldPath<T>> = {
+type PasswordInputFieldProps<T extends FieldValues, K extends FieldPath<T>> = {
   field: ControllerRenderProps<T, K>;
   fieldState: ControllerFieldState;
   label: string;
@@ -17,14 +17,14 @@ type PasswordFieldProps<T extends FieldValues, K extends FieldPath<T>> = {
   disabled?: boolean;
 };
 
-export function PasswordField<T extends FieldValues, K extends FieldPath<T>>({
+export function PasswordInputField<T extends FieldValues, K extends FieldPath<T>>({
   field,
   fieldState,
   label,
   id,
   autoComplete,
   disabled = false,
-}: PasswordFieldProps<T, K>) {
+}: PasswordInputFieldProps<T, K>) {
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
 
   return (

@@ -5,12 +5,12 @@ import {useForm} from 'react-hook-form';
 import {Button} from '@/components/ui/button';
 import {DialogClose, DialogFooter} from '@/components/ui/dialog';
 import {Form, FormField} from '@/components/ui/form';
+import {PasswordInputField} from '@/components/ui/password-input-field';
 import {useMediaQuery} from '@/hooks/use-media-query';
 import {cn} from '@/utils/cn';
 
 import {useChangePassword} from '../api/use-change-password';
 import {PasswordChangeDto, passwordChangeDtoSchema} from '../types/password-change.dto';
-import {PasswordField} from './password-field';
 
 type PasswordChangeFormProps = {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -56,7 +56,7 @@ export function PasswordChangeForm({setOpen}: PasswordChangeFormProps) {
             control={form.control}
             name='currentPassword'
             render={({field, fieldState}) => (
-              <PasswordField<PasswordChangeDto, 'currentPassword'>
+              <PasswordInputField<PasswordChangeDto, 'currentPassword'>
                 field={field}
                 fieldState={fieldState}
                 label='Current Password'
@@ -70,7 +70,7 @@ export function PasswordChangeForm({setOpen}: PasswordChangeFormProps) {
             control={form.control}
             name='newPassword'
             render={({field, fieldState}) => (
-              <PasswordField<PasswordChangeDto, 'newPassword'>
+              <PasswordInputField<PasswordChangeDto, 'newPassword'>
                 field={field}
                 fieldState={fieldState}
                 label='New password'
@@ -84,7 +84,7 @@ export function PasswordChangeForm({setOpen}: PasswordChangeFormProps) {
             control={form.control}
             name='confirmNewPassword'
             render={({field, fieldState}) => (
-              <PasswordField<PasswordChangeDto, 'confirmNewPassword'>
+              <PasswordInputField<PasswordChangeDto, 'confirmNewPassword'>
                 field={field}
                 fieldState={fieldState}
                 label='Confirm new password'

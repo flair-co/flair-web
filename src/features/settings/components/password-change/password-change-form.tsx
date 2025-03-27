@@ -9,8 +9,8 @@ import {PasswordInputField} from '@/components/ui/password-input-field';
 import {useMediaQuery} from '@/hooks/use-media-query';
 import {cn} from '@/utils/cn';
 
-import {useChangePassword} from '../api/use-change-password';
-import {PasswordChangeDto, passwordChangeDtoSchema} from '../types/password-change.dto';
+import {useChangePassword} from '../../api/use-change-password';
+import {PasswordChangeDto, passwordChangeDtoSchema} from '../../types/password-change.dto';
 
 type PasswordChangeFormProps = {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;

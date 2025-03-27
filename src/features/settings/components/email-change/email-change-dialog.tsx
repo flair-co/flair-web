@@ -26,7 +26,7 @@ import {useMediaQuery} from '@/hooks/use-media-query';
 import {User} from '@/types/user';
 import {cn} from '@/utils/cn';
 
-import {EmailChangeDto, emailChangeDtoSchema} from '../types/email-change.dto';
+import {EmailChangeDto, emailChangeDtoSchema} from '../../types/email-change.dto';
 import {EmailChangeRequestForm} from './email-change-request-form';
 
 type EmailChangeDialogProps = {

@@ -5,7 +5,7 @@ import {Button} from '@/components/ui/button';
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
 import {Separator} from '@/components/ui/separator';
 import {Skeleton} from '@/components/ui/skeleton';
-import {PasswordChangeDialog} from '@/features/settings/components/password-change-dialog';
+import {PasswordChangeDialog} from '@/features/settings/components/password-change/password-change-dialog';
 import {useCurrentUser} from '@/hooks/use-current-user';
 import {handleAuthenticatedRedirect} from '@/utils/handle-redirect';
 

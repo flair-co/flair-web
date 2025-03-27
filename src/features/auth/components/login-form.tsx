@@ -25,7 +25,7 @@ export function LogInForm({returnTo}: LogInFormProps) {
 
   const form = useForm<LogInDto>({
     resolver: zodResolver(logInDtoSchema),
-    mode: 'onTouched',
+    mode: 'onBlur',
     reValidateMode: 'onChange',
     defaultValues: {email: '', password: ''},
   });

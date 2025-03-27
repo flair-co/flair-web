@@ -47,7 +47,7 @@ export function EmailChangeDialog({currentEmail}: EmailChangeDialogProps) {
 
   const form = useForm<EmailChangeDto>({
     resolver: zodResolver(emailChangeDtoSchema),
-    mode: 'onChange',
+    mode: 'onBlur',
     reValidateMode: 'onChange',
   });
 

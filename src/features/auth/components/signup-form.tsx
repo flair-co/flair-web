@@ -19,7 +19,7 @@ export function SignUpForm() {
 
   const form = useForm<SignUpDto>({
     resolver: zodResolver(signUpDtoSchema),
-    mode: 'onTouched',
+    mode: 'onBlur',
     reValidateMode: 'onChange',
     defaultValues: {email: '', name: '', password: ''},
   });

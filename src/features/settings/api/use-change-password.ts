@@ -8,8 +8,7 @@ import {PasswordChangeDto} from '../types/password-change.dto';
 export const useChangePassword = () => {
   const {mutateAsync: changePassword, isPending} = useMutation<void, HttpError, PasswordChangeDto>({
     mutationFn: async (dto) => {
-      const response = await api.post('/auth/change-password', JSON.stringify(dto));
-      return response.json();
+      await api.post('/auth/change-password', JSON.stringify(dto));
     },
     onSuccess: () => {
       toast.success('Password changed.');

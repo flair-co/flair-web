@@ -1,8 +1,5 @@
 import {createFileRoute} from '@tanstack/react-router';
-import {ShieldX} from 'lucide-react';
 
-import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert';
-import {Button} from '@/components/ui/button';
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
 import {Separator} from '@/components/ui/separator';
 import {Skeleton} from '@/components/ui/skeleton';
@@ -47,20 +44,6 @@ function SettingsAccountIndex() {
           </div>
           <EmailChangeDialog currentEmail={currentUser.email} />
         </div>
-        {!currentUser.isEmailVerified && (
-          <Alert className='mt-6 border-warning bg-warning-foreground'>
-            <ShieldX className='h-5 w-5' />
-            <AlertTitle>Your email is not verified</AlertTitle>
-            <AlertDescription className='flex flex-col'>
-              <span className='text-muted-foreground'>
-                Verify your email to unlock all features and ensure your account&apos;s security.
-              </span>
-              <Button className='mt-4 w-full sm:mt-2 sm:w-fit' variant='default'>
-                Send verification link
-              </Button>
-            </AlertDescription>
-          </Alert>
-        )}
       </CardContent>
     </Card>
   );

@@ -6,6 +6,7 @@ import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/compo
 import {Separator} from '@/components/ui/separator';
 import {Skeleton} from '@/components/ui/skeleton';
 import {PasswordChangeDialog} from '@/features/settings/components/password-change/password-change-dialog';
+import {SessionList} from '@/features/settings/components/session/session-list';
 import {useCurrentUser} from '@/hooks/use-current-user';
 import {handleAuthenticatedRedirect} from '@/utils/handle-redirect';
 
@@ -31,6 +32,8 @@ function SettingsSecurityIndex() {
       </CardHeader>
       <CardContent>
         <Separator className='mb-6 bg-muted' />
+        <SessionList />
+        <Separator className='my-6 bg-muted' />
         <div className='mt-4'>
           <div className='flex flex-col items-start justify-between sm:flex-row sm:items-center'>
             <div>

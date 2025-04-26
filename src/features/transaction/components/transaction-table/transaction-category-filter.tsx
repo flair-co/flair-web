@@ -80,7 +80,7 @@ export function TransactionCategoryFilter({filters, setFilters}: TransactionCate
               </div>
             </>
           )}
-          <ChevronDown />
+          <ChevronDown className='text-muted-foreground' />
         </Button>
       </PopoverTrigger>
       <PopoverContent className='w-[14rem] p-0' align='start'>

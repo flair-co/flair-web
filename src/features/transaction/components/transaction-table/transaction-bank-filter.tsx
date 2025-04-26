@@ -1,6 +1,7 @@
 import {useNavigate} from '@tanstack/react-router';
-import {Check, ChevronDown, Landmark} from 'lucide-react';
+import {Check, ChevronDown, Landmark, Loader2} from 'lucide-react';
 import * as React from 'react';
+import {useMemo} from 'react';
 
 import {BankIcon} from '@/components/shared/bank-icon';
 import {Badge} from '@/components/ui/badge';
@@ -16,6 +17,7 @@ import {
 import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover';
 import {ScrollArea} from '@/components/ui/scroll-area';
 import {Separator} from '@/components/ui/separator';
+import {useGetAllBankAccounts} from '@/features/bank-account/api/use-get-all-accounts';
 import {Bank} from '@/types/bank';
 import {cn} from '@/utils/cn';
 
@@ -28,6 +30,15 @@ type TransactionBankFilterProps = {
 
 export function TransactionBankFilter({filters, setFilters}: TransactionBankFilterProps) {
   const navigate = useNavigate({from: '/transactions'});
+
+  const {bankAccounts, isPending} = useGetAllBankAccounts();
+
+  const userBanks = useMemo(() => {
+    if (!bankAccounts) return [];
+    const banks = new Set(bankAccounts.map((account) => account.bank));
+    
+    return Array.from(banks);
+  }, [bankAccounts]);
 
   const selectedValues = filters.banks || [];
 
@@ -51,53 +62,62 @@ export function TransactionBankFilter({filters, setFilters}: TransactionBankFilt
     setFilters((prev) => ({...prev, banks: []}));
   };
 
+  const isDisabled = isPending || userBanks.length === 0;
+
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button
           variant='outline'
           size='sm'
-          className={cn('h-8', selectedValues.length === 0 ? 'border-dashed' : 'border')}
+          disabled={isDisabled}
+          className={cn(
+            'h-8',
+            selectedValues.length === 0 && !isDisabled ? 'border-dashed' : 'border',
+            isDisabled && 'cursor-not-allowed opacity-50',
+          )}
         >
-          <Landmark />
-          Bank account
-          {selectedValues.length > 0 && (
+          {isPending ? (
+            <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+          ) : (
+            <Landmark className='mr-2 h-4 w-4' />
+          )}
+          Bank
+          {selectedValues.length > 0 && !isDisabled && (
             <>
               <Separator orientation='vertical' className='mx-2 h-4' />
               <Badge variant='secondary' className='rounded-sm px-1 font-normal lg:hidden'>
                 {selectedValues.length}
               </Badge>
               <div className='hidden space-x-1 lg:flex'>
-                {selectedValues.length > 3 ? (
+                {selectedValues.length > 2 ? (
                   <Badge variant='secondary' className='rounded-sm px-2 font-normal'>
                     {selectedValues.length} selected
                   </Badge>
                 ) : (
-                  selectedValues.map((bank) => {
-                    return (
-                      <div
-                        className='flex items-center rounded-md bg-accent px-2 py-[1px]'
-                        key={bank}
-                      >
-                        <BankIcon key={bank} bank={bank} className='mr-2 w-4' />
-                        {bank}
-                      </div>
-                    );
-                  })
+                  selectedValues.map((bank) => (
+                    <div
+                      className='flex items-center rounded bg-accent px-[6px] py-[3px]'
+                      key={bank}
+                    >
+                      <BankIcon key={bank} bank={bank} className='mr-1 w-10' />{' '}
+                      <span className='text-xs'>{bank}</span>
+                    </div>
+                  ))
                 )}
               </div>
             </>
           )}
-          <ChevronDown />
+          <ChevronDown className='text-muted-foreground' />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className='w-[165px] p-0' align='start'>
+      <PopoverContent className='w-[180px] p-0' align='start'>
         <Command>
-          <ScrollArea className='h-fit'>
+          <ScrollArea className='h-fit max-h-[200px]'>
             <CommandList>
-              <CommandEmpty>No results found.</CommandEmpty>
+              <CommandEmpty>No banks found.</CommandEmpty>
               <CommandGroup>
-                {Object.values(Bank).map((bank) => {
+                {userBanks.map((bank) => {
                   const isSelected = selectedValues.includes(bank);
                   return (
                     <CommandItem key={bank} onSelect={() => handleSelect(bank)}>

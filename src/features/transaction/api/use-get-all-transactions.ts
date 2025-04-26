@@ -39,7 +39,7 @@ export const useGetAllTransactions = (searchParams: TransactionSearchParams) => 
       if (filters.categories) {
         filters.categories.forEach((category) => params.append('filter[categories][]', category));
       }
-      
+
       if (filters.startedAt) {
         params.append('filter[startedAt][from]', filters.startedAt.from.toISOString());
         if (filters.startedAt.to) {

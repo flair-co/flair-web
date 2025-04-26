@@ -36,7 +36,7 @@ export function TransactionBankFilter({filters, setFilters}: TransactionBankFilt
   const userBanks = useMemo(() => {
     if (!bankAccounts) return [];
     const banks = new Set(bankAccounts.map((account) => account.bank));
-    
+
     return Array.from(banks);
   }, [bankAccounts]);
 

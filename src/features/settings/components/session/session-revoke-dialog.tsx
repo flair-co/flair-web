@@ -1,11 +1,13 @@
-import {Trash2} from 'lucide-react';
+import {Loader, Trash2} from 'lucide-react';
 import {useState} from 'react';
 
 import {Button} from '@/components/ui/button';
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -22,9 +24,9 @@ import {
 } from '@/components/ui/drawer';
 import {useMediaQuery} from '@/hooks/use-media-query';
 
+import {useRevokeSession} from '../../api/use-revoke-session';
 import {Session} from '../../types/session';
 import {SessionCard} from './session-card';
-import {SessionRevokeForm} from './session-revoke-form';
 
 type SessionRevokeDialogProps = {
   session: Session;
@@ -33,6 +35,14 @@ type SessionRevokeDialogProps = {
 export function SessionRevokeDialog({session}: SessionRevokeDialogProps) {
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const [isOpen, setIsOpen] = useState(false);
+
+  const {revokeSession, isPending} = useRevokeSession();
+
+  const handleRevoke = async () => {
+    await revokeSession({id: session.id});
+    setIsOpen(false);
+  };
+
   if (isDesktop) {
     return (
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -50,7 +60,29 @@ export function SessionRevokeDialog({session}: SessionRevokeDialogProps) {
             </DialogDescription>
           </DialogHeader>
           <SessionCard session={session} hideRevokeButton forceStackedLayout />
-          <SessionRevokeForm session={session} setIsOpen={setIsOpen} />
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant='outline' type='button' className='w-full'>
+                Cancel
+              </Button>
+            </DialogClose>
+            <Button
+              type='submit'
+              disabled={isPending}
+              className='w-full text-foreground'
+              variant='destructive'
+              onClick={handleRevoke}
+            >
+              {isPending ? (
+                <>
+                  <span>Revoking session...</span>
+                  <Loader className='ml-2 h-4 w-4 animate-slow-spin' />
+                </>
+              ) : (
+                <span>Revoke session</span>
+              )}
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     );
@@ -73,9 +105,24 @@ export function SessionRevokeDialog({session}: SessionRevokeDialogProps) {
         </DrawerHeader>
         <div className='px-4'>
           <SessionCard session={session} hideRevokeButton forceStackedLayout />
-          <SessionRevokeForm session={session} setIsOpen={setIsOpen} />
         </div>
         <DrawerFooter className='pt-4'>
+          <Button
+            type='submit'
+            disabled={isPending}
+            className='w-full text-foreground'
+            variant='destructive'
+            onClick={handleRevoke}
+          >
+            {isPending ? (
+              <>
+                <span>Revoking session...</span>
+                <Loader className='ml-2 h-4 w-4 animate-slow-spin' />
+              </>
+            ) : (
+              <span>Revoke session</span>
+            )}
+          </Button>
           <DrawerClose asChild>
             <Button variant='outline'>Cancel</Button>
           </DrawerClose>

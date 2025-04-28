@@ -22,25 +22,17 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer';
+import {useLogOut} from '@/hooks/use-logout';
 import {useMediaQuery} from '@/hooks/use-media-query';
 
-import {useRevokeSession} from '../../api/use-revoke-session';
-import {Session} from '../../types/session';
-import {SessionCard} from './session-card';
-
-type SessionRevokeDialogProps = {
-  session: Session;
-};
-
-export function SessionRevokeDialog({session}: SessionRevokeDialogProps) {
+export function LogOutDialog() {
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const [isOpen, setIsOpen] = useState(false);
 
-  const {revokeSession, isPending} = useRevokeSession();
+  const {logOut, isPending} = useLogOut();
 
-  const handleRevoke = async () => {
-    await revokeSession({id: session.id});
-    setIsOpen(false);
+  const handleLogOut = async () => {
+    await logOut();
   };
 
   if (isDesktop) {
@@ -48,37 +40,30 @@ export function SessionRevokeDialog({session}: SessionRevokeDialogProps) {
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
           <Button variant='ghost' className='w-full text-foreground sm:w-fit' size='sm'>
-            Revoke
+            Log out
           </Button>
         </DialogTrigger>
-        <DialogContent aria-describedby='Revoke session' className='max-w-[33rem]'>
+        <DialogContent aria-describedby='Log out' className='max-w-[33rem]'>
           <DialogHeader>
-            <DialogTitle>Revoke session</DialogTitle>
+            <DialogTitle>Log out</DialogTitle>
             <DialogDescription className='pt-2'>
-              Are you sure you want to revoke this session?
+              Are you sure you want to log out from this session?
             </DialogDescription>
           </DialogHeader>
-          <SessionCard session={session} hideRevokeButton />
           <DialogFooter className='flex gap-2'>
             <DialogClose asChild>
               <Button variant='outline' type='button'>
                 Cancel
               </Button>
             </DialogClose>
-            <Button
-              type='submit'
-              disabled={isPending}
-              className='text-foreground'
-              variant='destructive'
-              onClick={handleRevoke}
-            >
+            <Button type='submit' disabled={isPending} onClick={handleLogOut}>
               {isPending ? (
                 <>
-                  <span>Revoking...</span>
+                  <span>Logging out...</span>
                   <Loader className='ml-2 h-4 w-4 animate-slow-spin' />
                 </>
               ) : (
-                <span>Revoke</span>
+                <span>Log out</span>
               )}
             </Button>
           </DialogFooter>
@@ -91,34 +76,25 @@ export function SessionRevokeDialog({session}: SessionRevokeDialogProps) {
     <Drawer open={isOpen} onOpenChange={setIsOpen}>
       <DrawerTrigger asChild>
         <Button variant='ghost' className='w-full text-foreground sm:w-fit' size='sm'>
-          Revoke
+          Log out
         </Button>
       </DrawerTrigger>
-      <DrawerContent aria-describedby='Revoke session'>
+      <DrawerContent aria-describedby='Log out'>
         <DrawerHeader className='text-left'>
-          <DrawerTitle>Revoke session</DrawerTitle>
+          <DrawerTitle>Log out</DrawerTitle>
           <DrawerDescription className='pt-2'>
-            Are you sure you want to revoke this session?
+            Are you sure you want to log out from this session?
           </DrawerDescription>
         </DrawerHeader>
-        <div className='px-4'>
-          <SessionCard session={session} hideRevokeButton />
-        </div>
         <DrawerFooter className='pt-4'>
-          <Button
-            type='submit'
-            disabled={isPending}
-            className='w-full text-foreground'
-            variant='destructive'
-            onClick={handleRevoke}
-          >
+          <Button type='submit' disabled={isPending} className='w-full' onClick={handleLogOut}>
             {isPending ? (
               <>
-                <span>Revoking...</span>
+                <span>Logging out...</span>
                 <Loader className='ml-2 h-4 w-4 animate-slow-spin' />
               </>
             ) : (
-              <span>Revoke</span>
+              <span>Log out</span>
             )}
           </Button>
           <DrawerClose asChild>

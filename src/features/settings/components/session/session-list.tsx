@@ -11,9 +11,7 @@ export function SessionList() {
       <div className='flex flex-col items-start justify-between sm:flex-row sm:items-center'>
         <div>
           <h2 className='mb-1 text-lg font-medium'>Sessions</h2>
-          <p className='mr-8 text-sm text-muted-foreground'>
-            This is a list of devices that are currently logged into your account.
-          </p>
+          <p className='mr-8 text-sm text-muted-foreground'>Devices logged into your account.</p>
         </div>
       </div>
       <div className='mt-4 space-y-4'>

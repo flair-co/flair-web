@@ -1,7 +1,7 @@
 import {Loader} from 'lucide-react';
 import {useState} from 'react';
 
-import {Button} from '@/components/ui/button';
+import {Button, ButtonProps} from '@/components/ui/button';
 import {
   Dialog,
   DialogClose,
@@ -25,7 +25,11 @@ import {
 import {useLogOut} from '@/hooks/use-logout';
 import {useMediaQuery} from '@/hooks/use-media-query';
 
-export function LogOutDialog() {
+type LogOutDialogProps = {
+  triggerVariant?: ButtonProps['variant'];
+};
+
+export function LogOutDialog({triggerVariant = 'ghost'}: LogOutDialogProps) {
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const [isOpen, setIsOpen] = useState(false);
 
@@ -39,7 +43,7 @@ export function LogOutDialog() {
     return (
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
-          <Button variant='ghost' className='w-full text-foreground sm:w-fit' size='sm'>
+          <Button variant={triggerVariant} className='w-full text-foreground sm:w-fit' size='sm'>
             Log out
           </Button>
         </DialogTrigger>
@@ -75,7 +79,7 @@ export function LogOutDialog() {
   return (
     <Drawer open={isOpen} onOpenChange={setIsOpen}>
       <DrawerTrigger asChild>
-        <Button variant='ghost' className='w-full text-foreground sm:w-fit' size='sm'>
+        <Button variant={triggerVariant} className='w-full text-foreground sm:w-fit' size='sm'>
           Log out
         </Button>
       </DrawerTrigger>

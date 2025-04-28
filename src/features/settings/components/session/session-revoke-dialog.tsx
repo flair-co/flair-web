@@ -1,7 +1,7 @@
 import {Loader} from 'lucide-react';
 import {useState} from 'react';
 
-import {Button} from '@/components/ui/button';
+import {Button, ButtonProps} from '@/components/ui/button';
 import {
   Dialog,
   DialogClose,
@@ -26,13 +26,13 @@ import {useMediaQuery} from '@/hooks/use-media-query';
 
 import {useRevokeSession} from '../../api/use-revoke-session';
 import {Session} from '../../types/session';
-import {SessionCard} from './session-card';
 
 type SessionRevokeDialogProps = {
   session: Session;
+  triggerVariant?: ButtonProps['variant'];
 };
 
-export function SessionRevokeDialog({session}: SessionRevokeDialogProps) {
+export function SessionRevokeDialog({session, triggerVariant = 'ghost'}: SessionRevokeDialogProps) {
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const [isOpen, setIsOpen] = useState(false);
 
@@ -47,7 +47,7 @@ export function SessionRevokeDialog({session}: SessionRevokeDialogProps) {
     return (
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
-          <Button variant='ghost' className='w-full text-foreground sm:w-fit' size='sm'>
+          <Button variant={triggerVariant} className='w-full text-foreground sm:w-fit' size='sm'>
             Revoke
           </Button>
         </DialogTrigger>
@@ -55,10 +55,10 @@ export function SessionRevokeDialog({session}: SessionRevokeDialogProps) {
           <DialogHeader>
             <DialogTitle>Revoke session</DialogTitle>
             <DialogDescription className='pt-2'>
-              Are you sure you want to revoke this session?
+              Are you sure you want to revoke{' '}
+              <span className='text-foreground'>{session.clientDescription}</span>?
             </DialogDescription>
           </DialogHeader>
-          <SessionCard session={session} hideRevokeButton />
           <DialogFooter className='flex gap-2'>
             <DialogClose asChild>
               <Button variant='outline' type='button'>
@@ -90,7 +90,7 @@ export function SessionRevokeDialog({session}: SessionRevokeDialogProps) {
   return (
     <Drawer open={isOpen} onOpenChange={setIsOpen}>
       <DrawerTrigger asChild>
-        <Button variant='ghost' className='w-full text-foreground sm:w-fit' size='sm'>
+        <Button variant={triggerVariant} className='w-full text-foreground sm:w-fit' size='sm'>
           Revoke
         </Button>
       </DrawerTrigger>
@@ -101,9 +101,6 @@ export function SessionRevokeDialog({session}: SessionRevokeDialogProps) {
             Are you sure you want to revoke this session?
           </DrawerDescription>
         </DrawerHeader>
-        <div className='px-4'>
-          <SessionCard session={session} hideRevokeButton />
-        </div>
         <DrawerFooter className='pt-4'>
           <Button
             type='submit'

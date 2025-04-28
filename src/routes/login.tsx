@@ -5,7 +5,7 @@ import {Info, Mail} from 'lucide-react';
 import {useState} from 'react';
 import {z} from 'zod';
 
-import Google from '@/assets/google';
+import Google from '@/assets/icons/google';
 import {Button} from '@/components/ui/button';
 import {AuthLayout} from '@/features/auth/components/auth-layout';
 import {LogInForm} from '@/features/auth/components/login-form';

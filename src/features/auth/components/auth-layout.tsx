@@ -1,6 +1,6 @@
 import {motion} from 'framer-motion';
 
-import Logo from '@/assets/logo';
+import Logo from '@/assets/icons/logo';
 
 import {cardVariants} from '../constants/animations';
 

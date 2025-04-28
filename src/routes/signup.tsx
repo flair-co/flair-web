@@ -3,7 +3,7 @@ import {AnimatePresence, motion} from 'framer-motion';
 import {Mail} from 'lucide-react';
 import {useState} from 'react';
 
-import Google from '@/assets/google';
+import Google from '@/assets/icons/google';
 import {Button} from '@/components/ui/button';
 import {AuthLayout} from '@/features/auth/components/auth-layout';
 import {SignUpForm} from '@/features/auth/components/signup-form';

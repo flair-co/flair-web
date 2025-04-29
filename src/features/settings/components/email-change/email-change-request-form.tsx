@@ -1,12 +1,10 @@
-import {Eye, EyeOff, Loader} from 'lucide-react';
-import {useState} from 'react';
+import {Loader} from 'lucide-react';
 import {UseFormReturn} from 'react-hook-form';
 
 import {Button} from '@/components/ui/button';
 import {DialogClose, DialogFooter} from '@/components/ui/dialog';
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from '@/components/ui/form';
 import {Input} from '@/components/ui/input';
-import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from '@/components/ui/tooltip';
 import {useMediaQuery} from '@/hooks/use-media-query';
 import {cn} from '@/utils/cn';
 
@@ -33,7 +31,6 @@ export function EmailChangeRequestForm({
   setResendCooldown,
   resetAfterSuccess,
 }: EmailChangeRequestFormProps) {
-  const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
   const isDesktop = useMediaQuery('(min-width: 768px)');
 
   const {changeEmailRequest, isPending} = useChangeEmailRequest();
@@ -41,9 +38,6 @@ export function EmailChangeRequestForm({
   async function onSubmit(formData: EmailChangeDto) {
     await changeEmailRequest(formData, {
       onError: (error) => {
-        if (error.status === 401) {
-          form.setError('password', {message: 'Invalid password.'}, {shouldFocus: true});
-        }
         if (error.status === 409) {
           form.setError(
             'newEmail',
@@ -77,7 +71,7 @@ export function EmailChangeRequestForm({
                     <Input
                       {...field}
                       id='newEmail'
-                      placeholder='example@domain.com'
+                      placeholder='New email'
                       type='email'
                       autoCapitalize='none'
                       autoComplete='email'
@@ -85,84 +79,6 @@ export function EmailChangeRequestForm({
                       disabled={isPending}
                       className={cn(fieldState.error && 'border-destructive')}
                     />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='confirmNewEmail'
-              render={({field, fieldState}) => (
-                <FormItem>
-                  <FormLabel>Confirm new email</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      id='confirmNewEmail'
-                      placeholder='example@domain.com'
-                      type='email'
-                      autoCapitalize='none'
-                      autoComplete='email'
-                      autoCorrect='off'
-                      disabled={isPending}
-                      className={cn(fieldState.error && 'border-destructive')}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='password'
-              render={({field, fieldState}) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <div className='flex'>
-                      <Input
-                        {...field}
-                        id='password'
-                        type={isPasswordVisible ? 'text' : 'password'}
-                        autoCapitalize='none'
-                        autoComplete='current-password'
-                        autoCorrect='off'
-                        disabled={isPending}
-                        className={cn(
-                          'z-10',
-                          field.value && 'rounded-r-none border-r-0',
-                          fieldState.error && 'border-destructive',
-                        )}
-                      />
-                      {field.value && (
-                        <TooltipProvider delayDuration={500}>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button
-                                onClick={() => setIsPasswordVisible(!isPasswordVisible)}
-                                variant='outline'
-                                type='button'
-                                className={cn(
-                                  'rounded-l-none border-l-0',
-                                  fieldState.error && 'border-destructive',
-                                )}
-                                disabled={isPending}
-                              >
-                                {isPasswordVisible ? (
-                                  <EyeOff className='w-4 text-muted-foreground' />
-                                ) : (
-                                  <Eye className='w-4 text-muted-foreground' />
-                                )}
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>{isPasswordVisible ? 'Hide password' : 'Show password'}</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      )}
-                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -172,13 +88,13 @@ export function EmailChangeRequestForm({
               {isDesktop && (
                 <DialogFooter className='w-full'>
                   <DialogClose asChild>
-                    <Button variant='outline' type='button' className='w-full'>
+                    <Button variant='outline' type='button'>
                       Cancel
                     </Button>
                   </DialogClose>
                 </DialogFooter>
               )}
-              <Button type='submit' disabled={isPending} className='w-full'>
+              <Button type='submit' disabled={isPending}>
                 {isPending ? (
                   <>
                     <span>Sending email...</span>

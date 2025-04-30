@@ -28,6 +28,10 @@ function LogIn() {
   const searchParams = Route.useSearch();
   const [showEmailForm, setShowEmailForm] = useState(false);
 
+  const handleContinueWithGoogle = () => {
+    window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`;
+  };
+
   const handleContinueWithEmail = () => {
     setShowEmailForm(true);
   };
@@ -92,7 +96,12 @@ function LogIn() {
                 <Mail className='h-4 w-4' />
                 Continue with email
               </Button>
-              <Button variant='outline' type='button' className='w-full'>
+              <Button
+                variant='outline'
+                type='button'
+                className='w-full'
+                onClick={handleContinueWithGoogle}
+              >
                 <Google className='h-4 w-4 fill-foreground' />
                 Continue with Google
               </Button>

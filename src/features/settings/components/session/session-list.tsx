@@ -17,7 +17,7 @@ export function SessionList() {
       <div className='mt-4 space-y-4'>
         {isPending && (
           <>
-            <Skeleton className='h-[5.85rem] w-full rounded-lg bg-muted' />
+            <Skeleton className='h-[4.5rem] w-full rounded-lg bg-muted' />
           </>
         )}
         {sessions &&

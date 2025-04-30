@@ -76,7 +76,6 @@ export function SessionCard({session, hideRevokeButton = false}: SessionCardProp
                 </div>
               </div>
             </div>
-
             <div
               className='invisible flex-shrink-0 opacity-0 transition-opacity duration-150 ease-in-out group-hover:visible group-hover:opacity-100'
               onClick={(e) => e.stopPropagation()}
@@ -89,7 +88,6 @@ export function SessionCard({session, hideRevokeButton = false}: SessionCardProp
           </div>
         </Card>
       </DialogTrigger>
-
       <DialogContent className='sm:max-w-[28rem]'>
         <DialogHeader>
           <DialogTitle>{session.clientDescription}</DialogTitle>

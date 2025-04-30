@@ -13,9 +13,10 @@ import {EmailChangeDto} from '../../types/email-change.dto';
 type EmailChangeRequestFormProps = {
   form: UseFormReturn<EmailChangeDto>;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setStep: React.Dispatch<React.SetStateAction<'check' | 'request'>>;
 };
 
-export function EmailChangeRequestForm({form, setIsOpen}: EmailChangeRequestFormProps) {
+export function EmailChangeRequestForm({form, setIsOpen, setStep}: EmailChangeRequestFormProps) {
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const {changeEmailRequest, isPending} = useChangeEmailRequest();
 
@@ -32,6 +33,8 @@ export function EmailChangeRequestForm({form, setIsOpen}: EmailChangeRequestForm
             </>
           ),
         });
+        form.reset();
+        setStep('check');
         setIsOpen(false);
       },
       onError: (error) => {
@@ -44,6 +47,8 @@ export function EmailChangeRequestForm({form, setIsOpen}: EmailChangeRequestForm
             description: 'Please try again.',
           });
         }
+        form.reset();
+        setStep('check');
         setIsOpen(false);
       },
     });

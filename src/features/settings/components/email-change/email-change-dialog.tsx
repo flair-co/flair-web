@@ -55,7 +55,7 @@ export function EmailChangeDialog({currentEmail}: EmailChangeDialogProps) {
     step === 'check' ? (
       <EmailChangeCheckForm form={form} currentEmail={currentEmail} setStep={setStep} />
     ) : (
-      <EmailChangeRequestForm form={form} setIsOpen={setIsOpen} />
+      <EmailChangeRequestForm form={form} setIsOpen={setIsOpen} setStep={setStep} />
     );
 
   const headerContent = {

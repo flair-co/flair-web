@@ -61,8 +61,8 @@ export function SessionCard({session, hideRevokeButton = false}: SessionCardProp
                   {session.isCurrent ? (
                     <div className='mt-1 flex gap-1.5'>
                       <div className='flex items-center gap-1.5'>
-                        <span className='block h-2 w-2 rounded-full bg-green-500'></span>
-                        <span className='font-medium text-green-600'>Current session</span>
+                        <span className='block h-2 w-2 rounded-full bg-success'></span>
+                        <span className='font-medium text-success'>Current session</span>
                       </div>
                       <span>·</span>
                       <span>{session.clientLocation}</span>
@@ -95,26 +95,21 @@ export function SessionCard({session, hideRevokeButton = false}: SessionCardProp
           <DialogTitle>{session.clientDescription}</DialogTitle>
         </DialogHeader>
         <div className='grid gap-4 py-4 text-sm'>
-          <div className='flex items-center justify-between border-b pb-4'>
-            <span className='text-muted-foreground'>IP Address</span>
-            <span className='font-mono'>{session.ip || 'N/A'}</span>
+          <div className='flex items-center justify-between border-b border-border/50 pb-4'>
+            <span className='text-muted-foreground'>Device</span>
+            <span>{session.clientDescription}</span>
           </div>
-
-          <div className='flex items-center justify-between border-b pb-4'>
+          <div className='flex items-center justify-between border-b border-border/50 pb-4'>
+            <span className='text-muted-foreground'>IP Address</span>
+            <span className='font-mono'>{session.ip}</span>
+          </div>
+          <div className='flex items-center justify-between border-b border-border/50 pb-4'>
             <span className='text-muted-foreground'>Location</span>
             <span>{session.clientLocation}</span>
           </div>
-
-          <div className='flex items-center justify-between border-b pb-4'>
+          <div className='flex items-center justify-between pb-4'>
             <span className='text-muted-foreground'>Signed in at</span>
             <span>{createdAtAbsolute}</span>
-          </div>
-
-          <div className='flex flex-col gap-1'>
-            <span className='mb-1 text-muted-foreground'>User agent</span>
-            <span className='break-words rounded bg-muted/50 p-2 font-mono text-xs'>
-              {session.userAgent || 'N/A'}
-            </span>
           </div>
         </div>
         <DialogFooter>

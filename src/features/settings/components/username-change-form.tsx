@@ -67,7 +67,7 @@ export function UsernameChangeForm({currentUsername}: UsernameChangeFormProps) {
                 <Input
                   {...field}
                   id='name'
-                  placeholder='Username'
+                  placeholder='Enter your username'
                   type='text'
                   autoCapitalize='none'
                   autoComplete='name'
@@ -86,9 +86,7 @@ export function UsernameChangeForm({currentUsername}: UsernameChangeFormProps) {
               </FormControl>
               <FormMessage />
               <FormDescription className='text-xs'>
-                {isPending
-                  ? 'Saving changes...'
-                  : 'This is your display name. It can be your real name or an alias.'}
+                {isPending ? 'Saving changes...' : 'This can be a nickname or your real name.'}
               </FormDescription>
             </FormItem>
           )}

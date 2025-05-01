@@ -27,9 +27,9 @@ function SettingsAccountIndex() {
       <div className='space-y-8'>
         <div>
           <div className='mb-4'>
-            <h2 className='mb-1 text-lg font-medium'>Name</h2>
+            <h2 className='mb-1 text-lg font-medium'>Username</h2>
             <p className='mr-8 text-sm text-muted-foreground'>
-              Your name as it appears in the application.
+              Your display name as it appears in the application.
             </p>
           </div>
           <Card className='p-4'>

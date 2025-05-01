@@ -1,8 +1,7 @@
 import {zodResolver} from '@hookform/resolvers/zod';
-import {Loader} from 'lucide-react';
+import {useEffect} from 'react';
 import {useForm} from 'react-hook-form';
 
-import {Button} from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -18,31 +17,47 @@ import {cn} from '@/utils/cn';
 import {usePatchUser} from '../api/use-patch-user';
 import {NameChangeDto, nameChangeDtoSchema} from '../types/name-change.dto';
 
-type NameChangeFormProps = {
-  currentName: User['name'];
+type UsernameChangeFormProps = {
+  currentUsername: User['name'];
 };
 
-export function NameChangeForm({currentName}: NameChangeFormProps) {
+export function UsernameChangeForm({currentUsername}: UsernameChangeFormProps) {
   const {patchUser, isPending} = usePatchUser();
 
   const form = useForm<NameChangeDto>({
     resolver: zodResolver(nameChangeDtoSchema),
-    mode: 'onTouched',
-    reValidateMode: 'onChange',
-    defaultValues: {name: currentName},
+    mode: 'onChange',
+    defaultValues: {name: currentUsername},
   });
 
-  function onSubmit(formData: NameChangeDto) {
-    patchUser(formData);
-  }
+  const watchedName = form.watch('name');
+
+  const handleBlur = async () => {
+    const isValid = await form.trigger('name');
+
+    const trimmedWatchedName = watchedName.trim();
+    const trimmedCurrentName = currentUsername.trim();
+    const hasNameChanged = trimmedWatchedName !== trimmedCurrentName;
+    const isValidName = isValid && trimmedWatchedName !== '';
+
+    if (hasNameChanged && isValidName) {
+      const trimmedName = {name: form.getValues().name.trim()};
+      patchUser(trimmedName);
+    }
+  };
+
+  useEffect(() => {
+    const submissionAttemptFailed =
+      form.formState.isSubmitted && !isPending && !form.formState.isSubmitSuccessful;
+
+    if (submissionAttemptFailed) {
+      form.reset({name: currentUsername});
+    }
+  }, [form, currentUsername, isPending]);
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        noValidate
-        className='flex flex-col gap-2 sm:flex-row'
-      >
+      <form className='flex flex-col gap-2' noValidate>
         <FormField
           control={form.control}
           name='name'
@@ -59,29 +74,25 @@ export function NameChangeForm({currentName}: NameChangeFormProps) {
                   autoCorrect='off'
                   disabled={isPending}
                   className={cn(fieldState.error && 'border-destructive')}
+                  onChange={async (e) => {
+                    field.onChange(e);
+                    await form.trigger('name');
+                  }}
+                  onBlur={async () => {
+                    field.onBlur();
+                    await handleBlur();
+                  }}
                 />
               </FormControl>
               <FormMessage />
-              <FormDescription className='sm:mr-10'>
-                This is your display name. It can be your real name or an alias.
+              <FormDescription className='text-xs'>
+                {isPending
+                  ? 'Saving changes...'
+                  : 'This is your display name. It can be your real name or an alias.'}
               </FormDescription>
             </FormItem>
           )}
         />
-        <Button
-          type='submit'
-          disabled={isPending || form.watch('name') === currentName}
-          className='mt-2 w-full sm:mt-0 sm:w-fit'
-        >
-          {isPending ? (
-            <>
-              <span>Saving...</span>
-              <Loader className='ml-2 h-4 w-4 animate-slow-spin' />
-            </>
-          ) : (
-            <span>Save</span>
-          )}
-        </Button>
       </form>
     </Form>
   );

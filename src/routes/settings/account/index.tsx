@@ -1,8 +1,9 @@
 import {createFileRoute} from '@tanstack/react-router';
 
+import {Card} from '@/components/ui/card';
 import {Skeleton} from '@/components/ui/skeleton';
 import {EmailChangeDialog} from '@/features/settings/components/email-change/email-change-dialog';
-import {NameChangeForm} from '@/features/settings/components/name-change-form';
+import {UsernameChangeForm} from '@/features/settings/components/name-change-form';
 import {useCurrentUser} from '@/hooks/use-current-user';
 import {handleAuthenticatedRedirect} from '@/utils/handle-redirect';
 
@@ -31,9 +32,9 @@ function SettingsAccountIndex() {
               Your name as it appears in the application.
             </p>
           </div>
-          <div className='max-w-sm'>
-            <NameChangeForm currentName={currentUser.name} />
-          </div>
+          <Card className='p-4'>
+            <UsernameChangeForm currentUsername={currentUser.name} />
+          </Card>
         </div>
 
         <div>
@@ -47,7 +48,7 @@ function SettingsAccountIndex() {
             <div>
               <p className='text-sm font-medium'>{currentUser.email}</p>
               <p className='mt-1 text-xs text-muted-foreground'>
-                Primary email for login and notifications.
+                Primary contact for account recovery and important notifications.
               </p>
             </div>
             <div className='flex-shrink-0'>

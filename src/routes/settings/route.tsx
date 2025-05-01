@@ -18,7 +18,7 @@ export const Route = createFileRoute('/settings')({
 const navItems = [
   {label: 'Account', route: '/settings/account', icon: User},
   {label: 'Security & access', route: '/settings/security', icon: Shield},
-  {label: 'Theme', route: '/settings/theme', icon: SunMoon},
+  {label: 'Appearance', route: '/settings/appearance', icon: SunMoon},
 ];
 
 function SettingsIndex() {
@@ -44,7 +44,7 @@ function SettingsIndex() {
           })}
         </div>
         <div className='relative mx-auto mt-4 w-full max-w-[40rem] px-4 xl:mt-6'>
-          <div className='absolute right-full top-0 mr-6 hidden h-full xl:flex xl:w-[12rem] xl:flex-col xl:gap-1'>
+          <div className='absolute right-full top-0 mr-6 hidden h-full xl:flex xl:w-[11rem] xl:flex-col xl:gap-1'>
             {navItems.map((item) => {
               const isActive = matchRoute({to: item.route, fuzzy: true}) as boolean;
               return (
@@ -66,7 +66,9 @@ function SettingsIndex() {
               );
             })}
           </div>
-          <Outlet />
+          <div className='mt-10 xl:mt-0'>
+            <Outlet />
+          </div>
         </div>
       </AppBody>
     </>

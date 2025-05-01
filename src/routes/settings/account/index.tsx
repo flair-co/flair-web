@@ -3,7 +3,7 @@ import {createFileRoute} from '@tanstack/react-router';
 import {Card} from '@/components/ui/card';
 import {Skeleton} from '@/components/ui/skeleton';
 import {EmailChangeDialog} from '@/features/settings/components/email-change/email-change-dialog';
-import {UsernameChangeForm} from '@/features/settings/components/name-change-form';
+import {UsernameChangeForm} from '@/features/settings/components/username-change-form';
 import {useCurrentUser} from '@/hooks/use-current-user';
 import {handleAuthenticatedRedirect} from '@/utils/handle-redirect';
 

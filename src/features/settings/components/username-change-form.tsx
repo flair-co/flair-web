@@ -15,7 +15,7 @@ import {User} from '@/types/user';
 import {cn} from '@/utils/cn';
 
 import {usePatchUser} from '../api/use-patch-user';
-import {NameChangeDto, nameChangeDtoSchema} from '../types/name-change.dto';
+import {UsernameChangeDto, usernameChangeDtoSchema} from '../types/name-change.dto';
 
 type UsernameChangeFormProps = {
   currentUsername: User['name'];
@@ -24,8 +24,8 @@ type UsernameChangeFormProps = {
 export function UsernameChangeForm({currentUsername}: UsernameChangeFormProps) {
   const {patchUser, isPending} = usePatchUser();
 
-  const form = useForm<NameChangeDto>({
-    resolver: zodResolver(nameChangeDtoSchema),
+  const form = useForm<UsernameChangeDto>({
+    resolver: zodResolver(usernameChangeDtoSchema),
     mode: 'onChange',
     defaultValues: {name: currentUsername},
   });

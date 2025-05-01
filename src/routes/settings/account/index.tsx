@@ -1,7 +1,5 @@
 import {createFileRoute} from '@tanstack/react-router';
 
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
-import {Separator} from '@/components/ui/separator';
 import {Skeleton} from '@/components/ui/skeleton';
 import {EmailChangeDialog} from '@/features/settings/components/email-change/email-change-dialog';
 import {NameChangeForm} from '@/features/settings/components/name-change-form';
@@ -19,32 +17,45 @@ function SettingsAccountIndex() {
   const {currentUser} = useCurrentUser({skipFetch: true});
 
   if (!currentUser) {
-    return <Skeleton className='h-[23.3rem] w-full rounded-lg bg-card' />;
+    return <Skeleton className='h-[18rem] w-full rounded-lg bg-card' />;
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Account</CardTitle>
-        <CardDescription>Manage your account&apos;s settings.</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Separator className='mb-6 bg-muted' />
+    <div className='w-full'>
+      <h1 className='mb-6 text-2xl font-medium'>Account</h1>
+      <div className='space-y-8'>
         <div>
-          <h2 className='mb-1 text-lg font-medium'>Name</h2>
-          <div className='w-fit'>
+          <div className='mb-4'>
+            <h2 className='mb-1 text-lg font-medium'>Name</h2>
+            <p className='mr-8 text-sm text-muted-foreground'>
+              Your name as it appears in the application.
+            </p>
+          </div>
+          <div className='max-w-sm'>
             <NameChangeForm currentName={currentUser.name} />
           </div>
         </div>
-        <Separator className='my-6 bg-muted' />
-        <div className='flex flex-col items-start justify-between md:flex-row md:items-center'>
-          <div>
-            <h2 className='mb-1 text-lg font-medium'>Email address</h2>
-            <p className='mr-8 text-sm text-muted-foreground'>{currentUser.email}</p>
+
+        <div>
+          <div className='mb-4'>
+            <h2 className='mb-1 text-lg font-medium'>Email</h2>
+            <p className='mr-8 text-sm text-muted-foreground'>
+              The email address associated with your account.
+            </p>
           </div>
-          <EmailChangeDialog currentEmail={currentUser.email} />
+          <div className='flex flex-col items-start justify-between gap-4 rounded-lg border bg-card p-4 sm:flex-row sm:items-center'>
+            <div>
+              <p className='text-sm font-medium'>{currentUser.email}</p>
+              <p className='mt-1 text-xs text-muted-foreground'>
+                Primary email for login and notifications.
+              </p>
+            </div>
+            <div className='flex-shrink-0'>
+              <EmailChangeDialog currentEmail={currentUser.email} />
+            </div>
+          </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

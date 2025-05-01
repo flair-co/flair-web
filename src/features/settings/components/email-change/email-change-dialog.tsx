@@ -1,5 +1,4 @@
 import {zodResolver} from '@hookform/resolvers/zod';
-import {PencilLine} from 'lucide-react';
 import {useState} from 'react';
 import {useForm} from 'react-hook-form';
 
@@ -45,8 +44,7 @@ export function EmailChangeDialog({currentEmail}: EmailChangeDialogProps) {
   });
 
   const triggerButton = (
-    <Button variant='outline' className='w-full md:w-fit'>
-      <PencilLine />
+    <Button variant='ghost' className='w-full md:w-fit'>
       Change email
     </Button>
   );

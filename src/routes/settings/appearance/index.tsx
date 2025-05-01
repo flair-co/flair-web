@@ -16,8 +16,7 @@ function SettingsAppearanceIndex() {
       <div className='w-full'>
         <h1 className='mb-6 text-2xl font-medium'>Appearance</h1>
       </div>
-
-      <div className='mt-8'>
+      <div>
         <div className='mb-4'>
           <h2 className='mb-1 text-lg font-medium'>Theme</h2>
           <p className='mr-8 text-sm text-muted-foreground'>

@@ -31,7 +31,7 @@ export function SignInMethods({currentUser}: SignInMethodsProps) {
   };
 
   return (
-    <div className='mt-8'>
+    <div>
       <div className='mb-4'>
         <h2 className='mb-1 text-lg font-medium'>Sign-in methods</h2>
         <p className='mr-8 text-sm text-muted-foreground'>
@@ -58,9 +58,7 @@ export function SignInMethods({currentUser}: SignInMethodsProps) {
             <div>
               <p className='font-medium'>Google</p>
               <p className='text-xs text-muted-foreground'>
-                {hasGoogleAuth
-                  ? `Connected (${currentUser.email})`
-                  : 'Not connected. Sign in faster.'}
+                {hasGoogleAuth ? 'Log in using your Google account.' : 'Not connected.'}
               </p>
             </div>
           </div>

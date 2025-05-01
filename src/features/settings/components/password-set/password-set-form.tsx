@@ -9,35 +9,27 @@ import {PasswordInputField} from '@/components/ui/password-input-field';
 import {useMediaQuery} from '@/hooks/use-media-query';
 import {cn} from '@/utils/cn';
 
-import {useChangePassword} from '../../api/use-change-password';
-import {PasswordChangeDto, passwordChangeDtoSchema} from '../../types/password-change.dto';
+import {useSetPassword} from '../../api/use-set-password';
+import {PasswordSetDto, passwordSetDtoSchema} from '../../types/passsword-set.dto';
 
-type PasswordChangeFormProps = {
+type PasswordSetFormProps = {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export function PasswordChangeForm({setOpen}: PasswordChangeFormProps) {
+export function PasswordSetForm({setOpen}: PasswordSetFormProps) {
   const isDesktop = useMediaQuery('(min-width: 768px)');
 
-  const form = useForm<PasswordChangeDto>({
-    resolver: zodResolver(passwordChangeDtoSchema),
+  const form = useForm<PasswordSetDto>({
+    resolver: zodResolver(passwordSetDtoSchema),
     mode: 'onBlur',
     reValidateMode: 'onChange',
   });
 
-  const {changePassword, isPending} = useChangePassword();
+  const {setPassword, isPending} = useSetPassword();
 
-  async function onSubmit(formData: PasswordChangeDto) {
-    await changePassword(formData, {
-      onError: (error) => {
-        if (error.status === 401) {
-          form.setError(
-            'currentPassword',
-            {message: 'Invalid current password.'},
-            {shouldFocus: true},
-          );
-        }
-      },
+  async function onSubmit(formData: PasswordSetDto) {
+    console.log(formData);
+    await setPassword(formData, {
       onSuccess: () => {
         setOpen(false);
       },
@@ -54,23 +46,9 @@ export function PasswordChangeForm({setOpen}: PasswordChangeFormProps) {
         >
           <FormField
             control={form.control}
-            name='currentPassword'
+            name='password'
             render={({field, fieldState}) => (
-              <PasswordInputField<PasswordChangeDto, 'currentPassword'>
-                field={field}
-                fieldState={fieldState}
-                label='Current Password'
-                id='current-password'
-                autoComplete='current-password'
-                disabled={isPending}
-              />
-            )}
-          />
-          <FormField
-            control={form.control}
-            name='newPassword'
-            render={({field, fieldState}) => (
-              <PasswordInputField<PasswordChangeDto, 'newPassword'>
+              <PasswordInputField<PasswordSetDto, 'password'>
                 field={field}
                 fieldState={fieldState}
                 label='New password'
@@ -90,14 +68,14 @@ export function PasswordChangeForm({setOpen}: PasswordChangeFormProps) {
                 </DialogClose>
               </DialogFooter>
             )}
-            <Button type='submit' disabled={isPending}>
+            <Button type='submit' disabled={isPending} className={cn(!isDesktop && 'w-full')}>
               {isPending ? (
                 <>
-                  <span>Changing password...</span>
+                  <span>Setting password...</span>
                   <Loader className='ml-2 h-4 w-4 animate-slow-spin' />
                 </>
               ) : (
-                <span>Change password</span>
+                <span>Set password</span>
               )}
             </Button>
           </div>

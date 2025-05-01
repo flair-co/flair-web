@@ -48,15 +48,15 @@ export function SessionRevokeDialog({session, triggerVariant = 'ghost'}: Session
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
           <Button variant={triggerVariant} className='w-full text-foreground sm:w-fit' size='sm'>
-            Revoke
+            Revoke access
           </Button>
         </DialogTrigger>
-        <DialogContent aria-describedby='Revoke session' className='max-w-[33rem]'>
+        <DialogContent aria-describedby='Revoke access' className='max-w-[33rem]'>
           <DialogHeader>
-            <DialogTitle>Revoke session</DialogTitle>
+            <DialogTitle>Revoke access</DialogTitle>
             <DialogDescription className='pt-2'>
-              Are you sure you want to revoke{' '}
-              <span className='text-foreground'>{session.clientDescription}</span>?
+              Revoke <span className='text-foreground'>{session.clientDescription}</span>? This
+              cannot be undone.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className='flex gap-2'>
@@ -94,11 +94,12 @@ export function SessionRevokeDialog({session, triggerVariant = 'ghost'}: Session
           Revoke
         </Button>
       </DrawerTrigger>
-      <DrawerContent aria-describedby='Revoke session'>
+      <DrawerContent aria-describedby='Revoke access'>
         <DrawerHeader className='text-left'>
-          <DrawerTitle>Revoke session</DrawerTitle>
+          <DrawerTitle>Revoke access</DrawerTitle>
           <DrawerDescription className='pt-2'>
-            Are you sure you want to revoke this session?
+            Revoke <span className='text-foreground'>{session.clientDescription}</span>? This cannot
+            be undone.
           </DrawerDescription>
         </DrawerHeader>
         <DrawerFooter className='pt-4'>

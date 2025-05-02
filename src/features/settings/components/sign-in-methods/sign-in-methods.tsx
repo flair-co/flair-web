@@ -6,6 +6,7 @@ import {Separator} from '@/components/ui/separator';
 import {AuthMethodType} from '@/types/auth-method';
 import {User} from '@/types/user';
 
+import {DisconnectOAuthMethodDialog} from '../disconnect-oauth-method/disconnect-oauth-method-dialog';
 import {PasswordChangeDialog} from '../password-change/password-change-dialog';
 import {PasswordSetDialog} from '../password-set/password-set-dialog';
 
@@ -24,10 +25,6 @@ export function SignInMethods({currentUser}: SignInMethodsProps) {
 
   const handleConnectGoogle = () => {
     window.location.href = '/api/auth/google';
-  };
-
-  const handleDisconnectGoogle = () => {
-    console.warn('Disconnect Google functionality not implemented yet.');
   };
 
   return (
@@ -63,9 +60,7 @@ export function SignInMethods({currentUser}: SignInMethodsProps) {
             </div>
           </div>
           {hasGoogleAuth ? (
-            <Button variant='ghost' size='sm' onClick={handleDisconnectGoogle}>
-              Disconnect
-            </Button>
+            <DisconnectOAuthMethodDialog methodType={AuthMethodType.GOOGLE} />
           ) : (
             <Button variant='ghost' size='sm' onClick={handleConnectGoogle}>
               Connect

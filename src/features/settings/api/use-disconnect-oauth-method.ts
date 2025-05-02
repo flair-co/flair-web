@@ -4,15 +4,12 @@ import {toast} from 'sonner';
 import {AuthMethodType} from '@/types/auth-method';
 import {User} from '@/types/user';
 import {HttpError, api} from '@/utils/api';
+import {capitalizeFirstLetter} from '@/utils/string-utils';
 
 export const useDisconnectOauthMethod = () => {
   const queryClient = useQueryClient();
 
-  const {mutateAsync: disconnectOauthMethod, isPending} = useMutation<
-    Response,
-    HttpError,
-    AuthMethodType
-  >({
+  const {mutateAsync: disconnect, isPending} = useMutation<Response, HttpError, AuthMethodType>({
     mutationFn: async (methodType) => {
       return await api.delete(`/auth/methods/${methodType}`);
     },
@@ -28,17 +25,18 @@ export const useDisconnectOauthMethod = () => {
       });
     },
     onError: (error, methodType) => {
+      const method = capitalizeFirstLetter(methodType);
       if (error.status === 404) {
-        toast.error(`Failed to disconnect ${methodType.toUpperCase()} sign-in method.`, {
-          description: `The ${methodType.toUpperCase()} connection was not found.`,
+        toast.error(`Failed to disconnect ${method} sign-in method.`, {
+          description: `The ${method} connection was not found.`,
         });
       } else {
-        toast.error(`Failed to disconnect ${methodType.toUpperCase()} sign-in method.`, {
+        toast.error(`Failed to disconnect ${method} sign-in method.`, {
           description: 'Please try again.',
         });
       }
     },
   });
 
-  return {disconnectOauthMethod, isPending};
+  return {disconnect, isPending};
 };

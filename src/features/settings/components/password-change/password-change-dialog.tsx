@@ -29,7 +29,7 @@ export function PasswordChangeDialog() {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button variant='ghost'>Change password</Button>
+          <Button variant='ghost'>Change</Button>
         </DialogTrigger>
         <DialogContent className='w-[26rem]' aria-describedby='Change password'>
           <DialogHeader>
@@ -44,7 +44,7 @@ export function PasswordChangeDialog() {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant='ghost'>Change password</Button>
+        <Button variant='ghost'>Change</Button>
       </DrawerTrigger>
       <DrawerContent aria-describedby='Change password'>
         <DrawerHeader className='text-left'>

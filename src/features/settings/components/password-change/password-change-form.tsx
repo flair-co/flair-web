@@ -80,6 +80,9 @@ export function PasswordChangeForm({setOpen}: PasswordChangeFormProps) {
               />
             )}
           />
+          <p className='text-xs text-muted-foreground'>
+            Your password should be at least 8 characters long.
+          </p>
           <div className='mt-4 flex w-full gap-4'>
             {isDesktop && (
               <DialogFooter className='w-full'>

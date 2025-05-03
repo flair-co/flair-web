@@ -45,7 +45,7 @@ export function EmailChangeDialog({currentEmail}: EmailChangeDialogProps) {
 
   const triggerButton = (
     <Button variant='ghost' className='w-full md:w-fit'>
-      Change email
+      Change
     </Button>
   );
 

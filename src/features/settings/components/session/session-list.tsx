@@ -16,7 +16,7 @@ export function SessionList() {
   }, [sessions]);
 
   return (
-    <div className='mt-8'>
+    <div>
       <div className='mb-4'>
         <h2 className='mb-1 text-lg font-semibold'>Active Sessions</h2>
         <p className='mr-8 text-sm text-muted-foreground'>

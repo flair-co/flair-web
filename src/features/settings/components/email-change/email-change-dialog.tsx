@@ -43,11 +43,7 @@ export function EmailChangeDialog({currentEmail}: EmailChangeDialogProps) {
     reValidateMode: 'onChange',
   });
 
-  const triggerButton = (
-    <Button variant='ghost' className='w-full md:w-fit'>
-      Change
-    </Button>
-  );
+  const triggerButton = <Button variant='ghost'>Change</Button>;
 
   const formContent =
     step === 'check' ? (

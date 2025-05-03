@@ -43,7 +43,7 @@ function SettingsIndex() {
             );
           })}
         </div>
-        <div className='relative mx-auto mt-4 w-full max-w-[40rem] px-4 xl:mt-6'>
+        <div className='relative mx-auto mt-4 w-full max-w-[40rem] px-4 xl:mt-20'>
           <div className='absolute right-full top-0 mr-6 hidden h-full xl:flex xl:w-[11rem] xl:flex-col xl:gap-1'>
             {navItems.map((item) => {
               const isActive = matchRoute({to: item.route, fuzzy: true}) as boolean;

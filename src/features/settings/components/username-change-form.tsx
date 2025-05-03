@@ -15,7 +15,7 @@ import {User} from '@/types/user';
 import {cn} from '@/utils/cn';
 
 import {usePatchUser} from '../api/use-patch-user';
-import { UsernameChangeDto, usernameChangeDtoSchema } from '../types/username-change.dto';
+import {UsernameChangeDto, usernameChangeDtoSchema} from '../types/username-change.dto';
 
 type UsernameChangeFormProps = {
   currentUsername: User['name'];

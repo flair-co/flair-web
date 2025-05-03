@@ -1,6 +1,8 @@
-import Logo from '@/assets/logo';
 import {motion} from 'framer-motion';
-import { cardVariants } from '../constants/animations';
+
+import Logo from '@/assets/logo';
+
+import {cardVariants} from '../constants/animations';
 
 type AuthLayoutProps = {
   title: string;

@@ -25,7 +25,6 @@ export function LogInForm({returnTo}: LogInFormProps) {
     resolver: zodResolver(logInDtoSchema),
     mode: 'onBlur',
     reValidateMode: 'onChange',
-    defaultValues: {email: '', password: ''},
   });
 
   useEffect(() => {

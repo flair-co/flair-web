@@ -8,7 +8,7 @@ import {Session} from '../types/session';
 export const useRevokeSession = () => {
   const queryClient = useQueryClient();
 
-  const {mutateAsync, isPending} = useMutation<void,HttpError,{id: Session['id']}>({
+  const {mutateAsync, isPending} = useMutation<void, HttpError, {id: Session['id']}>({
     mutationFn: async ({id}) => {
       await api.delete<Session>(`/auth/sessions/${id}`);
     },

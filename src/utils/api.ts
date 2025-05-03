@@ -98,7 +98,6 @@ function head<T = unknown>(resource: string, init: RequestOptions = {}): Promise
   return request<T>(resource, {...init, method: 'HEAD', parseJson: false});
 }
 
-
 //
 // GET overloads
 //

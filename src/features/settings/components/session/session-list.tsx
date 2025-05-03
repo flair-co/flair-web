@@ -4,7 +4,7 @@ import {Skeleton} from '@/components/ui/skeleton';
 
 import {useGetSessions} from '../../api/use-get-sessions';
 import {SessionCard} from './session-card';
-import { SessionRevokeAllDialog } from './session-revoke-all-dialog';
+import {SessionRevokeAllDialog} from './session-revoke-all-dialog';
 
 export function SessionList() {
   const {sessions, isPending} = useGetSessions();

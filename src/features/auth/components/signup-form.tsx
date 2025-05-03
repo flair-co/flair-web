@@ -18,7 +18,6 @@ export function SignUpForm() {
     resolver: zodResolver(signUpDtoSchema),
     mode: 'onBlur',
     reValidateMode: 'onChange',
-    defaultValues: {email: '', name: '', password: ''},
   });
 
   async function onSubmit(formData: SignUpDto) {
@@ -60,17 +59,17 @@ export function SignUpForm() {
           />
           <FormField
             control={form.control}
-            name='name'
+            name='username'
             render={({field, fieldState}) => (
               <FormItem>
-                <FormLabel>Name</FormLabel>
+                <FormLabel>Username</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
-                    id='name'
+                    id='username'
                     type='text'
                     autoCapitalize='none'
-                    autoComplete='name'
+                    autoComplete='username'
                     autoCorrect='off'
                     disabled={isPending}
                     className={cn(fieldState.error && 'border-destructive')}

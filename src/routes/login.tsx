@@ -3,9 +3,9 @@ import {zodValidator} from '@tanstack/zod-adapter';
 import {Info} from 'lucide-react';
 import {z} from 'zod';
 
+import Logo from '@/assets/logo';
 import {Separator} from '@/components/ui/separator';
 import {LogInForm} from '@/features/auth/components/login-form';
-import {LogoLink} from '@/features/auth/components/logo-link';
 import {handleUnauthenticatedRedirect} from '@/utils/handle-redirect';
 
 const searchParamsSchema = z.object({
@@ -27,7 +27,7 @@ function LogIn() {
     <div className='mx-6 flex h-screen items-center justify-center'>
       <div className='mx-auto flex w-full max-w-96 flex-col justify-center'>
         <div className='flex flex-col items-center'>
-          <LogoLink />
+          <Logo aria-label='Flair logo' className='mb-10 h-8 w-8 text-foreground' />
           <h1 className='mb-12 text-center text-2xl font-semibold'>Log in</h1>
         </div>
         {searchParams.returnTo && searchParams.returnTo == '/verify' && (

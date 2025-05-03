@@ -18,7 +18,7 @@ import {usePatchUser} from '../api/use-patch-user';
 import {UsernameChangeDto, usernameChangeDtoSchema} from '../types/username-change.dto';
 
 type UsernameChangeFormProps = {
-  currentUsername: User['name'];
+  currentUsername: User['username'];
 };
 
 export function UsernameChangeForm({currentUsername}: UsernameChangeFormProps) {
@@ -27,21 +27,19 @@ export function UsernameChangeForm({currentUsername}: UsernameChangeFormProps) {
   const form = useForm<UsernameChangeDto>({
     resolver: zodResolver(usernameChangeDtoSchema),
     mode: 'onChange',
-    defaultValues: {name: currentUsername},
+    defaultValues: {username: currentUsername},
   });
 
-  const watchedName = form.watch('name');
+  const watchedUsername = form.watch('username');
 
   const handleBlur = async () => {
-    const isValid = await form.trigger('name');
+    const isValid = await form.trigger('username');
 
-    const trimmedWatchedName = watchedName.trim();
-    const trimmedCurrentName = currentUsername.trim();
-    const hasNameChanged = trimmedWatchedName !== trimmedCurrentName;
-    const isValidName = isValid && trimmedWatchedName !== '';
+    const hasNameChanged = watchedUsername.trim() !== currentUsername.trim();
+    const isValidName = isValid && watchedUsername.trim() !== '';
 
     if (hasNameChanged && isValidName) {
-      const trimmedName = {name: form.getValues().name.trim()};
+      const trimmedName = {username: form.getValues().username.trim()};
       patchUser(trimmedName);
     }
   };
@@ -51,7 +49,7 @@ export function UsernameChangeForm({currentUsername}: UsernameChangeFormProps) {
       form.formState.isSubmitted && !isPending && !form.formState.isSubmitSuccessful;
 
     if (submissionAttemptFailed) {
-      form.reset({name: currentUsername});
+      form.reset({username: currentUsername});
     }
   }, [form, currentUsername, isPending]);
 
@@ -60,23 +58,23 @@ export function UsernameChangeForm({currentUsername}: UsernameChangeFormProps) {
       <form className='flex flex-col gap-2' noValidate>
         <FormField
           control={form.control}
-          name='name'
+          name='username'
           render={({field, fieldState}) => (
             <FormItem>
               <FormControl>
                 <Input
                   {...field}
-                  id='name'
+                  id='username'
                   placeholder='Enter your username'
                   type='text'
                   autoCapitalize='none'
-                  autoComplete='name'
+                  autoComplete='username'
                   autoCorrect='off'
                   disabled={isPending}
                   className={cn(fieldState.error && 'border-destructive')}
                   onChange={async (e) => {
                     field.onChange(e);
-                    await form.trigger('name');
+                    await form.trigger('username');
                   }}
                   onBlur={async () => {
                     field.onBlur();

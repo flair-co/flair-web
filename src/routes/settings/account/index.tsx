@@ -33,7 +33,7 @@ function SettingsAccountIndex() {
             </p>
           </div>
           <Card className='p-4'>
-            <UsernameChangeForm currentUsername={currentUser.name} />
+            <UsernameChangeForm currentUsername={currentUser.username} />
           </Card>
         </div>
 

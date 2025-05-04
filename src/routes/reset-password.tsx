@@ -44,12 +44,11 @@ function ResetPasswordComponent() {
         <AnimatePresence initial={false} mode='wait'>
           {isSuccess ? (
             <motion.div
-              key='reset-form'
+              key='success-view-fade'
               variants={switchContentVariants}
               initial='hidden'
               animate='visible'
               exit='exit'
-              layout
               className='flex w-full flex-col space-y-4 text-sm text-muted-foreground'
             >
               <p>
@@ -59,24 +58,36 @@ function ResetPasswordComponent() {
               </p>
               <p>
                 If you haven&apos;t received an email in 5 minutes, check your spam,{' '}
-                <Button variant='link' onClick={() => onSubmit(form.getValues())}>
-                  Resend
+                <Button
+                  variant='link'
+                  onClick={() => onSubmit(form.getValues())}
+                  className='h-auto bg-transparent p-0 text-primary hover:underline focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50'
+                >
+                  resend
                 </Button>
                 , or{' '}
-                <Button variant='link' onClick={handleTryAgain}>
+                <Button
+                  variant='link'
+                  onClick={handleTryAgain}
+                  className='h-auto bg-transparent p-0 text-primary hover:underline focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50'
+                >
                   try a different email
                 </Button>
                 .
               </p>
+              <p className='px-8 pt-4 text-center text-sm text-muted-foreground'>
+                <Link to='/login' className='text-foreground underline-offset-4 hover:underline'>
+                  Return to log in
+                </Link>
+              </p>
             </motion.div>
           ) : (
             <motion.div
-              key='reset-form'
+              key='reset-form-view-fade'
               variants={switchContentVariants}
               initial='hidden'
               animate='visible'
               exit='exit'
-              layout
               className='flex w-full flex-col space-y-4'
             >
               <p className='text-sm text-muted-foreground'>
@@ -84,12 +95,12 @@ function ResetPasswordComponent() {
                 to reset your password.
               </p>
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+                <form onSubmit={form.handleSubmit(onSubmit)} className='grid gap-4'>
                   <FormField
                     control={form.control}
                     name='email'
                     render={({field}) => (
-                      <FormItem className='mb-2'>
+                      <FormItem>
                         <FormLabel>Email</FormLabel>
                         <FormControl>
                           <Input
@@ -106,7 +117,7 @@ function ResetPasswordComponent() {
                       </FormItem>
                     )}
                   />
-                  <Button type='submit' className='w-full' disabled={isPending}>
+                  <Button type='submit' className='mt-2 w-full' disabled={isPending}>
                     {isPending ? 'Continuing...' : 'Continue'}
                   </Button>
                 </form>

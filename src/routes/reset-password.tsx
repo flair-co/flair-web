@@ -52,9 +52,9 @@ function ResetPasswordComponent() {
               className='flex w-full flex-col space-y-4 text-sm text-muted-foreground'
             >
               <p>
-                Thanks! If <span className='text-foreground'>{form.getValues('email')}</span>{' '}
-                matches an email we have on file, then we&apos;ve sent you an email containing
-                further instructions for resetting your password.
+                If <span className='text-foreground'>{form.getValues('email')}</span> is registered
+                in our system, then we&apos;ve sent you an email with further instructions to reset
+                your password.
               </p>
               <p>
                 If you haven&apos;t received an email in 5 minutes, check your spam,{' '}

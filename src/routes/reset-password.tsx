@@ -1,6 +1,7 @@
 import {zodResolver} from '@hookform/resolvers/zod';
 import {Link, createFileRoute} from '@tanstack/react-router';
 import {AnimatePresence, motion} from 'framer-motion';
+import {useState} from 'react';
 import {useForm} from 'react-hook-form';
 
 import {Button} from '@/components/ui/button';
@@ -24,6 +25,7 @@ export const Route = createFileRoute('/reset-password')({
 
 function ResetPasswordComponent() {
   const {requestPasswordReset, isPending, isSuccess, reset} = usePasswordResetRequest();
+  const [hasResent, setHasResent] = useState(false);
 
   const form = useForm<PasswordResetRequestDto>({
     resolver: zodResolver(passwordResetRequestDtoSchema),
@@ -33,9 +35,15 @@ function ResetPasswordComponent() {
     await requestPasswordReset(formData);
   };
 
+  const handleResend = async () => {
+    setHasResent(true);
+    await requestPasswordReset(form.getValues());
+  };
+
   const handleTryAgain = () => {
     reset();
     form.reset();
+    setHasResent(false);
   };
 
   return (
@@ -51,27 +59,40 @@ function ResetPasswordComponent() {
               exit='exit'
               className='flex w-full flex-col space-y-4 text-sm text-muted-foreground'
             >
+              {hasResent ? (
+                <p>
+                  We&apos;ve resent an email to{' '}
+                  <span className='text-foreground'>{form.getValues('email')}</span> with
+                  instructions to reset your password.
+                </p>
+              ) : (
+                <p>
+                  If <span className='text-foreground'>{form.getValues('email')}</span> matches an
+                  email in our system, then we&apos;ve sent you an email with further instructions
+                  to reset your password.
+                </p>
+              )}
               <p>
-                If <span className='text-foreground'>{form.getValues('email')}</span> is registered
-                in our system, then we&apos;ve sent you an email with further instructions to reset
-                your password.
-              </p>
-              <p>
-                If you haven&apos;t received an email in 5 minutes, check your spam,{' '}
-                <Button
-                  variant='link'
-                  onClick={() => onSubmit(form.getValues())}
-                  className='h-auto bg-transparent p-0 text-primary hover:underline focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50'
-                >
-                  resend
-                </Button>
+                If you don&apos;t see the email within 5 minutes, check your spam folder
+                {!hasResent && (
+                  <>
+                    ,{' '}
+                    <Button
+                      variant='link'
+                      onClick={handleResend}
+                      className='h-auto bg-transparent p-0 text-primary hover:underline focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50'
+                    >
+                      resend
+                    </Button>
+                  </>
+                )}
                 , or{' '}
                 <Button
                   variant='link'
                   onClick={handleTryAgain}
                   className='h-auto bg-transparent p-0 text-primary hover:underline focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50'
                 >
-                  try a different email
+                  use a different email
                 </Button>
                 .
               </p>

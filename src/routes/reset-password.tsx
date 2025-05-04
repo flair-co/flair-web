@@ -112,8 +112,8 @@ function ResetPasswordComponent() {
               className='flex w-full flex-col space-y-4'
             >
               <p className='text-sm text-muted-foreground'>
-                Enter the email address associated with your account and we&apos;ll send you a link
-                to reset your password.
+                Enter your account&apos;s email address, and we&apos;ll send you a link to reset
+                your password.
               </p>
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className='grid gap-4'>

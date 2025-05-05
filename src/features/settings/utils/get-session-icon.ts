@@ -28,10 +28,7 @@ const getDeviceIcon = (deviceType: Session['deviceType']) => {
   }
 };
 
-export const getSessionIcon = (session: {
-  browserType: Session['browserType'];
-  deviceType: Session['deviceType'];
-}) => {
+export const getSessionIcon = (session: Session) => {
   switch (session.browserType?.toLowerCase()) {
     case 'chrome':
     case 'chromium':

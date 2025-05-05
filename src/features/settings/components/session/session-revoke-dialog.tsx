@@ -55,8 +55,7 @@ export function SessionRevokeDialog({session, triggerVariant = 'ghost'}: Session
           <DialogHeader>
             <DialogTitle>Revoke access</DialogTitle>
             <DialogDescription className='pt-2'>
-              Revoke <span className='text-foreground'>{session.clientDescription}</span>? This
-              cannot be undone.
+              Revoke <span className='text-foreground'>{session.name}</span>? This cannot be undone.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className='flex gap-2'>
@@ -98,8 +97,7 @@ export function SessionRevokeDialog({session, triggerVariant = 'ghost'}: Session
         <DrawerHeader className='text-left'>
           <DrawerTitle>Revoke access</DrawerTitle>
           <DrawerDescription className='pt-2'>
-            Revoke <span className='text-foreground'>{session.clientDescription}</span>? This cannot
-            be undone.
+            Revoke <span className='text-foreground'>{session.name}</span>? This cannot be undone.
           </DrawerDescription>
         </DrawerHeader>
         <DrawerFooter className='pt-4'>

@@ -46,7 +46,7 @@ export function ResetPasswordRequest() {
   };
 
   return (
-    <AuthLayout title={isSuccess ? 'Check your email' : 'Reset password'}>
+    <AuthLayout title={isSuccess ? 'Check your email' : 'Reset your password'}>
       <div className='relative flex flex-col'>
         <AnimatePresence initial={false} mode='wait'>
           {isSuccess ? (

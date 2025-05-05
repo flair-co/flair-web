@@ -1,6 +1,7 @@
 import {zodResolver} from '@hookform/resolvers/zod';
 import {Link} from '@tanstack/react-router';
 import {AnimatePresence, motion} from 'framer-motion';
+import {ExternalLink} from 'lucide-react';
 import {useState} from 'react';
 import {useForm} from 'react-hook-form';
 
@@ -37,6 +38,11 @@ export function ResetPasswordRequest() {
     reset();
     form.reset();
     setHasResent(false);
+  };
+
+  const openGmail = () => {
+    const searchQuery = encodeURIComponent('from:no-reply@flair.com');
+    window.open(`https://mail.google.com/mail/u/0/#search/${searchQuery}`, '_blank');
   };
 
   return (
@@ -89,6 +95,15 @@ export function ResetPasswordRequest() {
                 </Button>
                 .
               </p>
+              <div className='flex justify-center'>
+                <Button
+                  onClick={openGmail}
+                  variant='secondary'
+                  className='mt-4 flex h-auto items-center gap-2'
+                >
+                  Open Gmail <ExternalLink size={16} />
+                </Button>
+              </div>
               <p className='px-8 pt-4 text-center text-sm text-muted-foreground'>
                 <Link to='/login' className='text-foreground underline-offset-4 hover:underline'>
                   Return to log in

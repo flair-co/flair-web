@@ -35,7 +35,7 @@ export function SessionCard({session, hideRevokeButton = false}: SessionCardProp
           <div className='flex flex-row items-start justify-between gap-4 p-4 sm:items-center'>
             <div className='flex min-w-0 flex-grow items-center gap-4'>
               <div className='flex-shrink-0 rounded-lg bg-accent p-2 text-muted-foreground'>
-                <Icon className='h-6 w-6 text-muted-foreground' />
+                <Icon className='h-5 w-5 text-muted-foreground' />
               </div>
               <div className='min-w-0 flex-grow'>
                 <p className='truncate text-sm font-medium'>{session.name}</p>

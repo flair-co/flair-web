@@ -11,7 +11,8 @@
     "format:check": "prettier --check \"src/**/*.{js,jsx,ts,tsx}\"",
     "lint": "eslint \"{src,test}/**/*.ts\" --report-unused-disable-directives --max-warnings 0 --fix",
     "lint:check": "eslint \"{src,test}/**/*.ts\" --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:e2e": "npx playwright test"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -59,6 +60,7 @@
     "zod": "^3.24.4"
   },
   "devDependencies": {
+    "@playwright/test": "^1.52.0",
     "@tanstack/eslint-plugin-query": "^5.67.2",
     "@tanstack/router-cli": "^1.43.13",
     "@tanstack/router-devtools": "^1.40.0",

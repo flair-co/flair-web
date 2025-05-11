@@ -67,6 +67,8 @@ jobs:
     steps:
       - name: Checkout web repository
         uses: actions/checkout@v4
+        with:
+          path: web
 
       - name: Checkout API repository
         uses: actions/checkout@v4

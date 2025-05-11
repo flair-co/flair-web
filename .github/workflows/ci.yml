@@ -67,9 +67,6 @@ jobs:
     steps:
       - name: Checkout web repository
         uses: actions/checkout@v4
-        with:
-          repository: eduard-cc/flair-web
-          path: web
 
       - name: Checkout API repository
         uses: actions/checkout@v4
@@ -80,7 +77,7 @@ jobs:
       - name: Copy API environment variables
         run: cp api/.env.test .env
 
-      - name: Setup Docker E2E Environment
+      - name: Setup Docker E2E environment
         run: |
           cp web/docker-compose.e2e.yml docker-compose.e2e.yml
           docker compose -f docker-compose.e2e.yml up -d --build
@@ -89,7 +86,7 @@ jobs:
       - name: List Directory Contents
         run: ls -la
         working-directory: ./flair-web
-        
+
       - name: Run E2E tests
         run: npm run test:e2e
         working-directory: ./flair-web

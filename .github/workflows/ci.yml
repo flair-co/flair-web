@@ -78,7 +78,7 @@ jobs:
           path: api
 
       - name: Copy API environment variables
-        run: cp api/.env .env
+        run: cp api/.env.test .env
 
       - name: Set up Docker Compose
         run: |

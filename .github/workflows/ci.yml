@@ -82,8 +82,8 @@ jobs:
 
       - name: Set up Docker Compose
         run: |
-          cp web/docker-compose.e2e.yml docker-compose.yml
-          docker compose -f docker-compose.yml up -d --build
+          cp web/docker-compose.e2e.yml docker-compose.e2e.yml
+          docker compose -f docker-compose.e2e.yml up -d --build
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps

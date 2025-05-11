@@ -80,7 +80,7 @@ jobs:
       - name: Copy API environment variables
         run: cp api/.env.test .env
 
-      - name: Set up Docker Compose
+      - name: Setup E2E Environment
         run: |
           cp web/docker-compose.e2e.yml docker-compose.e2e.yml
           docker compose -f docker-compose.e2e.yml up -d --build

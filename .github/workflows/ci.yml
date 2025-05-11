@@ -84,13 +84,8 @@ jobs:
         run: |
           cp web/docker-compose.e2e.yml docker-compose.e2e.yml
           docker compose -f docker-compose.e2e.yml up -d --build
-
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
+          npx playwright install --with-deps
 
       - name: Run E2E tests
         run: |
           docker compose exec web npm run test:e2e
-
-      - name: Tear down
-        run: docker compose down

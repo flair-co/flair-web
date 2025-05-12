@@ -1,9 +1,12 @@
 import {defineConfig, devices} from '@playwright/test';
+import {loadEnv} from 'vite';
+
+const env = loadEnv('test', process.cwd(), '');
 
 export default defineConfig({
   webServer: {
     command: 'npm run dev',
-    url: process.env.VITE_APP_URL,
+    url: env.VITE_APP_URL,
     reuseExistingServer: !process.env.CI,
   },
   testDir: './test',
@@ -13,7 +16,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: [['list'], ['html']],
   use: {
-    baseURL: process.env.VITE_APP_URL,
+    baseURL: env.VITE_APP_URL,
     trace: 'on-first-retry',
   },
   projects: [

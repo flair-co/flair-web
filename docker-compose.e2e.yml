@@ -23,7 +23,7 @@ services:
       - "${DB_PORT}:${DB_PORT}"
 
   api:
-    image: ghcr.io/eduard-cc/flair-api:latest
+    image: ghcr.io/flair-co/flair-api:latest
     container_name: api
     ports:
       - "3000:3000"

@@ -69,7 +69,7 @@ jobs:
 
       - name: Export environment variables
         run: |
-          echo "${{ toJson(vars) }}" | jq -r 'to_entries | .[] | "\(.key)=\(.value)"' >> $GITHUB_ENV
+          echo '${{ toJson(vars) }}' | jq -c '.' | jq -r 'to_entries | .[] | "\(.key)=\(.value)"' >> $GITHUB_ENV
 
       - name: Start Docker E2E environment
         run: |

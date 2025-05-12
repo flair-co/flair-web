@@ -67,12 +67,9 @@ jobs:
       - name: Checkout web repository
         uses: actions/checkout@v4
 
-      - name: Debug env variables
+      - name: Export environment variables
         run: |
-          echo "----------- environment variables -----------"
-          env | grep EMAIL_PORT
-          env | grep REDIS_PORT
-          env | grep DB_USERNAME
+          echo "${{ toJson(vars) }}" | jq -r 'to_entries | .[] | "\(.key)=\(.value)"' >> $GITHUB_ENV
 
       - name: Start Docker E2E environment
         run: |

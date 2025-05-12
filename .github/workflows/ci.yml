@@ -65,35 +65,30 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     environment: test
-    needs: [build, lint-format]
+    needs: [build]
     steps:
       - name: Checkout web repository
         uses: actions/checkout@v4
-        with:
-          path: web
 
-      - name: Checkout API repository
-        uses: actions/checkout@v4
-        with:
-          repository: eduard-cc/flair-api
-          path: api
-
-      - name: Copy API environment variables
-        run: cp api/.env.test .env
-
-      - name: Setup Docker E2E environment
+      - name: Start Docker E2E environment
         run: |
-          cp web/docker-compose.e2e.yml docker-compose.e2e.yml
-          docker compose -f docker-compose.e2e.yml up -d --build
-          npx playwright install --with-deps
+          cp docker-compose.e2e.yml docker-compose.yml
+          docker compose -f docker-compose.yml up -d --build
 
-      - name: List Directory Contents
-        run: ls -la
-        working-directory: ./flair-web
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: 'npm'
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
 
       - name: Run E2E tests
         run: npm run test:e2e
-        working-directory: ./flair-web
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}

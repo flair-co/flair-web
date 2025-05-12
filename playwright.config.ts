@@ -3,7 +3,7 @@ import {defineConfig, devices} from '@playwright/test';
 export default defineConfig({
   webServer: {
     command: 'npm run dev',
-    url: import.meta.env.VITE_APP_URL,
+    url: process.env.VITE_APP_URL,
     reuseExistingServer: !process.env.CI,
   },
   testDir: './test',
@@ -13,7 +13,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   use: {
-    baseURL: import.meta.env.VITE_APP_URL,
+    baseURL: process.env.VITE_APP_URL,
     trace: 'on-first-retry',
   },
   projects: [

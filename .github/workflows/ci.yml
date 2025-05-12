@@ -13,7 +13,7 @@ jobs:
   lint-format:
     name: Lint & Format
     runs-on: ubuntu-latest
-    environment: development
+    environment: test
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -39,7 +39,7 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    environment: development
+    environment: test
     needs: [lint-format]
     steps:
       - name: Checkout repository
@@ -62,7 +62,9 @@ jobs:
 
   e2e-test:
     name: E2E Tests
+    timeout-minutes: 60
     runs-on: ubuntu-latest
+    environment: test
     needs: [build, lint-format]
     steps:
       - name: Checkout web repository

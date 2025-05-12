@@ -67,6 +67,13 @@ jobs:
       - name: Checkout web repository
         uses: actions/checkout@v4
 
+      - name: Debug env variables
+        run: |
+          echo "----------- environment variables -----------"
+          env | grep EMAIL_PORT
+          env | grep REDIS_PORT
+          env | grep DB_USERNAME
+
       - name: Start Docker E2E environment
         run: |
           cp docker-compose.e2e.yml docker-compose.yml

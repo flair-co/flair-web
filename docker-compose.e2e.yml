@@ -23,9 +23,7 @@ services:
       - "${DB_PORT}:${DB_PORT}"
 
   api:
-    build:
-      context: ./api
-      dockerfile: Dockerfile
+    image: ghcr.io/eduard-cc/flair-api:latest
     container_name: api
     env_file:
       - .env

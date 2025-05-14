@@ -43,10 +43,6 @@ services:
       - e2e-network
     healthcheck:
       test: ["CMD", "curl", "-f", "${API_URL}/health || exit 0"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 30s
 
 networks:
   e2e-network:

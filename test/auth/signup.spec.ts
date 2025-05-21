@@ -12,15 +12,15 @@ test.describe('Signup', () => {
   });
 
   test('should successfully create a new account', async () => {
-    const uniqueEmail = faker.internet.email();
-    const testName = faker.person.fullName();
-    const testPassword = faker.internet.password();
+    const email = faker.internet.email();
+    const name = faker.person.fullName();
+    const password = faker.internet.password();
 
-    await signupPage.fillEmail(uniqueEmail);
-    await signupPage.fillName(testName);
-    await signupPage.fillPassword(testPassword);
+    await signupPage.fillEmail(email);
+    await signupPage.fillName(name);
+    await signupPage.fillPassword(password);
 
-    await signupPage.expectFilledValues(uniqueEmail, testName, testPassword);
+    await signupPage.expectFilledValues(email, name, password);
 
     await signupPage.submit();
     await signupPage.expectRedirectToVerify();

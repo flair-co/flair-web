@@ -1,7 +1,7 @@
 import {defineConfig, devices} from '@playwright/test';
 import {loadEnv} from 'vite';
 
-const env = loadEnv('test', process.cwd(), '');
+const env = loadEnv('development', process.cwd(), '');
 
 export default defineConfig({
   webServer: {

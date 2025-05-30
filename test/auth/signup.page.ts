@@ -6,6 +6,11 @@ export class SignupPage {
   readonly nameInput: Locator;
   readonly passwordInput: Locator;
   readonly submitButton: Locator;
+  readonly emailInvalidError: Locator;
+  readonly requiredError: Locator;
+  readonly nameTooLongError: Locator;
+  readonly passwordTooShortError: Locator;
+  readonly passwordTooLongError: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -13,6 +18,11 @@ export class SignupPage {
     this.nameInput = page.getByTestId('signup-name');
     this.passwordInput = page.getByTestId('signup-password');
     this.submitButton = page.getByTestId('signup-submit');
+    this.requiredError = page.getByText('Required');
+    this.emailInvalidError = page.getByText('Please enter a valid email address.');
+    this.nameTooLongError = page.getByText('Name must be less than 256 characters.');
+    this.passwordTooShortError = page.getByText('Too short. Must be at least 8 characters.');
+    this.passwordTooLongError = page.getByText('Too long. Must be less than 256 characters.');
   }
 
   async navigate() {
@@ -43,5 +53,9 @@ export class SignupPage {
 
   async expectRedirectToVerify() {
     await expect(this.page).toHaveURL(/.*\/verify-email/);
+  }
+
+  async expectErrorMessage(messageLocator: Locator) {
+    await expect(messageLocator.first()).toBeVisible();
   }
 }

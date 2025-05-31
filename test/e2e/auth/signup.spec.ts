@@ -1,6 +1,6 @@
 import {faker} from '@faker-js/faker';
 import {expect, test} from '@playwright/test';
-import {EmailUtils} from 'test/clients/email-utils';
+import {EmailUtils} from 'test/utils/email-utils';
 import {HomePage} from 'test/pages/home.page';
 
 import {SignupPage} from '../../pages/signup.page';

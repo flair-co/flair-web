@@ -75,6 +75,7 @@ jobs:
         run: |
           cp docker-compose.e2e.yml docker-compose.yml
           docker compose -f docker-compose.yml up -d --build
+          npm run db:seed:e2e
 
       - name: Setup Node.js
         uses: actions/setup-node@v4

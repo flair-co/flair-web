@@ -11,8 +11,6 @@ test.describe.serial('Signup', () => {
   let verifyEmailPage: VerifyEmailPage;
   let homePage: HomePage;
 
-  let existingEmail: string;
-
   test.beforeEach(async ({page}) => {
     signupPage = new SignupPage(page);
     verifyEmailPage = new VerifyEmailPage(page);
@@ -34,7 +32,6 @@ test.describe.serial('Signup', () => {
 
   test('should create account, verify email via LINK, and land on home page', async () => {
     const email = await signupPage.fillAndSubmitForm();
-    existingEmail = email;
 
     await verifyEmailPage.expectToBeOnPage();
     const link = await EmailUtils.extractLinkFromEmail(email);
@@ -49,7 +46,7 @@ test.describe.serial('Signup', () => {
     const name = faker.person.fullName();
     const password = faker.internet.password();
 
-    await signupPage.emailInput.fill(existingEmail);
+    await signupPage.emailInput.fill('verified@test.com');
     await signupPage.nameInput.fill(name);
     await signupPage.passwordInput.fill(password);
     await signupPage.submitButton.click();

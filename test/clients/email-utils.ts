@@ -1,6 +1,9 @@
 import {loadEnv} from 'vite';
 
-import {MailpitMessageSummaryResponse, MailpitResponse} from './mailpit';
+type Message = {
+  ID: string;
+  To: {Address: string}[];
+};
 
 export class EmailUtils {
   static readonly EMAIL_UI_URL = loadEnv('development', process.cwd(), '').VITE_EMAIL_UI_URL;
@@ -23,17 +26,16 @@ export class EmailUtils {
     let retries = 10;
     const delayMs = 200;
 
-    // retry briefly to allow BullMQ to process the job and send email to Mailpit
     while (retries > 0) {
       const res = await fetch(`${this.EMAIL_UI_URL}/api/v1/messages`);
-      const data = (await res.json()) as MailpitResponse;
+      const data = (await res.json()) as {messages: Message[]};
       const email = data.messages.find((msg) =>
         msg.To.some((r) => r.Address.toLowerCase() === recipientEmail.toLowerCase()),
       );
 
       if (email) {
         const res = await fetch(`${this.EMAIL_UI_URL}/api/v1/message/${email.ID}`);
-        const fullEmail = (await res.json()) as MailpitMessageSummaryResponse;
+        const fullEmail = (await res.json()) as {Text: string};
         return fullEmail;
       }
 

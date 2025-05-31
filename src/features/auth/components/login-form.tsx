@@ -102,7 +102,6 @@ export function LogInForm({returnTo}: LogInFormProps) {
                     disabled={isPending}
                   />
                 </FormControl>
-                <FormMessage />
               </FormItem>
             )}
           />

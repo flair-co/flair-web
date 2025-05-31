@@ -5,8 +5,7 @@ export class LoginPage {
   readonly emailInput: Locator;
   readonly passwordInput: Locator;
   readonly submitButton: Locator;
-  readonly emailRequiredError: Locator;
-  readonly passwordRequiredError: Locator;
+  readonly requiredError: Locator;
   readonly invalidCredentialsError: Locator;
   readonly forgotPasswordLink: Locator;
 
@@ -15,8 +14,7 @@ export class LoginPage {
     this.emailInput = page.getByTestId('login-email-input');
     this.passwordInput = page.getByTestId('password-input');
     this.submitButton = page.getByTestId('login-submit');
-    this.emailRequiredError = page.getByText('Please enter your email address.');
-    this.passwordRequiredError = page.getByText('Please enter your password.');
+    this.requiredError = page.getByText('Required');
     this.invalidCredentialsError = page.getByText('Invalid email or password.');
     this.forgotPasswordLink = page.getByTestId('forgot-password-link');
   }

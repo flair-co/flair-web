@@ -1,7 +1,7 @@
 import {faker} from '@faker-js/faker';
 import {expect, test} from '@playwright/test';
-import {EmailUtils} from 'test/utils/email-utils';
 import {HomePage} from 'test/pages/home.page';
+import {EmailUtils} from 'test/utils/email-utils';
 
 import {SignupPage} from '../../pages/signup.page';
 import {VerifyEmailPage} from '../../pages/verify-email.page';
@@ -30,16 +30,22 @@ test.describe.serial('Signup', () => {
     await homePage.expectUserLoggedIn();
   });
 
-  test('should create account, verify email via LINK, and land on home page', async () => {
+  test('should create account, verify email via LINK, and land on home page', async ({page}) => {
     const email = await signupPage.fillAndSubmitForm();
 
     await verifyEmailPage.expectToBeOnPage();
-    const link = await EmailUtils.extractLinkFromEmail(email);
-    await verifyEmailPage.page.goto(link);
+    const verificationLink = await EmailUtils.extractLinkFromEmail(email);
+    await verifyEmailPage.page.goto(verificationLink);
 
     await homePage.expectToBeOnPage();
     await homePage.expectWelcomeMessage();
     await homePage.expectUserLoggedIn();
+
+    // Try reusing the link
+    await page.goto(verificationLink);
+    await homePage.expectToBeOnPage();
+    await homePage.expectUserLoggedIn();
+    await expect(homePage.alreadyVerifiedToastTitle).toBeVisible();
   });
 
   test('should show error for email already in use', async () => {

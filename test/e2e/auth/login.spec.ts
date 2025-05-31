@@ -45,12 +45,12 @@ test.describe.serial('Login', () => {
 
   test('should show error for empty email', async () => {
     await loginPage.login('', VERIFIED_ACCOUNT_PASSWORD);
-    await expect(loginPage.emailRequiredError).toBeVisible();
+    await expect(loginPage.requiredError).toBeVisible();
   });
 
   test('should show error for empty password', async () => {
     await loginPage.login(VERIFIED_ACCOUNT_EMAIL, '');
-    await expect(loginPage.passwordRequiredError).toBeVisible();
+    await expect(loginPage.requiredError).toBeVisible();
   });
 
   test('should navigate to reset password page when link is clicked', async ({page}) => {

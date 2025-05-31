@@ -1,3 +1,4 @@
+import {faker} from '@faker-js/faker';
 import {Locator, Page, expect} from '@playwright/test';
 
 export class SignupPage {
@@ -7,6 +8,7 @@ export class SignupPage {
   readonly passwordInput: Locator;
   readonly submitButton: Locator;
   readonly emailInvalidError: Locator;
+  readonly emailAlreadyInUseError: Locator;
   readonly requiredError: Locator;
   readonly nameTooLongError: Locator;
   readonly passwordTooShortError: Locator;
@@ -20,6 +22,7 @@ export class SignupPage {
     this.submitButton = page.getByTestId('signup-submit');
     this.requiredError = page.getByText('Required');
     this.emailInvalidError = page.getByText('Please enter a valid email address.');
+    this.emailAlreadyInUseError = page.getByText('This email is already in use');
     this.nameTooLongError = page.getByText('Name must be less than 256 characters.');
     this.passwordTooShortError = page.getByText('Too short. Must be at least 8 characters.');
     this.passwordTooLongError = page.getByText('Too long. Must be less than 256 characters.');
@@ -29,33 +32,20 @@ export class SignupPage {
     await this.page.goto('/signup');
   }
 
-  async fillEmail(email: string) {
+  async fillAndSubmitForm() {
+    const email = faker.internet.email();
+    const name = faker.person.fullName();
+    const password = faker.internet.password();
+
     await this.emailInput.fill(email);
-  }
-
-  async fillName(name: string) {
     await this.nameInput.fill(name);
-  }
-
-  async fillPassword(password: string) {
     await this.passwordInput.fill(password);
-  }
 
-  async submit() {
-    await this.submitButton.click();
-  }
-
-  async expectFilledValues(email: string, name: string, password: string) {
     await expect(this.emailInput).toHaveValue(email);
     await expect(this.nameInput).toHaveValue(name);
     await expect(this.passwordInput).toHaveValue(password);
-  }
+    await this.submitButton.click();
 
-  async expectRedirectToVerify() {
-    await expect(this.page).toHaveURL(/.*\/verify-email/);
-  }
-
-  async expectErrorMessage(messageLocator: Locator) {
-    await expect(messageLocator.first()).toBeVisible();
+    return email;
   }
 }

@@ -71,6 +71,7 @@ export function LogInForm({returnTo}: LogInFormProps) {
                     autoCorrect='off'
                     disabled={isPending}
                     className={cn(fieldState.error && 'border-destructive')}
+                    data-testid='login-email-input'
                   />
                 </FormControl>
                 <FormMessage />
@@ -84,7 +85,11 @@ export function LogInForm({returnTo}: LogInFormProps) {
               <FormItem>
                 <div className='flex items-center justify-between'>
                   <FormLabel htmlFor='password'>Password</FormLabel>
-                  <Link to='/reset-password' className='text-sm text-primary hover:underline'>
+                  <Link
+                    to='/reset-password'
+                    className='text-sm text-primary hover:underline'
+                    data-testid='forgot-password-link'
+                  >
                     Forgot your password?
                   </Link>
                 </div>
@@ -101,7 +106,7 @@ export function LogInForm({returnTo}: LogInFormProps) {
               </FormItem>
             )}
           />
-          <Button type='submit' disabled={isPending} className='mt-2'>
+          <Button type='submit' disabled={isPending} className='mt-2' data-testid='login-submit'>
             {isPending ? (
               <>
                 <span>Logging in...</span>

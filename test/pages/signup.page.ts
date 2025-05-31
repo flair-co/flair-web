@@ -16,9 +16,9 @@ export class SignupPage {
 
   constructor(page: Page) {
     this.page = page;
-    this.emailInput = page.getByTestId('signup-email');
-    this.nameInput = page.getByTestId('signup-name');
-    this.passwordInput = page.getByTestId('signup-password');
+    this.emailInput = page.getByTestId('signup-email-input');
+    this.nameInput = page.getByTestId('signup-name-input');
+    this.passwordInput = page.getByTestId('password-input');
     this.submitButton = page.getByTestId('signup-submit');
     this.requiredError = page.getByText('Required');
     this.emailInvalidError = page.getByText('Please enter a valid email address.');

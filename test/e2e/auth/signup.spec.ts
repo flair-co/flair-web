@@ -55,19 +55,16 @@ test.describe.serial('Signup', () => {
   });
 
   test('should show error for empty email', async () => {
-    await signupPage.emailInput.focus();
     await signupPage.submitButton.click();
     await expect(signupPage.requiredError.first()).toBeVisible();
   });
 
   test('should show error for empty name', async () => {
-    await signupPage.nameInput.focus();
     await signupPage.submitButton.click();
     await expect(signupPage.requiredError.first()).toBeVisible();
   });
 
   test('should show error for empty password', async () => {
-    await signupPage.passwordInput.focus();
     await signupPage.submitButton.click();
     await expect(signupPage.requiredError.first()).toBeVisible();
   });

@@ -28,9 +28,28 @@ test.describe.serial('Login', () => {
     await homePage.expectUserLoggedIn();
   });
 
+  test('should redirect to home page if a logged in user navigates to /login', async ({
+    page,
+  }) => {
+    await loginPage.navigate();
+    await loginPage.login(VERIFIED_ACCOUNT_EMAIL, VERIFIED_ACCOUNT_PASSWORD);
+    await homePage.expectToBeOnPage();
+
+    await loginPage.navigate();
+
+    await homePage.expectToBeOnPage();
+    await homePage.expectUserLoggedIn();
+    expect(page.url()).not.toContain('/login');
+  });
+
   test('should redirect to verify email page for unverified account', async () => {
     await loginPage.login(UNVERIFIED_ACCOUNT_EMAIL, UNVERIFIED_ACCOUNT_PASSWORD);
     await verifyEmailPage.expectToBeOnPage();
+  });
+
+  test('should navigate to reset password page when link is clicked', async ({page}) => {
+    await loginPage.forgotPasswordLink.click();
+    await expect(page).toHaveURL('/reset-password');
   });
 
   test('should show error for non-existent email', async () => {
@@ -51,10 +70,5 @@ test.describe.serial('Login', () => {
   test('should show error for empty password', async () => {
     await loginPage.login(VERIFIED_ACCOUNT_EMAIL, '');
     await expect(loginPage.requiredError).toBeVisible();
-  });
-
-  test('should navigate to reset password page when link is clicked', async ({page}) => {
-    await loginPage.forgotPasswordLink.click();
-    await expect(page).toHaveURL('/reset-password');
   });
 });

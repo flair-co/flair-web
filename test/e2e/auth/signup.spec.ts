@@ -46,6 +46,12 @@ test.describe.serial('Signup', () => {
     await homePage.expectToBeOnPage();
     await homePage.expectUserLoggedIn();
     await expect(homePage.alreadyVerifiedToastTitle).toBeVisible();
+
+    // Try navigating to /signup as a logged in user
+    await signupPage.navigate();
+    await homePage.expectToBeOnPage();
+    await homePage.expectUserLoggedIn();
+    expect(page.url()).not.toContain('/signup');
   });
 
   test('should show error for email already in use', async () => {

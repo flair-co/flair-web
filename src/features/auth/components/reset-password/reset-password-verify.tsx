@@ -38,62 +38,67 @@ export function ResetPasswordVerify({token, email}: ResetPasswordVerifyProps) {
   }
 
   if (isSuccess) {
-    <AuthLayout title={'Password reset successful'}>
-      <div className='relative flex flex-col'>
-        <AnimatePresence initial={false} mode='wait'>
-          <motion.div
-            key='success-view-fade'
-            variants={switchContentVariants}
-            initial='hidden'
-            animate='visible'
-            exit='exit'
-            className='flex w-full flex-col space-y-4 text-sm text-muted-foreground'
-          >
-            <p className='mb-2'>You can now use your new password to log in to your account.</p>
-            <Button asChild>
-              <Link to='/login' data-testid='return-to-login-link'>
-                Go to log in
-              </Link>
-            </Button>
-          </motion.div>
-        </AnimatePresence>
-      </div>
-    </AuthLayout>;
+    return (
+      <AuthLayout title={'Password reset successful'}>
+        <div className='relative flex flex-col'>
+          <AnimatePresence initial={false} mode='wait'>
+            <motion.div
+              key='success-view-fade'
+              variants={switchContentVariants}
+              initial='hidden'
+              animate='visible'
+              exit='exit'
+              className='flex w-full flex-col space-y-4 text-sm text-muted-foreground'
+            >
+              <p className='mb-2'>You can now use your new password to log in to your account.</p>
+              <Button asChild>
+                <Link to='/login' data-testid='return-to-login-link'>
+                  Go to log in
+                </Link>
+              </Button>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </AuthLayout>
+    );
   }
 
   if (error?.status === 400) {
-    <AuthLayout title={'Invalid or expired token'}>
-      <div className='relative flex flex-col'>
-        <AnimatePresence initial={false} mode='wait'>
-          <motion.div
-            key='success-view-fade'
-            variants={switchContentVariants}
-            initial='hidden'
-            animate='visible'
-            exit='exit'
-            className='flex w-full flex-col space-y-4 text-sm text-muted-foreground'
-          >
-            <p className='mb-2'>
-              Your password reset token is invalid or has expired. Please try requesting a new link.
-            </p>
-            <Button asChild>
-              <Link to='/reset-password' data-testid='request-new-link'>
-                Request a new link
-              </Link>
-            </Button>
-            <p className='px-8 pt-4 text-center text-sm text-muted-foreground'>
-              <Link
-                to='/login'
-                className='text-foreground underline-offset-4 hover:underline'
-                data-testid='return-to-login-link'
-              >
-                Log in
-              </Link>
-            </p>
-          </motion.div>
-        </AnimatePresence>
-      </div>
-    </AuthLayout>;
+    return (
+      <AuthLayout title={'Invalid or expired token'}>
+        <div className='relative flex flex-col'>
+          <AnimatePresence initial={false} mode='wait'>
+            <motion.div
+              key='success-view-fade'
+              variants={switchContentVariants}
+              initial='hidden'
+              animate='visible'
+              exit='exit'
+              className='flex w-full flex-col space-y-4 text-sm text-muted-foreground'
+            >
+              <p className='mb-2'>
+                Your password reset token is invalid or has expired. Please try requesting a new
+                link.
+              </p>
+              <Button asChild>
+                <Link to='/reset-password' data-testid='request-new-link'>
+                  Request a new link
+                </Link>
+              </Button>
+              <p className='px-8 pt-4 text-center text-sm text-muted-foreground'>
+                <Link
+                  to='/login'
+                  className='text-foreground underline-offset-4 hover:underline'
+                  data-testid='return-to-login-link'
+                >
+                  Log in
+                </Link>
+              </p>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </AuthLayout>
+    );
   }
 
   return (

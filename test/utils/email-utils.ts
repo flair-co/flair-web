@@ -61,7 +61,6 @@ export class EmailUtils {
     const linkRegex =
       /(https?:\/\/[^\s"'<>]*\/reset-password\?email=[^&"\s<>]+&token=[0-9a-fA-F]{8}-(?:[0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[^\s"'<>]*)/i;
     const match = body.match(linkRegex);
-    console.log(match);
     return match ? match[1] : '';
   }
 

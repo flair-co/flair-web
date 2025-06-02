@@ -13,6 +13,7 @@ export class SignupPage {
   readonly nameTooLongError: Locator;
   readonly passwordTooShortError: Locator;
   readonly passwordTooLongError: Locator;
+  readonly loginLink: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -26,6 +27,7 @@ export class SignupPage {
     this.nameTooLongError = page.getByText('Name must be less than 256 characters.');
     this.passwordTooShortError = page.getByText('Too short. Must be at least 8 characters.');
     this.passwordTooLongError = page.getByText('Too long. Must be less than 256 characters.');
+    this.loginLink = page.getByTestId('login-link');
   }
 
   async navigate() {

@@ -8,6 +8,7 @@ export class LoginPage {
   readonly requiredError: Locator;
   readonly invalidCredentialsError: Locator;
   readonly forgotPasswordLink: Locator;
+  readonly signupLink: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -17,6 +18,7 @@ export class LoginPage {
     this.requiredError = page.getByText('Required');
     this.invalidCredentialsError = page.getByText('Invalid email or password.');
     this.forgotPasswordLink = page.getByTestId('forgot-password-link');
+    this.signupLink = page.getByTestId('signup-link');
   }
 
   async navigate() {

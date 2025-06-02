@@ -28,9 +28,7 @@ test.describe.serial('Login', () => {
     await homePage.expectUserLoggedIn();
   });
 
-  test('should redirect to home page if a logged in user navigates to /login', async ({
-    page,
-  }) => {
+  test('should redirect to home page if a logged in user navigates to /login', async ({page}) => {
     await loginPage.navigate();
     await loginPage.login(VERIFIED_ACCOUNT_EMAIL, VERIFIED_ACCOUNT_PASSWORD);
     await homePage.expectToBeOnPage();
@@ -40,6 +38,11 @@ test.describe.serial('Login', () => {
     await homePage.expectToBeOnPage();
     await homePage.expectUserLoggedIn();
     expect(page.url()).not.toContain('/login');
+  });
+
+  test('should redirect to signup on link click', async ({page}) => {
+    await loginPage.signupLink.click()
+    expect(page.url()).toContain('/signup');
   });
 
   test('should redirect to verify email page for unverified account', async () => {

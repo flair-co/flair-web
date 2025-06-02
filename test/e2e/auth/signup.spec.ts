@@ -1,13 +1,16 @@
 import {faker} from '@faker-js/faker';
 import {expect, test} from '@playwright/test';
 import {HomePage} from 'test/pages/home.page';
+import {LoginPage} from 'test/pages/login.page';
 import {EmailUtils} from 'test/utils/email-utils';
+import {VERIFIED_ACCOUNT_EMAIL, VERIFIED_ACCOUNT_PASSWORD} from 'test/utils/seed.constants';
 
 import {SignupPage} from '../../pages/signup.page';
 import {VerifyEmailPage} from '../../pages/verify-email.page';
 
 test.describe.serial('Signup', () => {
   let signupPage: SignupPage;
+  let loginPage: LoginPage;
   let verifyEmailPage: VerifyEmailPage;
   let homePage: HomePage;
 
@@ -15,6 +18,7 @@ test.describe.serial('Signup', () => {
     signupPage = new SignupPage(page);
     verifyEmailPage = new VerifyEmailPage(page);
     homePage = new HomePage(page);
+    loginPage = new LoginPage(page);
     await signupPage.navigate();
   });
 
@@ -54,6 +58,23 @@ test.describe.serial('Signup', () => {
     await homePage.expectToBeOnPage();
     await homePage.expectUserLoggedIn();
     expect(page.url()).not.toContain('/signup');
+  });
+
+  test('should redirect to home page if a logged in user navigates to /signup', async ({page}) => {
+    await loginPage.navigate();
+    await loginPage.login(VERIFIED_ACCOUNT_EMAIL, VERIFIED_ACCOUNT_PASSWORD);
+    await homePage.expectToBeOnPage();
+
+    await signupPage.navigate();
+
+    await homePage.expectToBeOnPage();
+    await homePage.expectUserLoggedIn();
+    expect(page.url()).not.toContain('/signup');
+  });
+
+  test('should redirect to login on link click', async ({page}) => {
+    await signupPage.loginLink.click();
+    expect(page.url()).toContain('/login');
   });
 
   test('should show error for email already in use', async () => {

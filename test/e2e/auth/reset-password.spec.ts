@@ -101,7 +101,6 @@ test.describe.serial('Password Reset', () => {
     await homePage.expectUserLoggedIn();
   });
 
-  // --- New tests for invalid URL parameters ---
   test('should show request form if token is missing from URL', async ({page}) => {
     const email = PW_CHANGE_ACCOUNT_EMAIL;
     await page.goto(`/reset-password?email=${encodeURIComponent(email)}`);
@@ -109,7 +108,7 @@ test.describe.serial('Password Reset', () => {
   });
 
   test('should show request form if email is missing from URL', async ({page}) => {
-    const token = faker.string.uuid(); // A valid UUID token
+    const token = faker.string.uuid();
     await page.goto(`/reset-password?token=${token}`);
     await resetPasswordPage.expectRequestFormIsVisible();
   });
@@ -145,7 +144,7 @@ test.describe.serial('Password Reset', () => {
     await resetPasswordPage.expectRequestFormIsVisible();
   });
 
-  test('should show error toast or message when submitting with an unknown/expired token', async ({
+  test('should show error message when submitting with an unknown/expired token', async ({
     page,
   }) => {
     const unknownToken = faker.string.uuid();
@@ -156,8 +155,8 @@ test.describe.serial('Password Reset', () => {
     const newPassword = faker.internet.password();
     await resetPasswordPage.setNewPassword(newPassword);
 
-    await expect(resetPasswordPage.invalidLinkError).toBeVisible();
-    await resetPasswordPage.returnToLoginLink.click();
-    expect(page.url()).toContain('/login');
+    await expect(resetPasswordPage.invalidTokenError).toBeVisible();
+    await resetPasswordPage.requestNewLink.click();
+    await resetPasswordPage.expectRequestFormIsVisible();
   });
 });

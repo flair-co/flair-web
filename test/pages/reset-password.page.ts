@@ -13,7 +13,8 @@ export class ResetPasswordPage {
   readonly openGmailButton: Locator;
   readonly resendButton: Locator;
   readonly useDifferentEmailButton: Locator;
-  readonly invalidLinkError: Locator;
+  readonly invalidTokenError: Locator;
+  readonly requestNewLink: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -32,7 +33,8 @@ export class ResetPasswordPage {
     this.verifySuccessMessage = page.getByText('Password reset successful');
     this.passwordTooShortError = page.getByText('Too short. Must be at least 8 characters.');
     this.requiredError = page.getByText('Required');
-    this.invalidLinkError = page.getByText('Invalid or expired verification link');
+    this.invalidTokenError = page.getByText('Invalid or expired token');
+    this.requestNewLink = page.getByTestId('request-new-link');
   }
 
   async navigate() {

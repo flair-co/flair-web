@@ -22,7 +22,8 @@ test.describe.serial('Signup', () => {
     const email = await signupPage.fillAndSubmitForm();
 
     await verifyEmailPage.expectToBeOnPage();
-    const code = await EmailUtils.extractCodeFromEmail(email);
+    const message = await EmailUtils.findEmailByRecipient(email);
+    const code = EmailUtils.extractCode(message?.Text);
     await verifyEmailPage.inputCodeAndSubmit(code);
 
     await homePage.expectToBeOnPage();
@@ -34,8 +35,9 @@ test.describe.serial('Signup', () => {
     const email = await signupPage.fillAndSubmitForm();
 
     await verifyEmailPage.expectToBeOnPage();
-    const verificationLink = await EmailUtils.extractLinkFromEmail(email);
-    await verifyEmailPage.page.goto(verificationLink);
+    const message = await EmailUtils.findEmailByRecipient(email);
+    const verificationLink = EmailUtils.extractVerifyEmailLink(message?.Text);
+    await page.goto(verificationLink);
 
     await homePage.expectToBeOnPage();
     await homePage.expectWelcomeMessage();

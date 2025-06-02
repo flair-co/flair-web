@@ -88,7 +88,12 @@ export function ResetPasswordVerify({token, email}: ResetPasswordVerifyProps) {
                       />
                     )}
                   />
-                  <Button type='submit' disabled={isPending} className='mt-2'>
+                  <Button
+                    type='submit'
+                    disabled={isPending}
+                    className='mt-2'
+                    data-testid='reset-button'
+                  >
                     {isPending ? (
                       <>
                         <span>Resetting password...</span>
@@ -101,7 +106,11 @@ export function ResetPasswordVerify({token, email}: ResetPasswordVerifyProps) {
                 </form>
               </Form>
               <p className='px-8 pt-4 text-center text-sm text-muted-foreground'>
-                <Link to='/login' className='text-foreground underline-offset-4 hover:underline'>
+                <Link
+                  to='/login'
+                  className='text-foreground underline-offset-4 hover:underline'
+                  data-testid='return-to-login-link'
+                >
                   Return to log in
                 </Link>
               </p>

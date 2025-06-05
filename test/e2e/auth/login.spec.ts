@@ -10,7 +10,7 @@ import {HomePage} from '../../pages/home.page';
 import {LoginPage} from '../../pages/login.page';
 import {VerifyEmailPage} from '../../pages/verify-email.page';
 
-test.describe.serial('Login', () => {
+test.describe('Login', () => {
   let loginPage: LoginPage;
   let homePage: HomePage;
   let verifyEmailPage: VerifyEmailPage;
@@ -41,7 +41,7 @@ test.describe.serial('Login', () => {
   });
 
   test('should redirect to signup on link click', async ({page}) => {
-    await loginPage.signupLink.click()
+    await loginPage.signupLink.click();
     expect(page.url()).toContain('/signup');
   });
 

@@ -10,7 +10,7 @@ import {
   VERIFIED_ACCOUNT_PASSWORD,
 } from 'test/utils/seed.constants';
 
-test.describe.serial('Password Reset', () => {
+test.describe('Password Reset', () => {
   let resetPasswordPage: ResetPasswordPage;
   let loginPage: LoginPage;
   let homePage: HomePage;

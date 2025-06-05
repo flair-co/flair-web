@@ -2,10 +2,12 @@ import {faker} from '@faker-js/faker';
 
 import {EmailVerifySearchParams} from '@/features/auth/types/email-verify.dto';
 
-export const invalidSearchParamsTestCases: Array<{
+type Params = {
   name: string;
-  params: Partial<EmailVerifySearchParams> | Record<string, string>;
-}> = [
+  params: EmailVerifySearchParams | Record<string, string>;
+};
+
+export const invalidVerifyEmailSearchParams: Array<Params> = [
   {
     name: 'no param',
     params: {},

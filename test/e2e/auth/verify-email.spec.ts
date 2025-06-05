@@ -1,6 +1,6 @@
 import {faker} from '@faker-js/faker';
 import {expect, test} from '@playwright/test';
-import {invalidSearchParamsTestCases} from 'test/data/verify-email-params.data';
+import {invalidVerifyEmailSearchParams} from 'test/data/verify-email-params.data';
 import {HomePage} from 'test/pages/home.page';
 import {LoginPage} from 'test/pages/login.page';
 import {SignupPage} from 'test/pages/signup.page';
@@ -62,7 +62,7 @@ test.describe('Email Verification', () => {
 
   test.describe('Invalid search params', () => {
     test.describe('Authenticated + Verified', () => {
-      for (const testCase of invalidSearchParamsTestCases) {
+      for (const testCase of invalidVerifyEmailSearchParams) {
         test(`should redirect to Home and show "Invalid verification link" with ${testCase.name}`, async ({
           page,
         }) => {
@@ -84,7 +84,7 @@ test.describe('Email Verification', () => {
     });
 
     test.describe('Authenticated + Unverified', () => {
-      for (const testCase of invalidSearchParamsTestCases) {
+      for (const testCase of invalidVerifyEmailSearchParams) {
         test(`should not navigate away from /verify-email for ${testCase.name}`, async ({page}) => {
           await loginPage.navigate();
           await loginPage.login(UNVERIFIED_ACCOUNT_EMAIL, UNVERIFIED_ACCOUNT_PASSWORD);
@@ -103,7 +103,7 @@ test.describe('Email Verification', () => {
     });
 
     test.describe('Unauthenticated', () => {
-      for (const testCase of invalidSearchParamsTestCases) {
+      for (const testCase of invalidVerifyEmailSearchParams) {
         test(`should redirect to Login and show "Invalid verification link" with ${testCase.name}`, async ({
           page,
         }) => {

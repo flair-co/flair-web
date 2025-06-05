@@ -32,7 +32,7 @@ export const Route = createFileRoute('/verify-email')({
       } else {
         if (search.flow === 'email-change') {
           toast.info('Please log in', {
-            description: 'Please log in to verify your new email.',
+            description: 'You must be authenticated to verify your new email.',
           });
           throw redirect({to: '/login'});
         }

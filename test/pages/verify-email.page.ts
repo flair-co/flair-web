@@ -10,6 +10,7 @@ export class VerifyEmailPage {
   readonly invalidOrExpiredCodeError: Locator;
   readonly invalidLinkToastTitle: Locator;
   readonly emailAlreadyVerifiedToast: Locator;
+  readonly emailChangeLoginRequiredToast: Locator;
   readonly goHomeLink: Locator;
 
   constructor(page: Page) {
@@ -22,6 +23,7 @@ export class VerifyEmailPage {
     this.invalidOrExpiredCodeError = page.getByText('This code is invalid or has expired.');
     this.invalidLinkToastTitle = page.getByText('Invalid verification link');
     this.emailAlreadyVerifiedToast = page.getByText('Your email has already been verified');
+    this.emailChangeLoginRequiredToast = page.getByText('Please log in');
     this.goHomeLink = page.getByTestId('go-home-link');
   }
 

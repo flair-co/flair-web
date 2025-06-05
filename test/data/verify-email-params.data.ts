@@ -19,8 +19,12 @@ export const invalidSearchParamsTestCases: Array<{
     params: {email: faker.internet.email()},
   },
   {
-    name: 'only flow param',
+    name: 'only flow (onboarding) param',
     params: {flow: 'onboarding'},
+  },
+  {
+    name: 'only flow (email-change) param',
+    params: {flow: 'email-change'},
   },
   {
     name: 'code and email, missing flow',
@@ -32,7 +36,7 @@ export const invalidSearchParamsTestCases: Array<{
   },
   {
     name: 'email and flow, missing code',
-    params: {email: faker.internet.email(), flow: 'onboarding'},
+    params: {email: faker.internet.email(), flow: 'email-change'},
   },
   {
     name: 'all params but invalid email format',
@@ -40,7 +44,7 @@ export const invalidSearchParamsTestCases: Array<{
   },
   {
     name: 'all params but invalid code format (non-numeric)',
-    params: {email: faker.internet.email(), code: 'abcdef', flow: 'onboarding'},
+    params: {email: faker.internet.email(), code: 'abcdef', flow: 'email-change'},
   },
   {
     name: 'all params but invalid code format (wrong length)',
@@ -60,7 +64,7 @@ export const invalidSearchParamsTestCases: Array<{
   },
   {
     name: 'param with no value (code)',
-    params: {email: faker.internet.email(), code: '', flow: 'onboarding'},
+    params: {email: faker.internet.email(), code: '', flow: 'email-change'},
   },
   {
     name: 'param with no value (flow)',

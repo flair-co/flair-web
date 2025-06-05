@@ -61,17 +61,15 @@ test.describe('Email Verification', () => {
   });
 
   test.describe('Invalid search params', () => {
-    test.beforeEach(async () => {
-      await loginPage.navigate();
-      await loginPage.login(VERIFIED_ACCOUNT_EMAIL, VERIFIED_ACCOUNT_PASSWORD);
-      await homePage.expectToBeOnPage();
-    });
-
     test.describe('Authenticated + Verified', () => {
       for (const testCase of invalidSearchParamsTestCases) {
         test(`should redirect to Home and show "Invalid verification link" with ${testCase.name}`, async ({
           page,
         }) => {
+          await loginPage.navigate();
+          await loginPage.login(VERIFIED_ACCOUNT_EMAIL, VERIFIED_ACCOUNT_PASSWORD);
+          await homePage.expectToBeOnPage();
+
           const searchParams = new URLSearchParams();
           for (const [key, value] of Object.entries(testCase.params)) {
             searchParams.set(key, String(value));
@@ -86,14 +84,12 @@ test.describe('Email Verification', () => {
     });
 
     test.describe('Authenticated + Unverified', () => {
-      test.beforeEach(async () => {
-        await loginPage.navigate();
-        await loginPage.login(UNVERIFIED_ACCOUNT_EMAIL, UNVERIFIED_ACCOUNT_PASSWORD);
-        await verifyEmailPage.expectToBeOnPage();
-      });
-
       for (const testCase of invalidSearchParamsTestCases) {
         test(`should not navigate away from /verify-email for ${testCase.name}`, async ({page}) => {
+          await loginPage.navigate();
+          await loginPage.login(UNVERIFIED_ACCOUNT_EMAIL, UNVERIFIED_ACCOUNT_PASSWORD);
+          await verifyEmailPage.expectToBeOnPage();
+
           const searchParams = new URLSearchParams();
           for (const [key, value] of Object.entries(testCase.params)) {
             searchParams.set(key, String(value));

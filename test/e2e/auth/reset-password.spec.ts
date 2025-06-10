@@ -71,11 +71,13 @@ test.describe.serial('Password Reset', () => {
 
     test('should resend and expect 2 emails', async () => {
       await resetPasswordPage.requestPasswordReset(VERIFIED_ACCOUNT_EMAIL);
+      let count = await EmailUtils.countEmailsByRecipient(VERIFIED_ACCOUNT_EMAIL, 1);
+      expect(count).toBe(1);
 
       await resetPasswordPage.resendButton.click();
       await expect(resetPasswordPage.resendButton).toBeHidden();
 
-      const count = await EmailUtils.countEmailsByRecipient(VERIFIED_ACCOUNT_EMAIL, 2);
+      count = await EmailUtils.countEmailsByRecipient(VERIFIED_ACCOUNT_EMAIL, 2);
       expect(count).toBe(2);
     });
 

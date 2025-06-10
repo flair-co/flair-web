@@ -11,19 +11,22 @@ import {
   VERIFIED_ACCOUNT_PASSWORD,
 } from 'test/utils/seed.constants';
 
-test.describe('Password Reset', () => {
+test.describe.serial('Password Reset', () => {
   let resetPasswordPage: ResetPasswordPage;
   let loginPage: LoginPage;
   let homePage: HomePage;
 
-  test.beforeEach(async ({page}) => {
+  test.beforeEach(({page}) => {
     resetPasswordPage = new ResetPasswordPage(page);
     loginPage = new LoginPage(page);
     homePage = new HomePage(page);
-    await EmailUtils.clearEmails();
   });
 
-  test.describe('Successful password reset flow', () => {
+  test.describe.serial('Successful password reset flow', () => {
+    test.beforeEach(async () => {
+      await EmailUtils.clearEmails();
+    });
+
     test('should successfully reset password', async ({page}) => {
       await resetPasswordPage.requestPasswordReset(PW_CHANGE_ACCOUNT_EMAIL);
       const message = await EmailUtils.findEmailByRecipient(PW_CHANGE_ACCOUNT_EMAIL);
@@ -43,7 +46,6 @@ test.describe('Password Reset', () => {
     test('should redirect to home page if a logged in user navigates to /reset-password', async ({
       page,
     }) => {
-      await loginPage.navigate();
       await loginPage.login(VERIFIED_ACCOUNT_EMAIL, VERIFIED_ACCOUNT_PASSWORD);
       await homePage.expectToBeOnPage();
 
@@ -55,7 +57,11 @@ test.describe('Password Reset', () => {
     });
   });
 
-  test.describe('Request phase', () => {
+  test.describe.serial('Request phase', () => {
+    test.beforeEach(async () => {
+      await EmailUtils.clearEmails();
+    });
+
     test('should show reset confirmation message but not send an email for a non-existent account', async () => {
       const email = faker.internet.email();
       await resetPasswordPage.requestPasswordReset(email);
@@ -84,8 +90,8 @@ test.describe('Password Reset', () => {
     });
 
     test('should show error for password too short on reset form', async ({page}) => {
-      await resetPasswordPage.requestPasswordReset(PW_CHANGE_ACCOUNT_EMAIL);
-      const message = await EmailUtils.findEmailByRecipient(PW_CHANGE_ACCOUNT_EMAIL);
+      await resetPasswordPage.requestPasswordReset(VERIFIED_ACCOUNT_EMAIL);
+      const message = await EmailUtils.findEmailByRecipient(VERIFIED_ACCOUNT_PASSWORD);
       const link = EmailUtils.extractResetPasswordLink(message?.Text);
       await page.goto(link);
 
@@ -95,8 +101,8 @@ test.describe('Password Reset', () => {
     });
 
     test('should show error for empty new password on reset form', async ({page}) => {
-      await resetPasswordPage.requestPasswordReset(PW_CHANGE_ACCOUNT_EMAIL);
-      const message = await EmailUtils.findEmailByRecipient(PW_CHANGE_ACCOUNT_EMAIL);
+      await resetPasswordPage.requestPasswordReset(VERIFIED_ACCOUNT_EMAIL);
+      const message = await EmailUtils.findEmailByRecipient(VERIFIED_ACCOUNT_PASSWORD);
       const link = EmailUtils.extractResetPasswordLink(message?.Text);
       await page.goto(link);
 
@@ -106,7 +112,26 @@ test.describe('Password Reset', () => {
     });
   });
 
-  test.describe('Invalid URL parameter handling (defaults to request form)', () => {
+  test.describe('Invalid search params', () => {
+    test('should show "Invalid or expired token" for a validly formatted but incorrect email/token combination', async ({
+      page,
+    }) => {
+      const searchParams = new URLSearchParams({
+        email: faker.internet.email(),
+        token: faker.string.uuid(),
+      });
+      const invalidUrl = `/reset-password?${searchParams.toString()}`;
+
+      await page.goto(invalidUrl);
+      await resetPasswordPage.expectVerifyFormIsVisible();
+
+      const newPassword = faker.internet.password();
+      await resetPasswordPage.setNewPassword(newPassword);
+      await expect(resetPasswordPage.invalidTokenError).toBeVisible();
+      await resetPasswordPage.requestNewLink.click();
+      await resetPasswordPage.expectRequestFormIsVisible();
+    });
+
     for (const testCase of invalidResetPasswordSearchParams) {
       test(`should show request form for: ${testCase.name}`, async ({page}) => {
         const searchParams = new URLSearchParams();

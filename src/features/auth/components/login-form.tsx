@@ -35,6 +35,10 @@ export function LogInForm() {
   }, [form, hasUnauthorizedError]);
 
   function onSubmit(formData: LogInDto) {
+    if (hasUnauthorizedError) {
+      setHasUnauthorizedError(false);
+    }
+
     logIn(formData, {
       onError: (error) => {
         if (error.status === 401) {

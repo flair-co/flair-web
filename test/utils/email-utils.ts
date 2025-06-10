@@ -47,10 +47,18 @@ export class EmailUtils {
     return count;
   }
 
-  static extractVerifyEmailLink(body?: string) {
+  static extractOnboardingVerifyEmailLink(body?: string) {
     if (!body) return '';
     const linkRegex =
-      /\(\s*((?:https?:\/\/)[^\s)]+\/verify-email\?email=[^&"]+&code=\d{6}&flow=onboarding[^\s)]*)\s*\)/i;
+      /\(\s*((?:https?:\/\/)[^\s)]+\/verify-email\?email=[^&"]+&code=\d{6}[^\s)]*)\s*\)/i;
+    const match = body.match(linkRegex);
+    return match ? match[1] : '';
+  }
+
+  static extractEmailChangeLink(body?: string) {
+    if (!body) return '';
+    const linkRegex =
+      /(https?:\/\/[^\s"'<>]*\/verify-email-change\?email=[^&"\s<>]+&token=[0-9a-fA-F]{8}-(?:[0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[^\s"'<>]*)/i;
     const match = body.match(linkRegex);
     return match ? match[1] : '';
   }
@@ -68,7 +76,7 @@ export class EmailUtils {
     if (!body) return '';
     const SIX_DIGIT_REGEX = /(\d{6})/i;
     const pattern = new RegExp(
-      `You can also manually enter the code below:?\\s*(${SIX_DIGIT_REGEX.source})`,
+      `You can also manually enter the code below.?\\s*(${SIX_DIGIT_REGEX.source})`,
       'i',
     );
     const match = body.match(pattern);

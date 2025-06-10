@@ -58,7 +58,7 @@ test.describe('Email Verification', () => {
 
       await verifyEmailPage.resendCodeButton.click();
       await expect(verifyEmailPage.resendSuccessToastTitle).toBeVisible();
-      const emails = await EmailUtils.countEmailsByRecipient(UNVERIFIED_ACCOUNT_EMAIL);
+      const emails = await EmailUtils.countEmailsByRecipient(UNVERIFIED_ACCOUNT_EMAIL, 2);
       expect(emails).toBe(1);
     });
   });

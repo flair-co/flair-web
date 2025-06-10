@@ -35,16 +35,31 @@ export class EmailUtils {
     }
   }
 
-  static async countEmailsByRecipient(recipientEmail: string, initialDelayMs: number = 1000) {
-    await this._sleep(initialDelayMs);
+  static async countEmailsByRecipient(
+    recipientEmail: string,
+    expectedCount: number,
+    retries: number = 10,
+    delayMs: number = 200,
+  ) {
+    let lastKnownCount = 0;
+    for (let i = 0; i < retries; i++) {
+      const res = await fetch(`${this.EMAIL_UI_URL}/api/v1/messages`);
+      const data = (await res.json()) as {messages: Message[]};
 
-    const res = await fetch(`${this.EMAIL_UI_URL}/api/v1/messages`);
-    const data = (await res.json()) as {messages: Message[]};
+      const currentCount = data.messages.filter((msg) =>
+        msg.To.some((r) => r.Address && r.Address.toLowerCase() === recipientEmail.toLowerCase()),
+      ).length;
 
-    const count = data.messages.filter((msg) =>
-      msg.To.some((r) => r.Address && r.Address.toLowerCase() === recipientEmail.toLowerCase()),
-    ).length;
-    return count;
+      lastKnownCount = currentCount;
+      if (currentCount === expectedCount) {
+        return currentCount;
+      }
+
+      if (i < retries - 1) {
+        await this._sleep(delayMs);
+      }
+    }
+    return lastKnownCount;
   }
 
   static extractOnboardingVerifyEmailLink(body?: string) {

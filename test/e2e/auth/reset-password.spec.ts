@@ -65,22 +65,22 @@ test.describe.serial('Password Reset', () => {
     test('should show reset confirmation message but not send an email for a non-existent account', async () => {
       const email = faker.internet.email();
       await resetPasswordPage.requestPasswordReset(email);
-      const message = await EmailUtils.findEmailByRecipient(PW_CHANGE_ACCOUNT_EMAIL);
+      const message = await EmailUtils.findEmailByRecipient(VERIFIED_ACCOUNT_EMAIL);
       expect(message).toBeUndefined();
     });
 
     test('should resend and expect 2 emails', async () => {
-      await resetPasswordPage.requestPasswordReset(PW_CHANGE_ACCOUNT_EMAIL);
+      await resetPasswordPage.requestPasswordReset(VERIFIED_ACCOUNT_EMAIL);
 
       await resetPasswordPage.resendButton.click();
       await expect(resetPasswordPage.resendButton).toBeHidden();
 
-      const count = await EmailUtils.countEmailsByRecipient(PW_CHANGE_ACCOUNT_EMAIL);
+      const count = await EmailUtils.countEmailsByRecipient(VERIFIED_ACCOUNT_EMAIL, 2);
       expect(count).toBe(2);
     });
 
     test('should return to email input form when "use a different email" is clicked', async () => {
-      await resetPasswordPage.requestPasswordReset(PW_CHANGE_ACCOUNT_EMAIL);
+      await resetPasswordPage.requestPasswordReset(VERIFIED_ACCOUNT_EMAIL);
       await resetPasswordPage.useDifferentEmailButton.click();
       await expect(resetPasswordPage.useDifferentEmailButton).toBeHidden();
       await expect(resetPasswordPage.openGmailButton).toBeHidden();
@@ -91,7 +91,7 @@ test.describe.serial('Password Reset', () => {
 
     test('should show error for password too short on reset form', async ({page}) => {
       await resetPasswordPage.requestPasswordReset(VERIFIED_ACCOUNT_EMAIL);
-      const message = await EmailUtils.findEmailByRecipient(VERIFIED_ACCOUNT_PASSWORD);
+      const message = await EmailUtils.findEmailByRecipient(VERIFIED_ACCOUNT_EMAIL);
       const link = EmailUtils.extractResetPasswordLink(message?.Text);
       await page.goto(link);
 
@@ -102,7 +102,7 @@ test.describe.serial('Password Reset', () => {
 
     test('should show error for empty new password on reset form', async ({page}) => {
       await resetPasswordPage.requestPasswordReset(VERIFIED_ACCOUNT_EMAIL);
-      const message = await EmailUtils.findEmailByRecipient(VERIFIED_ACCOUNT_PASSWORD);
+      const message = await EmailUtils.findEmailByRecipient(VERIFIED_ACCOUNT_EMAIL);
       const link = EmailUtils.extractResetPasswordLink(message?.Text);
       await page.goto(link);
 

@@ -26,8 +26,7 @@ type ResetPasswordVerifyProps = {
 export function ResetPasswordVerify({token, email}: ResetPasswordVerifyProps) {
   const form = useForm<PasswordResetVerifyDto>({
     resolver: zodResolver(passwordResetVerifyDtoSchema),
-    mode: 'onBlur',
-    reValidateMode: 'onChange',
+    mode: 'onSubmit',
     defaultValues: {token},
   });
 

@@ -35,6 +35,7 @@ export const useVerifyEmailChange = () => {
         loading: 'Verifying your new email...',
         success: 'Your new email has been verified.',
         error: 'This verification link is invalid or has expired.',
+        id: 'verify-email-promise-toast',
       });
     },
     [mutateAsync],

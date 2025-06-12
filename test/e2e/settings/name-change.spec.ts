@@ -5,7 +5,7 @@ import {HomePage} from 'test/pages/home.page';
 import {LoginPage} from 'test/pages/login.page';
 import {VERIFIED_ACCOUNT_EMAIL, VERIFIED_ACCOUNT_PASSWORD} from 'test/utils/seed.constants';
 
-test.describe('Account Settings', () => {
+test.describe('Account Settings: Name change', () => {
   let loginPage: LoginPage;
   let homePage: HomePage;
   let accountSettingsPage: AccountSettingsPage;

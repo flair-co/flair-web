@@ -32,7 +32,7 @@ export function SessionList() {
         )}
         {otherSessions && otherSessions.length > 0 && (
           <div>
-            <div className='mb-3 flex items-center justify-between'>
+            <div className='mb-4 flex items-center justify-between'>
               <h3 className='text-sm font-medium text-muted-foreground'>
                 {otherSessions.length === 1
                   ? '1 other active session'

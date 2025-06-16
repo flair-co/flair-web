@@ -31,7 +31,7 @@ export function LogOutDialog({triggerVariant = 'ghost'}: LogOutDialogProps) {
           variant={triggerVariant}
           className='w-full text-foreground sm:w-fit'
           size='sm'
-          data-testid='log-out-button'
+          data-testid='log-out-button-session'
         >
           Log out
         </Button>
@@ -49,7 +49,7 @@ export function LogOutDialog({triggerVariant = 'ghost'}: LogOutDialogProps) {
             disabled={isPending}
             onClick={handleLogOut}
             className='order-1 md:order-2'
-            data-testid='log-out-button-confirm'
+            data-testid='log-out-button-session-confirm'
           >
             {isPending ? (
               <>

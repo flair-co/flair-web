@@ -29,6 +29,10 @@ export class AccountSettingsPage {
     );
   }
 
+  getStep2DescriptionLocator(email: string) {
+    return this.page.getByText(`We did not find an existing account for ${email}`);
+  }
+
   async navigate() {
     await this.page.goto('/settings/account');
   }
@@ -38,19 +42,10 @@ export class AccountSettingsPage {
     await this.page.keyboard.press('Tab'); // triggers a blur event
   }
 
-  async changeEmail(newEmail: string) {
+  async checkEmailAvailability(newEmail: string) {
+    await this.navigate();
     await this.changeEmailButton.click();
     await this.newEmailInput.fill(newEmail);
     await this.checkEmailButton.click();
-    await this.sendVerificationLinkButton.click();
-  }
-
-  async checkEmailAvailability(newEmail: string) {
-    await this.newEmailInput.fill(newEmail);
-    await this.checkEmailButton.click();
-  }
-
-  getStep2DescriptionLocator(email: string): Locator {
-    return this.page.getByText(`We did not find an existing account for ${email}`);
   }
 }

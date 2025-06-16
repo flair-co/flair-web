@@ -31,7 +31,11 @@ export function SessionCard({session, hideRevokeButton = false}: SessionCardProp
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Card className='group cursor-pointer transition-colors hover:bg-accent/70'>
+        <Card
+          className='group cursor-pointer transition-colors hover:bg-accent/70'
+          data-testid='session-card'
+          data-current-session={session.isCurrent}
+        >
           <div className='flex flex-row items-start justify-between gap-4 p-4 sm:items-center'>
             <div className='flex min-w-0 flex-grow items-center gap-4'>
               <div className='flex-shrink-0 rounded-lg bg-accent p-2 text-muted-foreground'>

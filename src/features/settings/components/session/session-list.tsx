@@ -31,7 +31,7 @@ export function SessionList() {
           </div>
         )}
         {otherSessions && otherSessions.length > 0 && (
-          <div className='mt-6'>
+          <div>
             <div className='mb-3 flex items-center justify-between'>
               <h3 className='text-sm font-medium text-muted-foreground'>
                 {otherSessions.length === 1

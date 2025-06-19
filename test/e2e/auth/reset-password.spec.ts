@@ -8,7 +8,7 @@ import {EmailUtils} from 'test/utils/email-utils';
 import {
   PW_RESET_ACCOUNT_EMAIL,
   VERIFIED_ACCOUNT_EMAIL,
-  VERIFIED_ACCOUNT_PASSWORD,
+  VERIFIED_USER_AUTH_FILE,
 } from 'test/utils/seed.constants';
 
 test.describe.serial('Password Reset', () => {
@@ -22,12 +22,10 @@ test.describe.serial('Password Reset', () => {
     homePage = new HomePage(page);
   });
 
-  test.describe.serial('Successful password reset flow', () => {
-    test.beforeEach(async () => {
-      await EmailUtils.clearEmails();
-    });
-
+  test.describe('Password Reset (Unauthenticated)', () => {
     test('should successfully reset password', async ({page}) => {
+      await EmailUtils.clearEmails();
+
       await resetPasswordPage.requestPasswordReset(PW_RESET_ACCOUNT_EMAIL);
       const message = await EmailUtils.findEmailByRecipient(PW_RESET_ACCOUNT_EMAIL);
       const link = EmailUtils.extractResetPasswordLink(message?.Text);
@@ -42,22 +40,22 @@ test.describe.serial('Password Reset', () => {
       await homePage.expectToBeOnPage();
       await homePage.expectUserLoggedIn();
     });
+  });
+
+  test.describe('Password Reset (Authenticated)', () => {
+    test.use({storageState: VERIFIED_USER_AUTH_FILE});
 
     test('should redirect to home page if a logged in user navigates to /reset-password', async ({
       page,
     }) => {
-      await loginPage.login(VERIFIED_ACCOUNT_EMAIL, VERIFIED_ACCOUNT_PASSWORD);
-      await homePage.expectToBeOnPage();
-
       await resetPasswordPage.navigate();
-
       await homePage.expectToBeOnPage();
       expect(page.url()).not.toContain('/reset-password');
       await homePage.expectUserLoggedIn();
     });
   });
 
-  test.describe.serial('Request phase', () => {
+  test.describe('Request phase', () => {
     test.beforeEach(async () => {
       await EmailUtils.clearEmails();
     });

@@ -10,7 +10,7 @@ export default defineConfig({
     reuseExistingServer: !process.env.CI,
   },
   testDir: './test',
-  timeout: 15000,
+  timeout: 10000,
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,

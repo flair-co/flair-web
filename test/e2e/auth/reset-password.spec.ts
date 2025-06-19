@@ -12,17 +12,17 @@ import {
 } from 'test/utils/seed.constants';
 
 test.describe.serial('Password Reset', () => {
-  let resetPasswordPage: ResetPasswordPage;
-  let loginPage: LoginPage;
-  let homePage: HomePage;
+  test.describe('Successful Flow', () => {
+    let resetPasswordPage: ResetPasswordPage;
+    let loginPage: LoginPage;
+    let homePage: HomePage;
 
-  test.beforeEach(({page}) => {
-    resetPasswordPage = new ResetPasswordPage(page);
-    loginPage = new LoginPage(page);
-    homePage = new HomePage(page);
-  });
+    test.beforeEach(({page}) => {
+      resetPasswordPage = new ResetPasswordPage(page);
+      loginPage = new LoginPage(page);
+      homePage = new HomePage(page);
+    });
 
-  test.describe('Password Reset (Unauthenticated)', () => {
     test('should successfully reset password', async ({page}) => {
       await EmailUtils.clearEmails();
 
@@ -42,12 +42,15 @@ test.describe.serial('Password Reset', () => {
     });
   });
 
-  test.describe('Password Reset (Authenticated)', () => {
+  test.describe('Authenticated Flow', () => {
     test.use({storageState: VERIFIED_USER_AUTH_FILE});
 
     test('should redirect to home page if a logged in user navigates to /reset-password', async ({
       page,
     }) => {
+      const resetPasswordPage = new ResetPasswordPage(page);
+      const homePage = new HomePage(page);
+
       await resetPasswordPage.navigate();
       await homePage.expectToBeOnPage();
       expect(page.url()).not.toContain('/reset-password');
@@ -55,12 +58,15 @@ test.describe.serial('Password Reset', () => {
     });
   });
 
-  test.describe('Request phase', () => {
-    test.beforeEach(async () => {
-      await EmailUtils.clearEmails();
+  test.describe('Request Phase', () => {
+    let resetPasswordPage: ResetPasswordPage;
+
+    test.beforeEach(({page}) => {
+      resetPasswordPage = new ResetPasswordPage(page);
     });
 
     test('should show reset confirmation message but not send an email for a non-existent account', async () => {
+      await EmailUtils.clearEmails();
       const email = faker.internet.email();
       await resetPasswordPage.requestPasswordReset(email);
       const message = await EmailUtils.findEmailByRecipient(VERIFIED_ACCOUNT_EMAIL);
@@ -68,6 +74,7 @@ test.describe.serial('Password Reset', () => {
     });
 
     test('should resend and expect 2 emails', async () => {
+      await EmailUtils.clearEmails();
       await resetPasswordPage.requestPasswordReset(VERIFIED_ACCOUNT_EMAIL);
       let count = await EmailUtils.countEmailsByRecipient(VERIFIED_ACCOUNT_EMAIL, 1);
       expect(count).toBe(1);
@@ -90,6 +97,7 @@ test.describe.serial('Password Reset', () => {
     });
 
     test('should show error for password too short on reset form', async ({page}) => {
+      await EmailUtils.clearEmails();
       await resetPasswordPage.requestPasswordReset(VERIFIED_ACCOUNT_EMAIL);
       const message = await EmailUtils.findEmailByRecipient(VERIFIED_ACCOUNT_EMAIL);
       const link = EmailUtils.extractResetPasswordLink(message?.Text);
@@ -101,6 +109,7 @@ test.describe.serial('Password Reset', () => {
     });
 
     test('should show error for empty new password on reset form', async ({page}) => {
+      await EmailUtils.clearEmails();
       await resetPasswordPage.requestPasswordReset(VERIFIED_ACCOUNT_EMAIL);
       const message = await EmailUtils.findEmailByRecipient(VERIFIED_ACCOUNT_EMAIL);
       const link = EmailUtils.extractResetPasswordLink(message?.Text);
@@ -112,7 +121,14 @@ test.describe.serial('Password Reset', () => {
     });
   });
 
-  test.describe('Invalid search params', () => {
+  // Invalid search param tests
+  test.describe('Invalid Search Params', () => {
+    let resetPasswordPage: ResetPasswordPage;
+
+    test.beforeEach(({page}) => {
+      resetPasswordPage = new ResetPasswordPage(page);
+    });
+
     test('should show "Invalid or expired token" for a validly formatted but incorrect email/token combination', async ({
       page,
     }) => {

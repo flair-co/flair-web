@@ -25,7 +25,7 @@ test.describe('Email Verification', () => {
     homePage = new HomePage(page);
   });
 
-  test.describe.serial('Verify email during signup flow', () => {
+  test.describe('Verify email during signup flow', () => {
     test('should show error for invalid verification code', async () => {
       await EmailUtils.clearEmails();
 
@@ -40,16 +40,10 @@ test.describe('Email Verification', () => {
     });
   });
 
-  test.describe('Verify email page actions', () => {
+  test.describe.serial('Verify email page actions', () => {
     test.use({storageState: UNVERIFIED_USER_AUTH_FILE});
     test.beforeEach(async () => {
       await verifyEmailPage.navigate();
-    });
-
-    test('should log out successfully', async ({page}) => {
-      await verifyEmailPage.logOutButton.click();
-      await loginPage.expectToBeOnPage();
-      expect(page.url()).not.toContain('/verify-email');
     });
 
     test('should resend verification email successfully', async () => {
@@ -57,6 +51,12 @@ test.describe('Email Verification', () => {
       await expect(verifyEmailPage.resendSuccessToastTitle).toBeVisible();
       const emails = await EmailUtils.countEmailsByRecipient(UNVERIFIED_ACCOUNT_EMAIL, 1);
       expect(emails).toBe(1);
+    });
+
+    test('should log out successfully', async ({page}) => {
+      await verifyEmailPage.logOutButton.click();
+      await loginPage.expectToBeOnPage();
+      expect(page.url()).not.toContain('/verify-email');
     });
   });
 

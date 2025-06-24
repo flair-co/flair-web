@@ -33,7 +33,7 @@ export function BankComboBox({onChange, isPending, error}: BankComboBoxProps) {
 
   if (isDesktop) {
     return (
-      <Popover open={open} onOpenChange={setOpen} modal={true}>
+      <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             variant='outline'
@@ -56,7 +56,11 @@ export function BankComboBox({onChange, isPending, error}: BankComboBoxProps) {
           </Button>
         </PopoverTrigger>
         <PopoverContent className='w-[--radix-popover-trigger-width] p-0' align='start'>
-          <BankList setOpen={setOpen} setSelectedBank={handleSetSelectedBank} />
+          <BankList
+            setOpen={setOpen}
+            setSelectedBank={handleSetSelectedBank}
+            selectedBank={selectedBank}
+          />
         </PopoverContent>
       </Popover>
     );
@@ -81,7 +85,11 @@ export function BankComboBox({onChange, isPending, error}: BankComboBoxProps) {
       </DrawerTrigger>
       <DrawerContent>
         <div className='mt-4 border-t'>
-          <BankList setOpen={setOpen} setSelectedBank={handleSetSelectedBank} />
+          <BankList
+            setOpen={setOpen}
+            setSelectedBank={handleSetSelectedBank}
+            selectedBank={selectedBank}
+          />
         </div>
       </DrawerContent>
     </Drawer>

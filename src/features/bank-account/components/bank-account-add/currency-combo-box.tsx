@@ -31,7 +31,7 @@ export function CurrencyComboBox({onChange, isPending, error}: CurrencyComboBoxP
 
   if (isDesktop) {
     return (
-      <Popover open={open} onOpenChange={setOpen} modal={true}>
+      <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             variant='outline'
@@ -45,7 +45,11 @@ export function CurrencyComboBox({onChange, isPending, error}: CurrencyComboBoxP
           </Button>
         </PopoverTrigger>
         <PopoverContent className='w-[--radix-popover-trigger-width] p-0' align='start'>
-          <CurrencyList setOpen={setOpen} setSelectedCurrency={handleSetSelectedCurrency} />
+          <CurrencyList
+            setOpen={setOpen}
+            setSelectedCurrency={handleSetSelectedCurrency}
+            selectedCurrency={selectedCurrency}
+          />
         </PopoverContent>
       </Popover>
     );
@@ -63,7 +67,11 @@ export function CurrencyComboBox({onChange, isPending, error}: CurrencyComboBoxP
       </DrawerTrigger>
       <DrawerContent>
         <div className='mt-4 border-t'>
-          <CurrencyList setOpen={setOpen} setSelectedCurrency={handleSetSelectedCurrency} />
+          <CurrencyList
+            setOpen={setOpen}
+            setSelectedCurrency={handleSetSelectedCurrency}
+            selectedCurrency={selectedCurrency}
+          />
         </div>
       </DrawerContent>
     </Drawer>

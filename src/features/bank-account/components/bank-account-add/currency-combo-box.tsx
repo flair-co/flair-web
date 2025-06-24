@@ -2,32 +2,30 @@ import {VisuallyHidden} from '@radix-ui/react-visually-hidden';
 import {ChevronDown} from 'lucide-react';
 import {useState} from 'react';
 
-import {BankIcon} from '@/components/shared/bank-icon';
 import {Button} from '@/components/ui/button';
 import {Drawer, DrawerContent, DrawerTitle, DrawerTrigger} from '@/components/ui/drawer';
 import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover';
 import {useMediaQuery} from '@/hooks/use-media-query';
-import {Bank} from '@/types/bank';
 import {cn} from '@/utils/cn';
 
-import {BankList} from './bank-list';
+import {CurrencyList} from './currency-list';
 
-type BankComboBoxProps = {
-  onChange: (bank: Bank) => void;
+type CurrencyComboBoxProps = {
+  onChange: (currency: string) => void;
   isPending?: boolean;
   error?: boolean;
 };
 
-export function BankComboBox({onChange, isPending, error}: BankComboBoxProps) {
+export function CurrencyComboBox({onChange, isPending, error}: CurrencyComboBoxProps) {
   const [open, setOpen] = useState(false);
-  const [selectedBank, setSelectedBank] = useState<Bank | null>(null);
+  const [selectedCurrency, setSelectedCurrency] = useState<string | null>('EUR');
 
   const isDesktop = useMediaQuery('(min-width: 768px)');
 
-  const handleSetSelectedBank = (bank: Bank | null) => {
-    setSelectedBank(bank);
-    if (bank) {
-      onChange(bank);
+  const handleSetSelectedCurrency = (currency: string | null) => {
+    setSelectedCurrency(currency);
+    if (currency) {
+      onChange(currency);
     }
   };
 
@@ -41,22 +39,13 @@ export function BankComboBox({onChange, isPending, error}: BankComboBoxProps) {
             className={cn('justify-start px-3', error && 'border-destructive')}
           >
             <div className='flex w-full items-center justify-between'>
-              {selectedBank ? (
-                <div className='flex items-center'>
-                  <div className='mr-2 rounded-md bg-muted p-[0.35rem]'>
-                    <BankIcon bank={selectedBank} className='w-4' />
-                  </div>
-                  <p>{selectedBank}</p>
-                </div>
-              ) : (
-                <p>Select a bank</p>
-              )}
+              {selectedCurrency ? <p>{selectedCurrency}</p> : <p>Select a currency</p>}
               <ChevronDown className='h-4 w-4 text-muted-foreground' />
             </div>
           </Button>
         </PopoverTrigger>
         <PopoverContent className='w-[--radix-popover-trigger-width] p-0' align='start'>
-          <BankList setOpen={setOpen} setSelectedBank={handleSetSelectedBank} />
+          <CurrencyList setOpen={setOpen} setSelectedCurrency={handleSetSelectedCurrency} />
         </PopoverContent>
       </Popover>
     );
@@ -65,23 +54,16 @@ export function BankComboBox({onChange, isPending, error}: BankComboBoxProps) {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <VisuallyHidden>
-        <DrawerTitle>Select a bank</DrawerTitle>
+        <DrawerTitle>Select a currency</DrawerTitle>
       </VisuallyHidden>
       <DrawerTrigger asChild>
         <Button variant='outline' disabled={isPending} className='justify-start'>
-          {selectedBank ? (
-            <>
-              <BankIcon bank={selectedBank} className='mr-2 w-4' />
-              {selectedBank}
-            </>
-          ) : (
-            <>Select a bank</>
-          )}
+          {selectedCurrency ? <>{selectedCurrency}</> : <>Select a currency</>}
         </Button>
       </DrawerTrigger>
       <DrawerContent>
         <div className='mt-4 border-t'>
-          <BankList setOpen={setOpen} setSelectedBank={handleSetSelectedBank} />
+          <CurrencyList setOpen={setOpen} setSelectedCurrency={handleSetSelectedCurrency} />
         </div>
       </DrawerContent>
     </Drawer>

@@ -39,7 +39,7 @@ export function BankList({setOpen, setSelectedBank, selectedBank}: BankListProps
               }}
             >
               <div className='flex items-center'>
-                <div className='mr-2 rounded-md bg-muted p-[0.35rem]'>
+                <div className='mr-3 rounded-md bg-muted p-[0.35rem]'>
                   <BankIcon bank={bank} className='w-4' />
                 </div>
                 {bank}

@@ -43,13 +43,13 @@ export function BankComboBox({onChange, isPending, error}: BankComboBoxProps) {
             <div className='flex w-full items-center justify-between'>
               {selectedBank ? (
                 <div className='flex items-center'>
-                  <div className='mr-2 rounded-md bg-muted p-[0.35rem]'>
+                  <div className='mr-3 rounded-md bg-muted p-[0.35rem]'>
                     <BankIcon bank={selectedBank} className='w-4' />
                   </div>
                   <p>{selectedBank}</p>
                 </div>
               ) : (
-                <p>Select a bank</p>
+                <p className='text-muted-foreground'>Select a bank</p>
               )}
               <ChevronDown className='h-4 w-4 text-muted-foreground' />
             </div>
@@ -79,7 +79,7 @@ export function BankComboBox({onChange, isPending, error}: BankComboBoxProps) {
               {selectedBank}
             </>
           ) : (
-            <>Select a bank</>
+            <p className='text-muted-foreground'>Select a bank</p>
           )}
         </Button>
       </DrawerTrigger>

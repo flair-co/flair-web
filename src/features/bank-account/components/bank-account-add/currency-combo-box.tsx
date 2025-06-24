@@ -1,13 +1,15 @@
-import {VisuallyHidden} from '@radix-ui/react-visually-hidden';
 import {ChevronDown} from 'lucide-react';
 import {useState} from 'react';
 
 import {Button} from '@/components/ui/button';
-import {Drawer, DrawerContent, DrawerTitle, DrawerTrigger} from '@/components/ui/drawer';
+import {Drawer, DrawerContent, DrawerTrigger} from '@/components/ui/drawer';
 import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover';
 import {useMediaQuery} from '@/hooks/use-media-query';
 import {cn} from '@/utils/cn';
 
+import {useGetCurrencies} from '../../api/use-get-currencies';
+import {Currency} from '../../types/currency';
+import {CurrencyDisplay} from './currency-flag';
 import {CurrencyList} from './currency-list';
 
 type CurrencyComboBoxProps = {
@@ -18,37 +20,48 @@ type CurrencyComboBoxProps = {
 
 export function CurrencyComboBox({onChange, isPending, error}: CurrencyComboBoxProps) {
   const [open, setOpen] = useState(false);
-  const [selectedCurrency, setSelectedCurrency] = useState<string | null>('EUR');
+  const [selectedCurrency, setSelectedCurrency] = useState<Currency | null>();
+
+  const {currencies, isPending: isCurrenciesPending} = useGetCurrencies();
 
   const isDesktop = useMediaQuery('(min-width: 768px)');
 
-  const handleSetSelectedCurrency = (currency: string | null) => {
+  const handleSetSelectedCurrency = (currency: Currency | null) => {
     setSelectedCurrency(currency);
     if (currency) {
-      onChange(currency);
+      onChange(currency.code);
     }
   };
 
+  const triggerContent = selectedCurrency ? (
+    <CurrencyDisplay currency={selectedCurrency} showName={false} />
+  ) : (
+    <p className='text-muted-foreground'>Select a currency</p>
+  );
+
   if (isDesktop) {
     return (
-      <Popover open={open} onOpenChange={setOpen}>
+      <Popover open={open} onOpenChange={setOpen} modal={false}>
         <PopoverTrigger asChild>
           <Button
             variant='outline'
-            disabled={isPending}
-            className={cn('justify-start px-3', error && 'border-destructive')}
+            disabled={isPending || isCurrenciesPending}
+            className={cn('w-full justify-start px-3', error && 'border-destructive')}
+            role='combobox'
+            aria-expanded={open}
           >
             <div className='flex w-full items-center justify-between'>
-              {selectedCurrency ? <p>{selectedCurrency}</p> : <p>Select a currency</p>}
-              <ChevronDown className='h-4 w-4 text-muted-foreground' />
+              {triggerContent}
+              <ChevronDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
             </div>
           </Button>
         </PopoverTrigger>
         <PopoverContent className='w-[--radix-popover-trigger-width] p-0' align='start'>
           <CurrencyList
+            currencies={currencies}
             setOpen={setOpen}
             setSelectedCurrency={handleSetSelectedCurrency}
-            selectedCurrency={selectedCurrency}
+            selectedCurrency={selectedCurrency?.code ?? null}
           />
         </PopoverContent>
       </Popover>
@@ -57,20 +70,22 @@ export function CurrencyComboBox({onChange, isPending, error}: CurrencyComboBoxP
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
-      <VisuallyHidden>
-        <DrawerTitle>Select a currency</DrawerTitle>
-      </VisuallyHidden>
       <DrawerTrigger asChild>
-        <Button variant='outline' disabled={isPending} className='justify-start'>
-          {selectedCurrency ? <>{selectedCurrency}</> : <>Select a currency</>}
+        <Button
+          variant='outline'
+          disabled={isPending || isCurrenciesPending}
+          className='w-full justify-start'
+        >
+          {triggerContent}
         </Button>
       </DrawerTrigger>
       <DrawerContent>
         <div className='mt-4 border-t'>
           <CurrencyList
+            currencies={currencies}
             setOpen={setOpen}
             setSelectedCurrency={handleSetSelectedCurrency}
-            selectedCurrency={selectedCurrency}
+            selectedCurrency={selectedCurrency?.code ?? null}
           />
         </div>
       </DrawerContent>

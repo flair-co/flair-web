@@ -74,7 +74,7 @@ export function CurrencyList({
                   return (
                     <CommandItem
                       key={currency.code}
-                      value={`${currency.code} ${currency.name}`} // Fixed: Include both code and name
+                      value={`${currency.code} ${currency.name}`}
                       className='mr-2 flex items-center justify-between'
                       style={{
                         position: 'absolute',

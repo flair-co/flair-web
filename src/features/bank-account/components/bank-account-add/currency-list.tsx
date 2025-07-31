@@ -14,7 +14,7 @@ import {ScrollArea} from '@/components/ui/scroll-area';
 import {cn} from '@/utils/cn';
 
 import {Currency} from '../../types/currency';
-import {CurrencyDisplay} from './currency-flag';
+import {CurrencyDisplay} from './currency-display';
 
 type CurrencyListProps = {
   currencies: Currency[] | undefined;
@@ -30,8 +30,6 @@ export function CurrencyList({
   selectedCurrency,
 }: CurrencyListProps) {
   const [query, setQuery] = useState<string>('');
-
-  const placeholder = useMemo(() => `Search ${currencies?.length} supported currencies...`, []);
 
   const filteredCurrencies = useMemo(() => {
     if (!currencies) return [];
@@ -58,7 +56,7 @@ export function CurrencyList({
   return (
     <Command>
       <CommandInput
-        placeholder={placeholder}
+        placeholder={`Search ${currencies?.length} supported currencies...`}
         disabled={!currencies}
         value={query}
         onValueChange={setQuery}
@@ -76,7 +74,7 @@ export function CurrencyList({
                   return (
                     <CommandItem
                       key={currency.code}
-                      value={currency.name}
+                      value={`${currency.code} ${currency.name}`} // Fixed: Include both code and name
                       className='mr-2 flex items-center justify-between'
                       style={{
                         position: 'absolute',

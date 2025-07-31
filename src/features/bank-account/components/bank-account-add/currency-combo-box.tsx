@@ -9,7 +9,7 @@ import {cn} from '@/utils/cn';
 
 import {useGetCurrencies} from '../../api/use-get-currencies';
 import {Currency} from '../../types/currency';
-import {CurrencyDisplay} from './currency-flag';
+import {CurrencyDisplay} from './currency-display';
 import {CurrencyList} from './currency-list';
 
 type CurrencyComboBoxProps = {

@@ -1,6 +1,5 @@
 import {createFileRoute} from '@tanstack/react-router';
 
-import {BackButton} from '@/components/shared/back-button';
 import {AppBodyLayout} from '@/components/shared/layout/app-body';
 import {AppHeaderLayout} from '@/components/shared/layout/app-header-layout';
 import {LoadingBar} from '@/components/shared/loading-bar';
@@ -27,8 +26,8 @@ function BankAccountsIndex() {
         <BankAccountBreadcrumb />
       </AppHeaderLayout>
       <AppBodyLayout>
-        <div className='mt-4 flex justify-between'>
-          <BackButton />
+        <div className='mb-4 flex items-end justify-between'>
+          <h1 className='text-2xl font-semibold'>Bank Accounts</h1>
           {bankAccounts && bankAccounts.length !== 0 && <BankAccountAddDialog />}
         </div>
         <BankAccountList bankAccounts={bankAccounts || []} isPending={isPending} />

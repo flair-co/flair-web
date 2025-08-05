@@ -1,5 +1,4 @@
 import {Landmark} from 'lucide-react';
-import React from 'react';
 
 import {Skeleton} from '@/components/ui/skeleton';
 import {BankAccount} from '@/types/bank-account';
@@ -14,7 +13,12 @@ type BankAccountListProps = {
 
 export function BankAccountList({bankAccounts, isPending}: BankAccountListProps) {
   if (isPending) {
-    return <Skeleton className='mt-[5.5rem] h-[5.1rem] w-full rounded-lg bg-card' />;
+    return (
+      <div className='mt-4 flex flex-col gap-3'>
+        <Skeleton className='h-[4.5rem] w-full rounded-lg bg-card' />
+        <Skeleton className='h-[4.5rem] w-full rounded-lg bg-card' />
+      </div>
+    );
   }
 
   if (!isPending && bankAccounts.length === 0) {
@@ -31,11 +35,9 @@ export function BankAccountList({bankAccounts, isPending}: BankAccountListProps)
   }
 
   return (
-    <div className='mt-4 flex flex-col gap-3'>
+    <div className='flex flex-col gap-3'>
       {bankAccounts?.map((bankAccount) => (
-        <React.Fragment key={bankAccount.id}>
-          <BankAccountCard bankAccount={bankAccount} />
-        </React.Fragment>
+        <BankAccountCard key={bankAccount.id} bankAccount={bankAccount} />
       ))}
     </div>
   );

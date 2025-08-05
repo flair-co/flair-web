@@ -1,6 +1,6 @@
+import {Landmark} from 'lucide-react';
 import React from 'react';
 
-import Wallet from '@/assets/illustrations/wallet';
 import {Skeleton} from '@/components/ui/skeleton';
 import {BankAccount} from '@/types/bank-account';
 
@@ -19,12 +19,12 @@ export function BankAccountList({bankAccounts, isPending}: BankAccountListProps)
 
   if (!isPending && bankAccounts.length === 0) {
     return (
-      <div className='mt-8 flex flex-col items-center'>
-        <Wallet className='h-60' />
-        <div className='mb-4 flex flex-col items-center text-base'>
-          <p className='mb-2 text-2xl'>No bank accounts</p>
-          <p className='text-muted-foreground'>You do not have any bank accounts yet.</p>
-        </div>
+      <div className='mt-16 flex flex-col items-center text-center'>
+        <Landmark className='mb-6 h-12 w-12 text-muted' />
+        <h2 className='mb-2 text-2xl font-semibold'>Add your first bank account</h2>
+        <p className='mb-6 max-w-sm text-muted-foreground'>
+          Create a bank account to upload statements and begin tracking your transactions.
+        </p>
         <BankAccountAddDialog />
       </div>
     );

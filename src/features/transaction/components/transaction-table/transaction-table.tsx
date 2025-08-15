@@ -1,9 +1,9 @@
 import {Link, useNavigate} from '@tanstack/react-router';
 import {flexRender, getCoreRowModel, useReactTable} from '@tanstack/react-table';
-import {SearchX} from 'lucide-react';
+import {CreditCard, SearchX} from 'lucide-react';
 import {Dispatch, SetStateAction} from 'react';
 
-import CreditCards from '@/assets/illustrations/credit-cards';
+import {EmptyState} from '@/components/shared/layout/app-empty-state';
 import {LoadingBar} from '@/components/shared/loading-bar';
 import {TablePagination} from '@/components/shared/table-pagination';
 import {Skeleton} from '@/components/ui/skeleton';
@@ -67,13 +67,11 @@ export function TransactionsTable({
 
   if (isEmptyState) {
     return (
-      <div className='mt-8 flex flex-col items-center'>
-        <CreditCards className='h-60' />
-        <div className='flex flex-col items-center text-base'>
-          <p className='mb-2 text-2xl'>No transactions</p>
-          <p className='text-muted-foreground'>You do not have any transactions yet.</p>
-        </div>
-      </div>
+      <EmptyState
+        icon={CreditCard}
+        title='No transactions found'
+        description='Once you upload a statement from a bank account, your transactions will appear here.'
+      />
     );
   }
 

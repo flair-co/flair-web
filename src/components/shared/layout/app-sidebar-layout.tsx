@@ -84,7 +84,7 @@ export function AppSidebarLayout() {
                         {currentAccount.name}
                       </span>
                       <span
-                        className='truncate text-xs'
+                        className='truncate text-xs text-muted-foreground'
                         data-testid='sidebar-current-account-email'
                       >
                         {currentAccount.email}

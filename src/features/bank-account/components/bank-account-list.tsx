@@ -14,7 +14,7 @@ type BankAccountListProps = {
 
 export function BankAccountList({bankAccounts, isPending}: BankAccountListProps) {
   if (isPending) {
-    return <Skeleton className='h-[288px] w-full rounded-lg bg-card' />;
+    return <Skeleton className='h-[22rem] w-full rounded-lg bg-card' />;
   }
 
   if (!isPending && bankAccounts.length === 0) {

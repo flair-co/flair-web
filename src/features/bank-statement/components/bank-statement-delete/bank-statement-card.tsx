@@ -1,8 +1,8 @@
 import {MimeTypeIcon} from '@/components/shared/mime-type-icon';
-import {Card} from '@/components/ui/card';
+import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
 import {BankStatement} from '@/types/bank-statement';
 
-import {FileMetadata} from '../file/file-metadata';
+import {BankStatementActions} from '../file/bank-statement-actions';
 
 type BankStatementCardProps = {
   bankStatement: BankStatement;
@@ -10,20 +10,21 @@ type BankStatementCardProps = {
 
 export function BankStatementCard({bankStatement}: BankStatementCardProps) {
   return (
-    <Card className='flex items-center p-4'>
-      <div className='mr-4 rounded-md bg-muted p-3'>
-        <MimeTypeIcon mimeType={bankStatement.file.mimeType} />
-      </div>
-      <div className='overflow-hidden'>
-        <p className='mb-1 max-w-[35rem] truncate text-base text-foreground md:max-w-[23.5rem]'>
-          {bankStatement.file.name}
+    <Card>
+      <CardHeader>
+        <div className='flex items-start justify-between'>
+          <div className='rounded bg-muted p-2'>
+            <MimeTypeIcon mimeType={bankStatement.file.mimeType} />
+          </div>
+          <BankStatementActions bankStatement={bankStatement} />
+        </div>
+      </CardHeader>
+      <CardContent>
+        <CardTitle className='truncate text-lg'>{bankStatement.file.name}</CardTitle>
+        <p className='text-sm text-muted-foreground'>
+          Uploaded on {new Date(bankStatement.uploadedAt).toLocaleDateString()}
         </p>
-        <FileMetadata
-          fileSize={bankStatement.file.size}
-          fileType={bankStatement.file.mimeType}
-          fileUploadedAt={bankStatement.uploadedAt}
-        />
-      </div>
+      </CardContent>
     </Card>
   );
 }

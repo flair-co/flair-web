@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {Upload} from 'lucide-react';
 
 import {Button} from '@/components/ui/button';
 import {
@@ -11,35 +11,31 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import {useMediaQuery} from '@/hooks/use-media-query';
-import {PaginationParams} from '@/types/pagination';
 
-import {FileState} from '../../types/file-state';
-import {BankStatementUploadInput} from './bank-statement-upload-input';
+import {BankStatementUploadInput} from './bank-statement-upload';
 
-type BankStatementUploadDialogProps = {
-  pagination: PaginationParams;
-};
-
-export function BankStatementUploadDialog({pagination}: BankStatementUploadDialogProps) {
+export function BankStatementUploadDialog() {
   const isDesktop = useMediaQuery('(min-width: 768px)');
-  const [files, setFiles] = useState<FileState[]>([]);
 
-  const title = 'Upload bank statement';
+  const title = 'Upload Statement';
 
   if (isDesktop) {
     return (
       <Dialog>
         <DialogTrigger asChild>
-          <Button className='w-fit items-end'>{title}</Button>
+          <Button>
+            <Upload className='h-4 w-4' />
+            {title}
+          </Button>
         </DialogTrigger>
-        <DialogContent className='mx-10 max-w-[50rem]'>
+        <DialogContent className='mx-10'>
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
           </DialogHeader>
-          <BankStatementUploadInput pagination={pagination} files={files} setFiles={setFiles} />
+          <BankStatementUploadInput />
           <DialogFooter>
             <DialogClose asChild>
-              <Button type='button' variant='outline' className='w-full'>
+              <Button type='button' variant='outline' className='mt-4 w-full'>
                 Close
               </Button>
             </DialogClose>
@@ -49,5 +45,5 @@ export function BankStatementUploadDialog({pagination}: BankStatementUploadDialo
     );
   }
 
-  return <BankStatementUploadInput pagination={pagination} files={files} setFiles={setFiles} />;
+  return <BankStatementUploadInput  />;
 }

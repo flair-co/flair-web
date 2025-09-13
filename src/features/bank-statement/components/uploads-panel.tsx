@@ -1,0 +1,109 @@
+import {AlertCircle, CheckCircle2, ChevronUp} from 'lucide-react';
+import {useMemo, useState} from 'react';
+
+import {Button} from '@/components/ui/button';
+import {UploadIcon} from '@/components/ui/upload-icon';
+import {useUploads} from '@/providers/uploads.provider';
+import {cn} from '@/utils/cn';
+
+import {UploadingFileCard} from './uploading-file-card';
+
+export function UploadsPanel() {
+  const {uploadingFiles, removeUploadingFile, clearFinishedUploads} = useUploads();
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
+  const {processingCount, failedCount} = useMemo(() => {
+    let processing = 0;
+    let failed = 0;
+    for (const file of uploadingFiles) {
+      if (file.status === 'processing') processing++;
+      if (file.status === 'failed') failed++;
+    }
+    return {processingCount: processing, failedCount: failed};
+  }, [uploadingFiles]);
+
+  if (uploadingFiles.length === 0) {
+    return null;
+  }
+
+  const getPanelStatus = () => {
+    if (processingCount > 0) return 'processing';
+    if (failedCount > 0) return 'error';
+    return 'success';
+  };
+
+  const panelStatus = getPanelStatus();
+
+  const getPanelHeader = () => {
+    switch (panelStatus) {
+      case 'error':
+        return {
+          icon: <AlertCircle className='mr-2 h-5 w-5 text-destructive' />,
+          title: `${failedCount} upload${failedCount > 1 ? 's' : ''} failed`,
+        };
+      case 'success':
+        return {
+          icon: <CheckCircle2 className='mr-2 h-5 w-5 text-green-500' />,
+          title: 'Uploads Complete',
+        };
+      case 'processing':
+      default:
+        return {
+          icon: <UploadIcon className='mr-2 h-5 w-5' />,
+          title: `${processingCount} Upload${processingCount > 1 ? 's' : ''} in Progress`,
+        };
+    }
+  };
+
+  const {icon, title} = getPanelHeader();
+  const allFinished = processingCount === 0;
+
+  return (
+    <div className='fixed right-4 top-4 z-50 w-[25rem] rounded-lg border bg-card shadow-lg transition-colors'>
+      <Button
+        variant='ghost'
+        className={cn(
+          'flex w-full items-center justify-between p-4 text-left',
+          panelStatus === 'error' &&
+            'border-destructive bg-destructive-foreground/60 hover:bg-destructive-foreground/40',
+          panelStatus === 'success' &&
+            'border-green-500 bg-success-foreground/60 hover:bg-success-foreground/40',
+          panelStatus === 'processing' && 'bg-card',
+        )}
+        onClick={() => setIsCollapsed(!isCollapsed)}
+      >
+        <div className='flex items-center'>
+          {icon}
+          <span className='font-medium text-card-foreground'>{title}</span>
+        </div>
+        <ChevronUp
+          className={cn(
+            'h-5 w-5 text-card-foreground transition-transform duration-200',
+            isCollapsed && 'rotate-180',
+          )}
+        />
+      </Button>
+
+      {!isCollapsed && (
+        <>
+          <div className='space-y-5 border-t p-4'>
+            {uploadingFiles.map((file) => (
+              <UploadingFileCard
+                key={file.id}
+                uploadingFile={file}
+                onDismiss={removeUploadingFile}
+              />
+            ))}
+          </div>
+          {allFinished && (
+            <div className='border-t p-2'>
+              <Button variant='ghost' className='w-full' onClick={clearFinishedUploads}>
+                Clear all
+              </Button>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+}

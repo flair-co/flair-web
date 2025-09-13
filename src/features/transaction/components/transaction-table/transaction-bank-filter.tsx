@@ -1,5 +1,5 @@
 import {useNavigate} from '@tanstack/react-router';
-import {Check, ChevronDown, Landmark, Loader2} from 'lucide-react';
+import {Check, ChevronDown, Landmark, Loader} from 'lucide-react';
 import * as React from 'react';
 import {useMemo} from 'react';
 
@@ -78,7 +78,7 @@ export function TransactionBankFilter({filters, setFilters}: TransactionBankFilt
           )}
         >
           {isPending ? (
-            <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+            <Loader className='mr-2 h-4 w-4 animate-slow-spin' />
           ) : (
             <Landmark className='mr-2 h-4 w-4' />
           )}

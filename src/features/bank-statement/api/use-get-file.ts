@@ -2,7 +2,7 @@ import {useQuery} from '@tanstack/react-query';
 import {useEffect, useState} from 'react';
 import {toast} from 'sonner';
 
-import {File as FileEntity} from '@/types/file';
+import {FileEntity} from '@/types/file';
 import {HttpError, api} from '@/utils/api';
 
 import {downloadFile} from '../utils/download-file';

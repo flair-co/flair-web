@@ -24,7 +24,7 @@ export const useGetAllBankStatements = (
         `/bank-accounts/${bankAccountId}/bank-statements?pageIndex=${pagination.pageIndex}&pageSize=${pagination.pageSize}`,
       );
     },
-    placeholderData: keepPreviousData,
+  placeholderData: keepPreviousData,
   });
 
   return {data, isPending, isPlaceholderData, pagination, setPagination};

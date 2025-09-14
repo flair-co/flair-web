@@ -4,7 +4,8 @@ import {useEffect} from 'react';
 
 import {Button} from '@/components/ui/button';
 import {Progress} from '@/components/ui/progress';
-import {UploadingFile, useUploads} from '@/providers/uploads.provider';
+import {useUploads} from '@/hooks/use-uploads';
+import {UploadingFile} from '@/providers/uploads.provider';
 
 import {useGetUploadStatus} from '../api/use-get-upload-status';
 

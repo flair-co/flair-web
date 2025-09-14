@@ -1,7 +1,7 @@
 import {useMutation} from '@tanstack/react-query';
 import {toast} from 'sonner';
 
-import {useUploads} from '@/providers/uploads.provider';
+import {useUploads} from '@/hooks/use-uploads';
 import {BankAccount} from '@/types/bank-account';
 import {UploadJob} from '@/types/bank-statement';
 import {HttpError, api} from '@/utils/api';

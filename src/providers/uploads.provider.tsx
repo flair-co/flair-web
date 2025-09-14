@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import {ReactNode, createContext, useCallback, useContext, useState} from 'react';
+import {ReactNode, createContext, useCallback, useState} from 'react';
 
 export type UploadStatus = 'processing' | 'completed' | 'failed';
 
@@ -19,7 +19,7 @@ type UploadsContextType = {
   clearFinishedUploads: () => void;
 };
 
-const UploadsContext = createContext<UploadsContextType | undefined>(undefined);
+export const UploadsContext = createContext<UploadsContextType | undefined>(undefined);
 
 export const UploadsProvider = ({children}: {children: ReactNode}) => {
   const [uploadingFiles, setUploadingFiles] = useState<UploadingFile[]>([]);
@@ -53,12 +53,4 @@ export const UploadsProvider = ({children}: {children: ReactNode}) => {
       {children}
     </UploadsContext.Provider>
   );
-};
-
-export const useUploads = () => {
-  const context = useContext(UploadsContext);
-  if (context === undefined) {
-    throw new Error('useUploads must be used within an UploadsProvider');
-  }
-  return context;
 };

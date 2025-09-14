@@ -18,7 +18,11 @@ const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
 const MAX_FILES = 10;
 const ACCEPT_TYPES = Object.fromEntries(Object.values(MimeType).map((type) => [type, []]));
 
-export function BankStatementUploadInput() {
+type BankStatementUploadInputProps = {
+  setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export function BankStatementUploadInput({setDialogOpen}: BankStatementUploadInputProps) {
   const {bankAccountId} = useParams({from: '/bank-accounts/$bankAccountId/bank-statements/'});
   const {mutate: uploadFile} = useUploadBankStatement(bankAccountId);
   const formattedFileTypes = useMemo(() => Object.keys(MimeType).join(', '), []);
@@ -27,6 +31,10 @@ export function BankStatementUploadInput() {
 
   const onDrop = useCallback(
     (acceptedFiles: File[], fileRejections: FileRejection[]) => {
+      if (acceptedFiles.length > 0) {
+        setDialogOpen(false);
+      }
+
       acceptedFiles.forEach((file) => {
         uploadFile(file);
       });
@@ -58,7 +66,7 @@ export function BankStatementUploadInput() {
         });
       });
     },
-    [formattedFileTypes, uploadFile],
+    [formattedFileTypes, setDialogOpen, uploadFile],
   );
 
   const dropzone = useDropzone({

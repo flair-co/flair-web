@@ -22,7 +22,6 @@ export const useUploadBankStatement = (bankAccountId: BankAccount['id']) => {
     onSuccess: (data, file) => {
       const fileId = `${file.name}-${file.lastModified}`;
       addUploadingFile({id: fileId, file, jobId: data.jobId, bankAccountId});
-      toast.success(`"${file.name}" has started uploading.`);
     },
     onError: (error) => {
       toast.error(error.message || 'Failed to start upload.');

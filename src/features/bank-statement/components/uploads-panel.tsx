@@ -1,16 +1,29 @@
-import {AlertCircle, CheckCircle2, ChevronUp} from 'lucide-react';
-import {useMemo, useState} from 'react';
+import {AlertCircle, CheckCircle2, ChevronUp, UploadIcon} from 'lucide-react';
+import {useEffect, useMemo, useRef, useState} from 'react';
 
 import {Button} from '@/components/ui/button';
-import {UploadIcon} from '@/components/ui/upload-icon';
-import {useUploads} from '@/providers/uploads.provider';
+import {useOnClickOutside} from '@/hooks/use-on-click-outside';
+import {useUploads} from '@/hooks/use-uploads';
 import {cn} from '@/utils/cn';
 
 import {UploadingFileCard} from './uploading-file-card';
 
 export function UploadsPanel() {
   const {uploadingFiles, removeUploadingFile, clearFinishedUploads} = useUploads();
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  useOnClickOutside(panelRef, () => {
+    if (!isCollapsed) {
+      setIsCollapsed(true);
+    }
+  });
+
+  useEffect(() => {
+    if (uploadingFiles.length > 0) {
+      setIsCollapsed(false);
+    }
+  }, [uploadingFiles.length]);
 
   const {processingCount, failedCount} = useMemo(() => {
     let processing = 0;
@@ -59,7 +72,10 @@ export function UploadsPanel() {
   const allFinished = processingCount === 0;
 
   return (
-    <div className='fixed right-4 top-4 z-50 w-[25rem] rounded-lg border bg-card shadow-lg transition-colors'>
+    <div
+      ref={panelRef}
+      className='fixed right-4 top-4 z-50 w-[25rem] rounded-lg border bg-card shadow-lg transition-colors'
+    >
       <Button
         variant='ghost'
         className={cn(

@@ -5,7 +5,7 @@ import {Dispatch, SetStateAction} from 'react';
 
 import {EmptyState} from '@/components/shared/layout/app-empty-state';
 import {LoadingBar} from '@/components/shared/loading-bar';
-import {Pagination} from '@/components/shared/table-pagination';
+import {Pagination} from '@/components/shared/pagination';
 import {Skeleton} from '@/components/ui/skeleton';
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/components/ui/table';
 import {PaginationParams} from '@/types/pagination';

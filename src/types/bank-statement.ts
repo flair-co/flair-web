@@ -13,13 +13,12 @@ export type BankStatement = {
   uploadedAt: Date;
 };
 
+type JobStatus = 'active' | 'completed' | 'failed' | 'waiting';
+
 export type UploadJob = {
   id: string;
   progress: number;
   status: JobStatus;
-  result?: BankStatement;
   failedReason?: string;
   jobId: string;
 };
-
-type JobStatus = 'active' | 'completed' | 'failed' | 'waiting';

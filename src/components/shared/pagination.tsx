@@ -17,6 +17,7 @@ type PaginationProps = {
   pagination: PaginationParams;
   setPagination: Dispatch<SetStateAction<PaginationParams>>;
   navigateOptions: NavigateOptions;
+  pageSizeOptions?: number[];
 };
 
 export function Pagination({
@@ -24,6 +25,7 @@ export function Pagination({
   pagination,
   setPagination,
   navigateOptions,
+  pageSizeOptions = PAGE_SIZE_OPTIONS,
 }: PaginationProps) {
   const navigate = useNavigate(navigateOptions);
 
@@ -93,7 +95,7 @@ export function Pagination({
               <SelectValue placeholder={pagination.pageSize} />
             </SelectTrigger>
             <SelectContent side='top'>
-              {PAGE_SIZE_OPTIONS.map((pageSize) => (
+              {pageSizeOptions.map((pageSize) => (
                 <SelectItem key={pageSize} value={`${pageSize}`}>
                   {pageSize}
                 </SelectItem>

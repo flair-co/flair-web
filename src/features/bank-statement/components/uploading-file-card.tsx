@@ -6,15 +6,17 @@ import {Button} from '@/components/ui/button';
 import {Progress} from '@/components/ui/progress';
 import {useUploads} from '@/hooks/use-uploads';
 import {UploadingFile} from '@/providers/uploads.provider';
+import {cn} from '@/utils/cn';
 
 import {useGetUploadStatus} from '../api/use-get-upload-status';
 
 type UploadingFileCardProps = {
   uploadingFile: UploadingFile;
   onDismiss: (jobId: string) => void;
+  isAnimating: boolean;
 };
 
-export function UploadingFileCard({uploadingFile, onDismiss}: UploadingFileCardProps) {
+export function UploadingFileCard({uploadingFile, onDismiss, isAnimating}: UploadingFileCardProps) {
   const {updateUploadingFileStatus} = useUploads();
   const {
     data: job,
@@ -76,7 +78,7 @@ export function UploadingFileCard({uploadingFile, onDismiss}: UploadingFileCardP
       <div className='flex-shrink-0'>{icon}</div>
       <div className='w-full overflow-hidden'>
         <p className='truncate text-sm font-medium'>{uploadingFile.file.name}</p>
-        <p className='text-xs text-muted-foreground'>{message}</p>
+        <p className={cn('text-xs text-muted-foreground', isAnimating && 'truncate')}>{message}</p>
         {uploadingFile.status === 'processing' && (
           <Progress value={progress} className='mt-1 h-1.5' />
         )}

@@ -8,10 +8,19 @@ import {cn} from '@/utils/cn';
 
 import {UploadingFileCard} from './uploading-file-card';
 
+const ANIMATION_DURATION = 300;
+
 export function UploadsPanel() {
   const {uploadingFiles, removeUploadingFile, clearFinishedUploads} = useUploads();
   const [isCollapsed, setIsCollapsed] = useState(true);
+  const [isAnimating, setIsAnimating] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setIsAnimating(true);
+    const timer = setTimeout(() => setIsAnimating(false), ANIMATION_DURATION);
+    return () => clearTimeout(timer);
+  }, [isCollapsed]);
 
   useOnClickOutside(panelRef, () => {
     if (!isCollapsed) {
@@ -74,7 +83,11 @@ export function UploadsPanel() {
   return (
     <div
       ref={panelRef}
-      className='fixed right-4 top-4 z-50 w-[25rem] rounded-lg border bg-card shadow-lg transition-colors'
+      className={cn(
+        'fixed right-4 top-4 z-50 rounded-lg border bg-card shadow-lg transition-all ease-in-out',
+        isCollapsed ? 'w-64' : 'w-[25rem]',
+        `duration-[${ANIMATION_DURATION}ms]`,
+      )}
     >
       <Button
         variant='ghost'
@@ -108,6 +121,7 @@ export function UploadsPanel() {
                 key={file.id}
                 uploadingFile={file}
                 onDismiss={removeUploadingFile}
+                isAnimating={isAnimating}
               />
             ))}
           </div>

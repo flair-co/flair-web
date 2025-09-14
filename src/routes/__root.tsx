@@ -3,7 +3,7 @@ import {TanStackRouterDevtools} from '@tanstack/router-devtools';
 
 import {AppSidebarLayout} from '@/components/shared/layout/app-sidebar-layout';
 import {SidebarProvider} from '@/components/ui/sidebar';
-import {UploadsPanel} from '@/features/bank-statement/components/uploads-panel';
+import {UploadsPanel} from '@/features/bank-statement/components/bank-statement-upload/uploads-panel';
 import {UploadsProvider} from '@/providers/uploads.provider';
 
 export const Route = createRootRouteWithContext<{

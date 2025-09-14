@@ -4,7 +4,7 @@ import {UploadJob} from '@/types/bank-statement';
 import {HttpError, api} from '@/utils/api';
 
 export const useGetUploadStatus = (bankAccountId: string, jobId: string | null) => {
-  return useQuery<UploadJob, HttpError>({
+  const {data, isError, error} = useQuery<UploadJob, HttpError>({
     queryKey: ['upload-status', jobId, bankAccountId],
     queryFn: async () => {
       return api.get<UploadJob>(
@@ -28,4 +28,6 @@ export const useGetUploadStatus = (bankAccountId: string, jobId: string | null) 
       return failureCount < 3;
     },
   });
+
+  return {job: data, isError, error};
 };

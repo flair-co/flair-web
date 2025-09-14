@@ -37,10 +37,12 @@ export function UploadsPanel() {
   const {processingCount, failedCount} = useMemo(() => {
     let processing = 0;
     let failed = 0;
+
     for (const file of uploadingFiles) {
       if (file.status === 'processing') processing++;
       if (file.status === 'failed') failed++;
     }
+
     return {processingCount: processing, failedCount: failed};
   }, [uploadingFiles]);
 
@@ -65,7 +67,7 @@ export function UploadsPanel() {
         };
       case 'success':
         return {
-          icon: <CheckCircle2 className='mr-2 h-5 w-5 text-green-500' />,
+          icon: <CheckCircle2 className='mr-2 h-5 w-5 text-success' />,
           title: 'Uploads Complete',
         };
       case 'processing':
@@ -96,7 +98,7 @@ export function UploadsPanel() {
           panelStatus === 'error' &&
             'border-destructive bg-destructive-foreground/60 hover:bg-destructive-foreground/40',
           panelStatus === 'success' &&
-            'border-green-500 bg-success-foreground/60 hover:bg-success-foreground/40',
+            'border-success bg-success-foreground/60 hover:bg-success-foreground/40',
           panelStatus === 'processing' && 'bg-card',
         )}
         onClick={() => setIsCollapsed(!isCollapsed)}

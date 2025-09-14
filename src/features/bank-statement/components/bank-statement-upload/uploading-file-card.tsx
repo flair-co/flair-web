@@ -8,7 +8,7 @@ import {useUploads} from '@/hooks/use-uploads';
 import {UploadingFile} from '@/providers/uploads.provider';
 import {cn} from '@/utils/cn';
 
-import {useGetUploadStatus} from '../api/use-get-upload-status';
+import {useGetUploadStatus} from '../../api/use-get-upload-status';
 
 type UploadingFileCardProps = {
   uploadingFile: UploadingFile;
@@ -18,27 +18,22 @@ type UploadingFileCardProps = {
 
 export function UploadingFileCard({uploadingFile, onDismiss, isAnimating}: UploadingFileCardProps) {
   const {updateUploadingFileStatus} = useUploads();
-  const {
-    data: job,
-    isError,
-    error,
-  } = useGetUploadStatus(uploadingFile.bankAccountId, uploadingFile.jobId);
+  const {job, error} = useGetUploadStatus(uploadingFile.bankAccountId, uploadingFile.jobId);
   const queryClient = useQueryClient();
 
   useEffect(() => {
     if (uploadingFile.status !== 'processing') return;
 
     const isJobDone = job?.status === 'completed' || job?.status === 'failed';
-    const isJobNotFound = isError && error.status === 404;
+    const isJobNotFound = error && error.status === 404;
 
     if (isJobDone || isJobNotFound) {
       void queryClient.invalidateQueries({queryKey: ['bank-statements']});
-      const hasFailed = job?.status === 'failed' || (isError && !isJobNotFound);
+      const hasFailed = job?.status === 'failed' || (error && !isJobNotFound);
       updateUploadingFileStatus(uploadingFile.jobId, hasFailed ? 'failed' : 'completed');
     }
   }, [
     job,
-    isError,
     error,
     uploadingFile.jobId,
     uploadingFile.status,

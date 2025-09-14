@@ -2,6 +2,7 @@ import {AlertCircle, CheckCircle2, ChevronUp, UploadIcon} from 'lucide-react';
 import {useEffect, useMemo, useRef, useState} from 'react';
 
 import {Button} from '@/components/ui/button';
+import {ScrollArea} from '@/components/ui/scroll-area';
 import {useOnClickOutside} from '@/hooks/use-on-click-outside';
 import {useUploads} from '@/hooks/use-uploads';
 import {cn} from '@/utils/cn';
@@ -117,16 +118,20 @@ export function UploadsPanel() {
 
       {!isCollapsed && (
         <>
-          <div className='space-y-5 border-t p-4'>
-            {uploadingFiles.map((file) => (
-              <UploadingFileCard
-                key={file.id}
-                uploadingFile={file}
-                onDismiss={removeUploadingFile}
-                isAnimating={isAnimating}
-              />
-            ))}
-          </div>
+          <ScrollArea
+            className={cn('border-t', uploadingFiles.length > 15 && 'h-[calc(100vh-8rem)]')}
+          >
+            <div className='space-y-5 p-4'>
+              {uploadingFiles.map((file) => (
+                <UploadingFileCard
+                  key={file.jobId}
+                  uploadingFile={file}
+                  onDismiss={removeUploadingFile}
+                  isAnimating={isAnimating}
+                />
+              ))}
+            </div>
+          </ScrollArea>
           {allFinished && (
             <div className='border-t p-2'>
               <Button variant='ghost' className='w-full' onClick={clearFinishedUploads}>

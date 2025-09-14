@@ -45,7 +45,7 @@ export function UploadingFileCard({uploadingFile, onDismiss, isAnimating}: Uploa
     switch (uploadingFile.status) {
       case 'completed':
         return {
-          icon: <CheckCircle2 className='h-5 w-5 text-green-500' />,
+          icon: <CheckCircle2 className='h-5 w-5 text-success' />,
           message: 'Completed',
           progress: 100,
         };
@@ -69,16 +69,16 @@ export function UploadingFileCard({uploadingFile, onDismiss, isAnimating}: Uploa
   const isFinished = uploadingFile.status === 'completed' || uploadingFile.status === 'failed';
 
   return (
-    <div className='flex items-center space-x-3'>
-      <div className='flex-shrink-0'>{icon}</div>
-      <div className='w-full overflow-hidden'>
+    <div className='grid grid-cols-[auto_1fr_auto] items-center gap-3'>
+      <div>{icon}</div>
+      <div className='min-w-0'>
         <p className='truncate text-sm font-medium'>{uploadingFile.file.name}</p>
         <p className={cn('text-xs text-muted-foreground', isAnimating && 'truncate')}>{message}</p>
         {uploadingFile.status === 'processing' && (
           <Progress value={progress} className='mt-1 h-1.5' />
         )}
       </div>
-      <div className='flex-shrink-0'>
+      <div>
         {isFinished && (
           <Button
             size='icon'

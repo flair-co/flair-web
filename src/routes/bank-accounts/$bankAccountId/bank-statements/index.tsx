@@ -8,7 +8,10 @@ import {useGetBankAccount} from '@/features/bank-account/api/use-get-bank-accoun
 import {BankAccountBreadcrumb} from '@/features/bank-account/components/bank-account-breadcrumb';
 import {useGetAllBankStatements} from '@/features/bank-statement/api/use-get-all-bank-statements';
 import {BankStatementGrid} from '@/features/bank-statement/components/bank-statement-grid';
-import {bankStatementPaginationSearchParamsSchema} from '@/features/bank-statement/types/bank-statement-pagination';
+import {
+  BANK_STATEMENT_PAGE_SIZE_OPTIONS,
+  bankStatementPaginationSearchParamsSchema,
+} from '@/features/bank-statement/types/bank-statement-pagination';
 import {handleAuthenticatedRedirect} from '@/utils/handle-redirect';
 
 export const Route = createFileRoute('/bank-accounts/$bankAccountId/bank-statements/')({
@@ -49,6 +52,7 @@ function BankStatementsIndex() {
             pagination={pagination}
             setPagination={setPagination}
             navigateOptions={{from: '/bank-accounts/$bankAccountId/bank-statements'}}
+            pageSizeOptions={BANK_STATEMENT_PAGE_SIZE_OPTIONS}
           />
         )}
       </AppBodyLayout>

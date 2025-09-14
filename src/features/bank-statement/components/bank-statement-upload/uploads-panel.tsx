@@ -3,6 +3,7 @@ import {useEffect, useMemo, useRef, useState} from 'react';
 
 import {Button} from '@/components/ui/button';
 import {ScrollArea} from '@/components/ui/scroll-area';
+import {useMediaQuery} from '@/hooks/use-media-query';
 import {useOnClickOutside} from '@/hooks/use-on-click-outside';
 import {useUploads} from '@/hooks/use-uploads';
 import {cn} from '@/utils/cn';
@@ -16,6 +17,7 @@ export function UploadsPanel() {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [isAnimating, setIsAnimating] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
+  const isMobile = useMediaQuery('(max-width: 768px)');
 
   useEffect(() => {
     setIsAnimating(true);
@@ -87,9 +89,10 @@ export function UploadsPanel() {
     <div
       ref={panelRef}
       className={cn(
-        'fixed right-4 top-4 z-50 rounded-lg border bg-card shadow-lg transition-all ease-in-out',
-        isCollapsed ? 'w-64' : 'w-[25rem]',
+        'fixed z-50 border bg-card shadow-lg transition-all ease-in-out',
         `duration-[${ANIMATION_DURATION}ms]`,
+        isMobile ? 'inset-x-0 top-0 w-full rounded-none' : 'right-4 top-4 rounded-lg',
+        !isMobile && (isCollapsed ? 'w-64' : 'w-[25rem]'),
       )}
     >
       <Button
@@ -101,6 +104,7 @@ export function UploadsPanel() {
           panelStatus === 'success' &&
             'border-success bg-success-foreground/60 hover:bg-success-foreground/40',
           panelStatus === 'processing' && 'bg-card',
+          isMobile && 'h-16',
         )}
         onClick={() => setIsCollapsed(!isCollapsed)}
       >

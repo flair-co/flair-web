@@ -45,7 +45,7 @@ export function BankStatementGrid({
         <h1 className='text-2xl font-semibold'>Bank Statements</h1>
         <BankStatementUploadDialog isOpen={isUploadDialogOpen} setIsOpen={setIsUploadDialogOpen} />
       </div>
-      <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
+      <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3'>
         {bankStatements.map((bankStatement) => (
           <BankStatementCard key={bankStatement.id} bankStatement={bankStatement} />
         ))}

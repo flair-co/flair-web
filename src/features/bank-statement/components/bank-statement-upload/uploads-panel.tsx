@@ -88,9 +88,10 @@ export function UploadsPanel() {
   return (
     <div
       ref={panelRef}
+      style={{'--animation-duration': `${ANIMATION_DURATION}ms`} as React.CSSProperties}
       className={cn(
         'fixed z-50 border bg-card shadow-lg transition-all ease-in-out',
-        `duration-[${ANIMATION_DURATION}ms]`,
+        'duration-[var(--animation-duration)]',
         isMobile ? 'inset-x-0 top-0 w-full rounded-none' : 'right-4 top-4 rounded-lg',
         !isMobile && (isCollapsed ? 'w-64' : 'w-[25rem]'),
       )}

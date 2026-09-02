@@ -1,5 +1,14 @@
 import {Link, useMatchRoute} from '@tanstack/react-router';
-import {ChevronsUpDown, CreditCard, Home, Landmark, LogOut, Settings} from 'lucide-react';
+import {
+  Building2,
+  ChevronsUpDown,
+  CreditCard,
+  Home,
+  Landmark,
+  List,
+  LogOut,
+  Settings,
+} from 'lucide-react';
 
 import {Avatar, AvatarFallback} from '@/components/ui/avatar';
 import {
@@ -28,7 +37,9 @@ import {cn} from '@/utils/cn';
 const navItems = [
   {label: 'Home', route: '/', icon: Home},
   {label: 'Bank Accounts', route: '/bank-accounts', icon: Landmark},
+  {label: 'Connected Banks', route: '/bank-connections', icon: Building2},
   {label: 'Transactions', route: '/transactions', icon: CreditCard},
+  {label: 'Bank Transactions', route: '/bank-transactions', icon: List},
 ];
 
 export function AppSidebarLayout() {

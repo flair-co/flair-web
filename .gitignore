@@ -32,3 +32,6 @@ routeTree.gen.ts
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# Local agent instructions
+AGENTS.md

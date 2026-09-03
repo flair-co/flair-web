@@ -18,7 +18,7 @@ type BankTransactionDateFilterProps = {
 };
 
 export function BankTransactionDateFilter({filters, setFilters}: BankTransactionDateFilterProps) {
-  const navigate = useNavigate({from: '/bank-transactions'});
+  const navigate = useNavigate({from: '/bank-transactions/'});
 
   const handleSelect = async (range: DateRange | undefined) => {
     const bookingDate = range?.from ? {from: range.from, to: range.to} : undefined;

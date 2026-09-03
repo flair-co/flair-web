@@ -48,7 +48,7 @@ export function BankTransactionTable({
   sort,
   setSort,
 }: BankTransactionTableProps) {
-  const navigate = useNavigate({from: '/bank-transactions'});
+  const navigate = useNavigate({from: '/bank-transactions/'});
   const isFilteringApplied =
     !!filters.bookingDate ||
     (filters.externalAccountIds?.length ?? 0) > 0 ||
@@ -209,7 +209,7 @@ export function BankTransactionTable({
             totalItems={totalTransactions}
             pagination={pagination}
             setPagination={setPagination}
-            navigateOptions={{from: '/bank-transactions'}}
+            navigateOptions={{from: '/bank-transactions/'}}
           />
         )}
       </div>

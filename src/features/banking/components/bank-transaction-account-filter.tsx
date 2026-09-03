@@ -38,7 +38,7 @@ export function BankTransactionAccountFilter({
   filters,
   setFilters,
 }: BankTransactionAccountFilterProps) {
-  const navigate = useNavigate({from: '/bank-transactions'});
+  const navigate = useNavigate({from: '/bank-transactions/'});
   const {bankConnections, isPending} = useGetAllBankConnections();
   const selectedValues = filters.externalAccountIds || [];
 

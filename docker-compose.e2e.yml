@@ -46,13 +46,7 @@ services:
       mailpit:
         condition: service_started
     healthcheck:
-      test:
-        [
-          'CMD',
-          'node',
-          '-e',
-          "fetch('http://localhost:3000/health').then(async r => { await r.arrayBuffer(); process.exit(r.ok ? 0 : 1) }).catch(() => process.exit(1))",
-        ]
+      test: ['CMD', 'wget', '-q', '-O', '/dev/null', 'http://127.0.0.1:3000/health']
       interval: 30s
       timeout: 5s
       retries: 5

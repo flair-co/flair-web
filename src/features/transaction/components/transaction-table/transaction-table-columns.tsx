@@ -1,10 +1,9 @@
 import {ColumnDef} from '@tanstack/react-table';
 import {format} from 'date-fns';
-import {ArrowDown, ArrowDownUp, ArrowUp} from 'lucide-react';
 
 import {CategoryBadge} from '@/components/shared/category-badge';
 import {CurrencyAmount} from '@/components/shared/currency-amount';
-import {Button} from '@/components/ui/button';
+import {SortButton} from '@/components/shared/sort-button';
 import {Transaction} from '@/types/transaction';
 
 export const transactionsTableColumns: ColumnDef<Transaction>[] = [
@@ -19,29 +18,7 @@ export const transactionsTableColumns: ColumnDef<Transaction>[] = [
   },
   {
     accessorKey: 'startedAt',
-    header: ({column}) => {
-      const sortDirection = column.getIsSorted();
-      return (
-        <Button
-          variant='ghost'
-          onClick={() => {
-            if (sortDirection === 'desc') {
-              column.toggleSorting(false);
-            } else if (sortDirection === 'asc') {
-              column.clearSorting();
-            } else {
-              column.toggleSorting(true);
-            }
-          }}
-          className='flex h-12 w-full justify-start px-3'
-        >
-          Started at
-          {!sortDirection && <ArrowDownUp className='text-muted-foreground' />}
-          {sortDirection === 'asc' && <ArrowUp className='h-4 w-4 text-secondary-foreground' />}
-          {sortDirection === 'desc' && <ArrowDown className='h-4 w-4 text-secondary-foreground' />}
-        </Button>
-      );
-    },
+    header: ({column}) => <SortButton column={column}>Started at</SortButton>,
     cell: ({row}) => {
       return <p>{format(new Date(row.original.startedAt), 'MMM d, yyyy')}</p>;
     },
@@ -61,29 +38,11 @@ export const transactionsTableColumns: ColumnDef<Transaction>[] = [
   },
   {
     accessorKey: 'amount',
-    header: ({column}) => {
-      const sortDirection = column.getIsSorted();
-      return (
-        <Button
-          variant='ghost'
-          onClick={() => {
-            if (sortDirection === 'desc') {
-              column.toggleSorting(false);
-            } else if (sortDirection === 'asc') {
-              column.clearSorting();
-            } else {
-              column.toggleSorting(true);
-            }
-          }}
-          className='flex h-12 w-full justify-end px-3'
-        >
-          {!sortDirection && <ArrowDownUp className='text-muted-foreground' />}
-          {sortDirection === 'asc' && <ArrowUp className='h-4 w-4 text-secondary-foreground' />}
-          {sortDirection === 'desc' && <ArrowDown className='h-4 w-4 text-secondary-foreground' />}
-          Amount
-        </Button>
-      );
-    },
+    header: ({column}) => (
+      <SortButton column={column} className='justify-end' iconPosition='before'>
+        Amount
+      </SortButton>
+    ),
     cell: ({row}) => {
       return (
         <p className='text-right'>

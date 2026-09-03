@@ -1,12 +1,15 @@
-import {format, parseISO} from 'date-fns';
-
 import {CopyToClipboardButton} from '@/components/shared/copy-to-clipboard-button';
 import {CurrencyAmount} from '@/components/shared/currency-amount';
 import {Badge} from '@/components/ui/badge';
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
 import {Skeleton} from '@/components/ui/skeleton';
 
-import {BankTransaction, BankTransactionDirection} from '../types/bank-transaction';
+import {BankTransaction} from '../types/bank-transaction';
+import {
+  formatBankTransactionDate,
+  formatBankTransactionDirection,
+  formatBankTransactionType,
+} from '../utils/formatters';
 
 type BankTransactionCardProps = {
   transaction?: BankTransaction;
@@ -34,7 +37,7 @@ export function BankTransactionCard({transaction, isPending}: BankTransactionCar
               <CurrencyAmount amount={Number(transaction.amount)} currency={transaction.currency} />
             </p>
             <p className='mt-1 text-sm text-muted-foreground'>
-              {formatDirection(transaction.direction)}
+              {formatBankTransactionDirection(transaction.direction)}
             </p>
           </div>
           <div className='flex flex-col items-end gap-2'>
@@ -44,14 +47,17 @@ export function BankTransactionCard({transaction, isPending}: BankTransactionCar
         </div>
 
         <div className='mt-6 grid gap-5 rounded-md border p-5 sm:grid-cols-2 lg:grid-cols-3'>
-          <Detail label='Transaction date' value={formatDate(transaction.transactionDate)} />
-          <Detail label='Booking date' value={formatDate(transaction.bookingDate)} />
-          <Detail label='Value date' value={formatDate(transaction.valueDate)} />
+          <Detail
+            label='Transaction date'
+            value={formatBankTransactionDate(transaction.transactionDate)}
+          />
+          <Detail label='Booking date' value={formatBankTransactionDate(transaction.bookingDate)} />
+          <Detail label='Value date' value={formatBankTransactionDate(transaction.valueDate)} />
           <Detail
             label='Transaction type'
-            value={formatTransactionType(transaction.transactionType)}
+            value={formatBankTransactionType(transaction.transactionType)}
           />
-          <Detail label='Direction' value={formatDirection(transaction.direction)} />
+          <Detail label='Direction' value={formatBankTransactionDirection(transaction.direction)} />
           <Detail label='Bank' value={`${transaction.bankName} (${transaction.bankCountry})`} />
           <Detail
             label='Account'
@@ -87,21 +93,6 @@ export function BankTransactionCard({transaction, isPending}: BankTransactionCar
   );
 }
 
-function formatTransactionType(value: string | null) {
-  if (!value) return 'Other';
-  return value
-    .toLowerCase()
-    .split('_')
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(' ');
-}
-
-function formatDirection(value: BankTransactionDirection) {
-  if (value === BankTransactionDirection.INCOME) return 'Income';
-  if (value === BankTransactionDirection.EXPENSE) return 'Expense';
-  return 'Unknown direction';
-}
-
 function formatAmount(amount: string | null, currency: string | null) {
   if (!amount || !currency) return '—';
   const numericAmount = Number(amount);
@@ -131,10 +122,4 @@ function Detail({label, value}: {label: string; value: string}) {
       <p className='whitespace-pre-wrap break-words'>{value}</p>
     </div>
   );
-}
-
-function formatDate(value: string | null) {
-  if (!value) return '—';
-  const date = parseISO(value);
-  return Number.isNaN(date.getTime()) ? value : format(date, 'MMM d, yyyy');
 }

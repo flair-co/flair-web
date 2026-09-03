@@ -1,6 +1,7 @@
 import {expect, test} from '@playwright/test';
 
 import {VERIFIED_USER_AUTH_FILE} from '../../constants/auth.constants';
+import {mockCurrentAccount} from '../../utils/mock-current-account';
 
 test.use({storageState: VERIFIED_USER_AUTH_FILE});
 
@@ -12,18 +13,7 @@ test.describe('bank connections', () => {
     requestedBankName = undefined;
     syncRequested = false;
 
-    await page.route('http://localhost:3000/accounts/me', async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          id: 'account-1',
-          name: 'Verified Account',
-          email: 'verified@test.com',
-          isEmailVerified: true,
-        }),
-      });
-    });
+    await mockCurrentAccount(page);
 
     await page.route('http://localhost:3000/bank-connections/authorize', async (route) => {
       expect(route.request().method()).toBe('POST');

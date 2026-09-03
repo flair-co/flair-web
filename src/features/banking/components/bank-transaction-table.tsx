@@ -54,6 +54,26 @@ export function BankTransactionTable({
     (filters.externalAccountIds?.length ?? 0) > 0 ||
     !!filters.search?.trim();
 
+  const handleSortingChange = (
+    updaterOrValue: SortingState | ((prev: SortingState) => SortingState),
+  ) => {
+    const currentSorting: SortingState = sort
+      ? [{id: sort.by, desc: sort.order === BankTransactionSortOrder.DESC}]
+      : [];
+    const updatedSorting =
+      typeof updaterOrValue === 'function' ? updaterOrValue(currentSorting) : updaterOrValue;
+    const firstSort = updatedSorting[0];
+    const nextSort = firstSort
+      ? {
+          by: firstSort.id as BankTransactionSortField,
+          order: firstSort.desc ? BankTransactionSortOrder.DESC : BankTransactionSortOrder.ASC,
+        }
+      : undefined;
+
+    void navigate({search: (prev) => ({...prev, sort: nextSort, pageIndex: 0})});
+    setSort(nextSort);
+  };
+
   const table = useReactTable({
     data: transactions,
     columns: bankTransactionTableColumns,
@@ -66,25 +86,7 @@ export function BankTransactionTable({
       sorting: sort ? [{id: sort.by, desc: sort.order === BankTransactionSortOrder.DESC}] : [],
     },
     rowCount: totalTransactions,
-    onSortingChange: (updaterOrValue) => {
-      setSort((previousSort) => {
-        const currentSorting: SortingState = previousSort
-          ? [{id: previousSort.by, desc: previousSort.order === BankTransactionSortOrder.DESC}]
-          : [];
-        const updatedSorting =
-          typeof updaterOrValue === 'function' ? updaterOrValue(currentSorting) : updaterOrValue;
-        const firstSort = updatedSorting[0];
-        const nextSort = firstSort
-          ? {
-              by: firstSort.id as BankTransactionSortField,
-              order: firstSort.desc ? BankTransactionSortOrder.DESC : BankTransactionSortOrder.ASC,
-            }
-          : undefined;
-
-        void navigate({search: (prev) => ({...prev, sort: nextSort, pageIndex: 0})});
-        return nextSort;
-      });
-    },
+    onSortingChange: handleSortingChange,
   });
 
   const clearFilters = () => {

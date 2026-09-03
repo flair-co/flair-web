@@ -45,8 +45,6 @@ export type BankConnection = {
   externalAccounts: ExternalAccount[];
 };
 
-export type BankConnectionResult = 'connected' | 'cancelled' | 'error';
-
 export type ExternalTransaction = {
   id: string;
   bookingDate: string | null;

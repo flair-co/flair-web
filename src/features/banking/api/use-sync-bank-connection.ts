@@ -9,9 +9,11 @@ export const useSyncBankConnection = () => {
     mutationFn: async (connectionId) => {
       return await api.post<BankSyncRun>(`/bank-connections/${connectionId}/sync`);
     },
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({queryKey: ['bank-connections']});
-      await queryClient.invalidateQueries({queryKey: ['bank-connection-transactions']});
+    onSuccess: async (_, connectionId) => {
+      await Promise.all([
+        queryClient.invalidateQueries({queryKey: ['bank-connections']}),
+        queryClient.invalidateQueries({queryKey: ['bank-connection-transactions', connectionId]}),
+      ]);
     },
     retry: false,
   });

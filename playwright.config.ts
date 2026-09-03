@@ -11,8 +11,6 @@ export default defineConfig({
   },
   testDir: './test',
   timeout: 10000,
-  // The E2E API and Mailpit services are shared across workers, so tests must
-  // run in one worker to avoid cross-test state races.
   fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,

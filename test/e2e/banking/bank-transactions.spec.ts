@@ -60,6 +60,28 @@ const transactions = [
     externalAccountName: 'Main account',
     externalAccountAlias: 'Daily spending',
   },
+  {
+    id: '00000000-0000-4000-8000-000000000013',
+    transactionDate: '2026-08-18',
+    bookingDate: '2026-08-19',
+    valueDate: '2026-08-19',
+    description:
+      'Online card payment at a particularly long merchant description that resembles the detail returned by the bank provider',
+    counterpartyName: 'Long Merchant Name',
+    amount: '-42.00000000',
+    currency: 'EUR',
+    creditDebitIndicator: 'DBIT',
+    direction: 'EXPENSE',
+    transactionType: 'CARD_PAYMENT',
+    transactionStatus: 'BOOK',
+    providerTransactionDescription: 'Card payment',
+    merchantCategoryCode: '5999',
+    remittanceInformation: 'Long transaction description',
+    bankName: 'ABN AMRO',
+    bankCountry: 'NL',
+    externalAccountName: 'Main account',
+    externalAccountAlias: 'Daily spending',
+  },
   ...Array.from({length: 9}, (_, index) => ({
     id: `00000000-0000-4000-8000-${String(index + 20).padStart(12, '0')}`,
     transactionDate: '2026-08-01',
@@ -217,5 +239,41 @@ test.describe('bank transactions', () => {
     await page.getByRole('button', {name: 'Go to next page'}).click();
     await expect(page).toHaveURL(/pageIndex=1/);
     await expect(page.getByText('Extra transaction 9')).toBeVisible();
+  });
+
+  test('does not overflow horizontally on a narrow viewport', async ({page}) => {
+    await page.setViewportSize({width: 390, height: 844});
+    await page.goto('/bank-transactions');
+
+    await expect(page.getByText('Coffee shop')).toBeVisible();
+    const [documentWidth, viewportWidth] = await page.evaluate(() => [
+      document.documentElement.scrollWidth,
+      window.innerWidth,
+    ]);
+    expect(documentWidth).toBeLessThanOrEqual(
+      viewportWidth,
+    );
+  });
+
+  test('does not require horizontal table scrolling at a laptop width', async ({page}) => {
+    for (const width of [1280, 1320, 1366]) {
+      await page.setViewportSize({width, height: 800});
+      await page.goto('/bank-transactions');
+
+      const metrics = await page.getByTestId('bank-transactions-table').evaluate((table) => {
+        const viewport = table.closest('[data-radix-scroll-area-viewport]');
+        const description = table.querySelector('tbody tr:nth-child(3) td:nth-child(3) > div');
+
+        return {
+          descriptionWidth: description?.clientWidth ?? 0,
+          tableWidth: table.scrollWidth,
+          viewportWidth: (viewport as HTMLElement | null)?.clientWidth ?? 0,
+        };
+      });
+      expect(metrics.tableWidth).toBeLessThanOrEqual(metrics.viewportWidth);
+      if (width === 1366) {
+        expect(metrics.descriptionWidth).toBeGreaterThan(320);
+      }
+    }
   });
 });

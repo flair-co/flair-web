@@ -26,7 +26,7 @@ export const bankTransactionTableColumns: ColumnDef<BankTransaction>[] = [
     id: 'description',
     header: () => <p className='px-3'>Description</p>,
     cell: ({row}) => (
-      <div className='max-w-[14rem] lg:max-w-[24rem] xl:max-w-[36rem]'>
+      <div className='w-full max-w-[10rem] sm:max-w-[14rem] lg:max-w-[16rem] xl:max-w-[20rem] min-[1320px]:max-w-[24rem]'>
         <p className='overflow-hidden text-ellipsis whitespace-nowrap'>
           {row.original.description || row.original.counterpartyName || 'Transaction'}
         </p>

@@ -173,6 +173,16 @@ test.describe('bank connections', () => {
     await expect(page).toHaveURL(/\/bank-connections$/);
   });
 
+  test('does not overflow horizontally on a narrow viewport', async ({page}) => {
+    await page.setViewportSize({width: 390, height: 844});
+    await page.goto('/bank-connections');
+
+    await expect(page.getByText('ABN AMRO', {exact: true})).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
+      await page.evaluate(() => window.innerWidth),
+    );
+  });
+
   test('runs a manual synchronization and displays the bank data preview', async ({page}) => {
     await page.goto('/bank-connections');
 

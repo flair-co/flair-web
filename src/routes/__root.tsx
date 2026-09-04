@@ -28,7 +28,7 @@ function Root() {
   return (
     <SidebarProvider>
       <AppSidebarLayout />
-      <main className='flex-1'>
+      <main className='min-w-0 flex-1'>
         <Outlet />
       </main>
       {import.meta.env.DEV && <TanStackRouterDevtools position='bottom-right' />}

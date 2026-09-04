@@ -7,6 +7,7 @@ import {Button} from '@/components/ui/button';
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
 import {Skeleton} from '@/components/ui/skeleton';
 import {HttpError} from '@/utils/api';
+import {formatRetryAfter} from '@/utils/retry-after';
 
 import {useGetBankConnectionTransactions} from '../api/use-get-bank-connection-transactions';
 import {useStartBankConnection} from '../api/use-start-bank-connection';
@@ -102,7 +103,12 @@ function BankConnectionCard({connection}: {connection: BankConnection}) {
   const syncBank = async () => {
     try {
       const run = await syncBankConnection(connection.id);
-      if (run.status === 'SUCCEEDED') {
+      if (run.rateLimitSource === 'enable-banking') {
+        toast.warning('Bank sync rate-limited', {
+          description: `The bank is temporarily limiting background access. ${formatRetryAfter(run.retryAfterSeconds)}`,
+          id: `bank-sync-rate-limit-${connection.id}`,
+        });
+      } else if (run.status === 'SUCCEEDED') {
         toast.success('Bank synchronized', {
           description: `${run.transactionsFetched} transactions and ${run.balancesFetched} balances fetched.`,
           id: `bank-sync-success-${connection.id}`,

@@ -5,11 +5,7 @@ import {SortButton} from '@/components/shared/sort-button';
 import {Badge} from '@/components/ui/badge';
 
 import {BankTransaction, BankTransactionSortField} from '../types/bank-transaction';
-import {
-  formatBankTransactionDate,
-  formatBankTransactionDirection,
-  formatBankTransactionType,
-} from '../utils/formatters';
+import {formatBankTransactionDate, formatBankTransactionType} from '../utils/formatters';
 
 export const bankTransactionTableColumns: ColumnDef<BankTransaction>[] = [
   {
@@ -58,19 +54,11 @@ export const bankTransactionTableColumns: ColumnDef<BankTransaction>[] = [
     ),
   },
   {
-    id: 'status',
-    header: () => <p className='px-3'>Status</p>,
-    cell: ({row}) => <Badge variant='outline'>{row.original.transactionStatus || 'Unknown'}</Badge>,
-  },
-  {
     accessorKey: BankTransactionSortField.AMOUNT,
     header: ({column}) => <SortButton column={column}>Amount</SortButton>,
     cell: ({row}) => (
       <div className='text-right'>
         <CurrencyAmount amount={Number(row.original.amount)} currency={row.original.currency} />
-        <p className='text-xs text-muted-foreground'>
-          {formatBankTransactionDirection(row.original.direction)}
-        </p>
       </div>
     ),
   },

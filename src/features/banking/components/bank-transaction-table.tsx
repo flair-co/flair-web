@@ -18,6 +18,7 @@ import {
   BankTransactionSortField,
   BankTransactionSortOrder,
   BankTransactionSortParams,
+  DEFAULT_BANK_TRANSACTION_SORT,
 } from '../types/bank-transaction';
 import {BankTransactionAccountFilter} from './bank-transaction-account-filter';
 import {BankTransactionDateFilter} from './bank-transaction-date-filter';
@@ -68,7 +69,7 @@ export function BankTransactionTable({
           by: firstSort.id as BankTransactionSortField,
           order: firstSort.desc ? BankTransactionSortOrder.DESC : BankTransactionSortOrder.ASC,
         }
-      : undefined;
+      : DEFAULT_BANK_TRANSACTION_SORT;
 
     void navigate({search: (prev) => ({...prev, sort: nextSort, pageIndex: 0})});
     setSort(nextSort);

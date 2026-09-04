@@ -46,6 +46,11 @@ export type BankTransactionFilterParams = Pick<
 
 export type BankTransactionSortParams = BankTransactionSearchParams['sort'];
 
+export const DEFAULT_BANK_TRANSACTION_SORT: NonNullable<BankTransactionSortParams> = {
+  by: BankTransactionSortField.BOOKING_DATE,
+  order: BankTransactionSortOrder.DESC,
+};
+
 export type BankTransaction = {
   id: string;
   transactionDate: string | null;

@@ -196,7 +196,10 @@ test.describe('bank transactions', () => {
     ).toBeVisible();
     await expect(
       page.getByTestId(`bank-transaction-row-${firstTransactionId}`).getByText('Expense'),
-    ).toBeVisible();
+    ).not.toBeVisible();
+    await expect(
+      page.getByTestId('bank-transactions-table').getByRole('columnheader', {name: 'Status'}),
+    ).not.toBeVisible();
     await expect(
       page.getByTestId(`bank-transaction-row-${firstTransactionId}`).getByText('Card payment'),
     ).toBeVisible();
@@ -229,11 +232,15 @@ test.describe('bank transactions', () => {
   test('sorts and paginates with the shared table controls', async ({page}) => {
     await page.goto('/bank-transactions');
 
-    await page
+    const bookingDateButton = page
       .getByTestId('bank-transactions-table')
-      .getByRole('button', {name: 'Booking date'})
-      .click();
-    const sort = new URL(page.url()).searchParams.get('sort');
+      .getByRole('button', {name: 'Booking date'});
+    await bookingDateButton.click();
+    let sort = new URL(page.url()).searchParams.get('sort');
+    expect(sort).toBe(JSON.stringify({by: 'bookingDate', order: 'ASC'}));
+
+    await bookingDateButton.click();
+    sort = new URL(page.url()).searchParams.get('sort');
     expect(sort).toBe(JSON.stringify({by: 'bookingDate', order: 'DESC'}));
 
     await page.getByRole('button', {name: 'Go to next page'}).click();
@@ -250,9 +257,7 @@ test.describe('bank transactions', () => {
       document.documentElement.scrollWidth,
       window.innerWidth,
     ]);
-    expect(documentWidth).toBeLessThanOrEqual(
-      viewportWidth,
-    );
+    expect(documentWidth).toBeLessThanOrEqual(viewportWidth);
   });
 
   test('does not require horizontal table scrolling at a laptop width', async ({page}) => {

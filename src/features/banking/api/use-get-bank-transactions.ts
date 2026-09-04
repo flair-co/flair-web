@@ -10,6 +10,7 @@ import {
   BankTransactionSearchParams,
   BankTransactionSortParams,
   BankTransactionsResponse,
+  DEFAULT_BANK_TRANSACTION_SORT,
 } from '../types/bank-transaction';
 
 export const useGetBankTransactions = (searchParams: BankTransactionSearchParams) => {
@@ -22,7 +23,9 @@ export const useGetBankTransactions = (searchParams: BankTransactionSearchParams
     externalAccountIds: searchParams.externalAccountIds,
     search: searchParams.search,
   });
-  const [sort, setSort] = useState<BankTransactionSortParams>(searchParams.sort);
+  const [sort, setSort] = useState<BankTransactionSortParams>(
+    searchParams.sort ?? DEFAULT_BANK_TRANSACTION_SORT,
+  );
 
   const {data, isPending, isPlaceholderData} = useQuery<BankTransactionsResponse>({
     queryKey: ['bank-transactions', pagination, filters, sort],

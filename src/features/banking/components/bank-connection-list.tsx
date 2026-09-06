@@ -132,8 +132,11 @@ function BankConnectionCard({connection}: {connection: BankConnection}) {
           id: `bank-sync-rate-limit-${connection.id}`,
         });
       } else if (run.status === 'SUCCEEDED') {
+        const transactionLabel = run.transactionsFetched === 1 ? 'transaction' : 'transactions';
+        const balanceLabel = run.balancesFetched === 1 ? 'balance' : 'balances';
+
         toast.success('Bank synchronized', {
-          description: `${run.transactionsFetched} transactions and ${run.balancesFetched} balances fetched.`,
+          description: `${run.transactionsFetched} ${transactionLabel} and ${run.balancesFetched} ${balanceLabel} fetched.`,
           id: `bank-sync-success-${connection.id}`,
         });
       } else if (run.status === 'PARTIAL') {

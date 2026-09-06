@@ -175,7 +175,7 @@ Use weight and scale to establish hierarchy before introducing additional typefa
 
 ### Hierarchy
 
-- **Page title** (`600`, `1.5rem`, approximately `1.25` line-height): The title of a major authenticated surface, such as Connected Banks or Appearance.
+- **Page title** (`600`, `1.5rem`, approximately `1.25` line-height): The title of a major authenticated surface, such as Bank connections or Appearance.
 - **Section title** (`600`, `1.125rem`, approximately `1.35` line-height): A meaningful subsection or grouped task.
 - **Body** (`400`, `1rem`, `1.5` line-height): Primary explanatory copy and comfortable reading text.
 - **Body small** (`400`, `0.875rem`, `1.5` line-height): Supporting descriptions, table content, and secondary controls.

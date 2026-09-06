@@ -7,7 +7,7 @@ export type BankConnectionAuthorizationResponse = {
   authorizationUrl: string;
 };
 
-export type ExternalAccount = {
+export type BankAccount = {
   id: string;
   name: string | null;
   details: string | null;
@@ -20,10 +20,10 @@ export type ExternalAccount = {
   currentBalanceType: string | null;
   balanceUpdatedAt: string | null;
   isActive: boolean;
-  latestBalances: ExternalAccountBalance[];
+  latestBalances: BankAccountBalance[];
 };
 
-export type ExternalAccountBalance = {
+export type BankAccountBalance = {
   name: string | null;
   balanceType: string;
   amount: string;
@@ -42,10 +42,10 @@ export type BankConnection = {
   status: string;
   consentValidUntil: string | null;
   lastSyncedAt: string | null;
-  externalAccounts: ExternalAccount[];
+  bankAccounts: BankAccount[];
 };
 
-export type ExternalTransaction = {
+export type BankTransaction = {
   id: string;
   bookingDate: string | null;
   valueDate: string | null;
@@ -59,8 +59,8 @@ export type ExternalTransaction = {
   remittanceInformation: string | null;
 };
 
-export type ExternalTransactionsResponse = {
-  transactions: ExternalTransaction[];
+export type BankTransactionsResponse = {
+  transactions: BankTransaction[];
   total: number;
 };
 

@@ -27,7 +27,7 @@ export const bankTransactionSearchParamsSchema = paginationSearchParamsSchema.ex
       to: z.preprocess(toDate, z.date()).optional(),
     })
     .optional(),
-  externalAccountIds: z.array(z.string().uuid()).optional(),
+  bankAccountIds: z.array(z.string().uuid()).optional(),
   search: z.string().max(100).optional(),
   sort: z
     .object({
@@ -41,7 +41,7 @@ export type BankTransactionSearchParams = z.infer<typeof bankTransactionSearchPa
 
 export type BankTransactionFilterParams = Pick<
   BankTransactionSearchParams,
-  'bookingDate' | 'externalAccountIds' | 'search'
+  'bookingDate' | 'bankAccountIds' | 'search'
 >;
 
 export type BankTransactionSortParams = BankTransactionSearchParams['sort'];
@@ -78,8 +78,8 @@ export type BankTransaction = {
   referenceNumberScheme: string | null;
   bankName: string;
   bankCountry: string;
-  externalAccountName: string | null;
-  externalAccountAlias: string | null;
+  bankAccountName: string | null;
+  bankAccountAlias: string | null;
 };
 
 export type BankTransactionsResponse = {

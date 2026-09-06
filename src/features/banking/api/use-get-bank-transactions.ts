@@ -20,7 +20,7 @@ export const useGetBankTransactions = (searchParams: BankTransactionSearchParams
   });
   const [filters, setFilters] = useState<BankTransactionFilterParams>({
     bookingDate: searchParams.bookingDate,
-    externalAccountIds: searchParams.externalAccountIds,
+    bankAccountIds: searchParams.bankAccountIds,
     search: searchParams.search,
   });
   const [sort, setSort] = useState<BankTransactionSortParams>(
@@ -41,10 +41,8 @@ export const useGetBankTransactions = (searchParams: BankTransactionSearchParams
       if (filters.bookingDate?.to) {
         params.append('filter[bookingDate][to]', format(filters.bookingDate.to, 'yyyy-MM-dd'));
       }
-      if (filters.externalAccountIds && filters.externalAccountIds.length > 0) {
-        filters.externalAccountIds.forEach((id) =>
-          params.append('filter[externalAccountIds][]', id),
-        );
+      if (filters.bankAccountIds && filters.bankAccountIds.length > 0) {
+        filters.bankAccountIds.forEach((id) => params.append('filter[bankAccountIds][]', id));
       }
       if (filters.search?.trim()) {
         params.append('filter[search]', filters.search.trim());

@@ -40,12 +40,12 @@ export function BankTransactionAccountFilter({
 }: BankTransactionAccountFilterProps) {
   const navigate = useNavigate({from: '/bank-transactions/'});
   const {bankConnections, isPending} = useGetAllBankConnections();
-  const selectedValues = filters.externalAccountIds || [];
+  const selectedValues = filters.bankAccountIds || [];
 
   const accounts = useMemo<AccountOption[]>(
     () =>
       bankConnections?.flatMap((connection) =>
-        connection.externalAccounts.map((account) => ({
+        connection.bankAccounts.map((account) => ({
           id: account.id,
           label: account.alias || account.name || 'Bank account',
           bankName: connection.aspspName,
@@ -65,16 +65,16 @@ export function BankTransactionAccountFilter({
     await navigate({
       search: (prev) => ({
         ...prev,
-        externalAccountIds: newSelectedValues.length === 0 ? undefined : newSelectedValues,
+        bankAccountIds: newSelectedValues.length === 0 ? undefined : newSelectedValues,
         pageIndex: 0,
       }),
     });
-    setFilters((prev) => ({...prev, externalAccountIds: newSelectedValues}));
+    setFilters((prev) => ({...prev, bankAccountIds: newSelectedValues}));
   };
 
   const handleReset = async () => {
-    await navigate({search: (prev) => ({...prev, externalAccountIds: undefined, pageIndex: 0})});
-    setFilters((prev) => ({...prev, externalAccountIds: []}));
+    await navigate({search: (prev) => ({...prev, bankAccountIds: undefined, pageIndex: 0})});
+    setFilters((prev) => ({...prev, bankAccountIds: []}));
   };
 
   const isDisabled = isPending || accounts.length === 0;

@@ -61,9 +61,7 @@ export function BankTransactionCard({transaction, isPending}: BankTransactionCar
           <Detail label='Bank' value={`${transaction.bankName} (${transaction.bankCountry})`} />
           <Detail
             label='Bank account'
-            value={
-              transaction.externalAccountAlias || transaction.externalAccountName || 'Bank account'
-            }
+            value={transaction.bankAccountAlias || transaction.bankAccountName || 'Bank account'}
           />
           <Detail label='Counterparty' value={transaction.counterpartyName || '—'} />
           <Detail label='Merchant category code' value={transaction.merchantCategoryCode || '—'} />

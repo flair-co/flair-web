@@ -48,7 +48,7 @@ export const bankTransactionTableColumns: ColumnDef<BankTransaction>[] = [
       <div className='max-w-[12rem]'>
         <p className='overflow-hidden text-ellipsis whitespace-nowrap'>{row.original.bankName}</p>
         <p className='overflow-hidden text-ellipsis whitespace-nowrap text-xs text-muted-foreground'>
-          {row.original.externalAccountAlias || row.original.externalAccountName || 'Bank account'}
+          {row.original.bankAccountAlias || row.original.bankAccountName || 'Bank account'}
         </p>
       </div>
     ),

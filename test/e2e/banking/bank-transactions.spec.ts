@@ -5,7 +5,9 @@ import {PW_CHANGE_USER_AUTH_FILE, VERIFIED_USER_AUTH_FILE} from '../../constants
 test.describe('bank transactions', () => {
   test.use({storageState: VERIFIED_USER_AUTH_FILE});
 
-  test('renders, searches, filters by bank account, and opens transaction detail', async ({page}) => {
+  test('renders, searches, filters by bank account, and opens transaction detail', async ({
+    page,
+  }) => {
     await page.goto('/bank-transactions');
 
     const firstTransactionRow = page
@@ -50,7 +52,7 @@ test.describe('bank transactions', () => {
     await page.getByRole('button', {name: 'Bank accounts'}).click();
     await expect(page.getByRole('option', {name: /Daily spending/})).toBeVisible();
     await page.getByRole('option', {name: /Daily spending/}).click();
-    await expect(page).toHaveURL(/externalAccountIds/);
+    await expect(page).toHaveURL(/bankAccountIds/);
     await expect(page.getByText('Coffee shop')).toBeVisible();
 
     await page.getByRole('button', {name: 'Booking date'}).first().click();

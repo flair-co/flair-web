@@ -12,7 +12,7 @@ import {formatRetryAfter} from '@/utils/retry-after';
 import {useGetBankConnectionTransactions} from '../api/use-get-bank-connection-transactions';
 import {useStartBankConnection} from '../api/use-start-bank-connection';
 import {useSyncBankConnection} from '../api/use-sync-bank-connection';
-import {BankConnection, ExternalTransaction} from '../types/bank-connection';
+import {BankConnection, BankTransaction} from '../types/bank-connection';
 
 type BankConnectionListProps = {
   bankConnections: BankConnection[];
@@ -185,11 +185,11 @@ function BankConnectionCard({connection}: {connection: BankConnection}) {
         </div>
       </CardHeader>
       <CardContent>
-        {connection.externalAccounts.length === 0 ? (
+        {connection.bankAccounts.length === 0 ? (
           <p className='text-sm text-muted-foreground'>No bank accounts were returned.</p>
         ) : (
           <div className='divide-y rounded-md border'>
-            {connection.externalAccounts.map((account) => (
+            {connection.bankAccounts.map((account) => (
               <div key={account.id} className='flex items-center justify-between gap-4 p-4'>
                 <div className='min-w-0 flex-1'>
                   <p className='font-medium'>{account.alias || account.name || 'Bank account'}</p>
@@ -236,7 +236,7 @@ function BankConnectionCard({connection}: {connection: BankConnection}) {
                 data-testid={`bank-transactions-${connection.id}`}
               >
                 {transactions.map((transaction) => (
-                  <ExternalTransactionRow key={transaction.id} transaction={transaction} />
+                  <BankTransactionRow key={transaction.id} transaction={transaction} />
                 ))}
               </div>
             ) : (
@@ -259,7 +259,7 @@ function BankConnectionCard({connection}: {connection: BankConnection}) {
   );
 }
 
-function ExternalTransactionRow({transaction}: {transaction: ExternalTransaction}) {
+function BankTransactionRow({transaction}: {transaction: BankTransaction}) {
   return (
     <div className='flex items-center justify-between gap-4 p-3'>
       <div className='min-w-0'>

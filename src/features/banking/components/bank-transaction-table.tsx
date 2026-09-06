@@ -51,9 +51,7 @@ export function BankTransactionTable({
 }: BankTransactionTableProps) {
   const navigate = useNavigate({from: '/bank-transactions/'});
   const isFilteringApplied =
-    !!filters.bookingDate ||
-    (filters.externalAccountIds?.length ?? 0) > 0 ||
-    !!filters.search?.trim();
+    !!filters.bookingDate || (filters.bankAccountIds?.length ?? 0) > 0 || !!filters.search?.trim();
 
   const handleSortingChange = (
     updaterOrValue: SortingState | ((prev: SortingState) => SortingState),
@@ -96,12 +94,12 @@ export function BankTransactionTable({
       search: (prev) => ({
         ...prev,
         bookingDate: undefined,
-        externalAccountIds: undefined,
+        bankAccountIds: undefined,
         search: undefined,
         pageIndex: 0,
       }),
     });
-    setFilters({bookingDate: undefined, externalAccountIds: [], search: undefined});
+    setFilters({bookingDate: undefined, bankAccountIds: [], search: undefined});
   };
 
   const updateSearch = (value: string) => {

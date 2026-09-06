@@ -33,6 +33,29 @@ const MOCK_ASPSP = {
 
 const targetBank = import.meta.env.DEV ? MOCK_ASPSP : ABN_AMRO;
 
+type ConnectBankButtonProps = {
+  onClick: () => void;
+  isPending: boolean;
+  className?: string;
+  testId?: string;
+  showIcon?: boolean;
+};
+
+function ConnectBankButton({
+  onClick,
+  isPending,
+  className,
+  testId,
+  showIcon = false,
+}: ConnectBankButtonProps) {
+  return (
+    <Button className={className} onClick={onClick} disabled={isPending} data-testid={testId}>
+      {showIcon && (isPending ? <Loader className='animate-slow-spin' /> : <Plus />)}
+      {isPending ? 'Connecting...' : `Connect ${targetBank.displayName}`}
+    </Button>
+  );
+}
+
 export function BankConnectionList({bankConnections, isPending}: BankConnectionListProps) {
   const {startBankConnection, isPending: isStarting} = useStartBankConnection();
 
@@ -62,10 +85,12 @@ export function BankConnectionList({bankConnections, isPending}: BankConnectionL
             Read-only connections to your financial institutions.
           </p>
         </div>
-        <Button onClick={connectBank} disabled={isStarting} data-testid={targetBank.testId}>
-          {isStarting ? <Loader className='animate-slow-spin' /> : <Plus />}
-          {isStarting ? 'Connecting...' : `Connect ${targetBank.displayName}`}
-        </Button>
+        <ConnectBankButton
+          onClick={connectBank}
+          isPending={isStarting}
+          testId={targetBank.testId}
+          showIcon
+        />
       </div>
 
       {bankConnections.length === 0 ? (
@@ -77,9 +102,7 @@ export function BankConnectionList({bankConnections, isPending}: BankConnectionL
               Connect {targetBank.displayName} to make its available accounts part of your financial
               history.
             </p>
-            <Button className='mt-6' onClick={connectBank} disabled={isStarting}>
-              {isStarting ? 'Connecting...' : `Connect ${targetBank.displayName}`}
-            </Button>
+            <ConnectBankButton onClick={connectBank} isPending={isStarting} className='mt-6' />
           </CardContent>
         </Card>
       ) : (

@@ -64,12 +64,13 @@ export function BankTransactionTable({
     const updatedSorting =
       typeof updaterOrValue === 'function' ? updaterOrValue(currentSorting) : updaterOrValue;
     const firstSort = updatedSorting[0];
-    const nextSort = firstSort
-      ? {
-          by: firstSort.id as BankTransactionSortField,
-          order: firstSort.desc ? BankTransactionSortOrder.DESC : BankTransactionSortOrder.ASC,
-        }
-      : DEFAULT_BANK_TRANSACTION_SORT;
+    const nextSort =
+      firstSort && isBankTransactionSortField(firstSort.id)
+        ? {
+            by: firstSort.id,
+            order: firstSort.desc ? BankTransactionSortOrder.DESC : BankTransactionSortOrder.ASC,
+          }
+        : DEFAULT_BANK_TRANSACTION_SORT;
 
     void navigate({search: (prev) => ({...prev, sort: nextSort, pageIndex: 0})});
     setSort(nextSort);
@@ -216,4 +217,8 @@ export function BankTransactionTable({
       </div>
     </>
   );
+}
+
+function isBankTransactionSortField(value: string): value is BankTransactionSortField {
+  return Object.values(BankTransactionSortField).includes(value as BankTransactionSortField);
 }

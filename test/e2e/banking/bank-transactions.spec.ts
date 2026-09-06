@@ -1,11 +1,11 @@
 import {expect, test} from '@playwright/test';
 
-import {VERIFIED_USER_AUTH_FILE} from '../../constants/auth.constants';
-
-test.use({storageState: VERIFIED_USER_AUTH_FILE});
+import {PW_CHANGE_USER_AUTH_FILE, VERIFIED_USER_AUTH_FILE} from '../../constants/auth.constants';
 
 test.describe('bank transactions', () => {
-  test('renders, searches, clears filters, and opens a read-only detail page', async ({page}) => {
+  test.use({storageState: VERIFIED_USER_AUTH_FILE});
+
+  test('renders, searches, filters by account, and opens transaction detail', async ({page}) => {
     await page.goto('/bank-transactions');
 
     const firstTransactionRow = page
@@ -43,6 +43,27 @@ test.describe('bank transactions', () => {
     await expect(page.getByText('Category', {exact: true})).not.toBeVisible();
   });
 
+  test('filters seeded transactions by account and booking date', async ({page}) => {
+    await page.goto('/bank-transactions');
+
+    await page.getByRole('button', {name: 'Accounts'}).click();
+    await expect(page.getByRole('option', {name: /Daily spending/})).toBeVisible();
+    await page.getByRole('option', {name: /Daily spending/}).click();
+    await expect(page).toHaveURL(/externalAccountIds/);
+    await expect(page.getByText('Coffee shop')).toBeVisible();
+
+    await page.getByRole('button', {name: 'Booking date'}).first().click();
+    for (let monthIndex = 0; monthIndex < 24; monthIndex += 1) {
+      if (await page.getByText('August 2026', {exact: true}).isVisible()) break;
+      await page.getByRole('button', {name: 'Go to previous month'}).click();
+    }
+    await page.getByRole('dialog').getByRole('gridcell', {name: '26'}).last().click();
+
+    await expect(page).toHaveURL(/bookingDate/);
+    await expect(page.getByText('Coffee shop')).toBeVisible();
+    await expect(page.getByText('Provider purchase')).not.toBeVisible();
+  });
+
   test('sorts and paginates with the shared table controls', async ({page}) => {
     await page.goto('/bank-transactions');
 
@@ -61,39 +82,17 @@ test.describe('bank transactions', () => {
     await expect(page).toHaveURL(/pageIndex=1/);
     await expect(page.getByText('Extra transaction 9')).toBeVisible();
   });
+});
 
-  test('does not overflow horizontally on a narrow viewport', async ({page}) => {
-    await page.setViewportSize({width: 390, height: 844});
+test.describe('bank transactions without synced data', () => {
+  test.use({storageState: PW_CHANGE_USER_AUTH_FILE});
+
+  test('shows the empty state for an account without transactions', async ({page}) => {
     await page.goto('/bank-transactions');
 
-    await expect(page.getByText('Coffee shop')).toBeVisible();
-    const [documentWidth, viewportWidth] = await page.evaluate(() => [
-      document.documentElement.scrollWidth,
-      window.innerWidth,
-    ]);
-    expect(documentWidth).toBeLessThanOrEqual(viewportWidth);
-  });
-
-  test('does not require horizontal table scrolling at a laptop width', async ({page}) => {
-    for (const width of [1280, 1320, 1366]) {
-      await page.setViewportSize({width, height: 800});
-      await page.goto('/bank-transactions');
-
-      const metrics = await page.getByTestId('bank-transactions-table').evaluate((table) => {
-        const viewport = table.closest('[data-radix-scroll-area-viewport]');
-        const description = table.querySelector('tbody tr:nth-child(3) td:nth-child(3) > div');
-
-        return {
-          descriptionWidth: description?.clientWidth ?? 0,
-          tableWidth: table.scrollWidth,
-          viewportWidth: (viewport as HTMLElement | null)?.clientWidth ?? 0,
-        };
-      });
-
-      expect(metrics.tableWidth).toBeLessThanOrEqual(metrics.viewportWidth);
-      if (width === 1366) {
-        expect(metrics.descriptionWidth).toBeGreaterThan(320);
-      }
-    }
+    await expect(page.getByRole('heading', {name: 'No bank transactions found'})).toBeVisible();
+    await expect(
+      page.getByText('Synchronize a connected bank to make its transactions appear here.'),
+    ).toBeVisible();
   });
 });

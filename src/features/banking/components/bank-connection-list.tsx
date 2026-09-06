@@ -65,7 +65,7 @@ export function BankConnectionList({bankConnections, isPending}: BankConnectionL
       window.location.assign(authorizationUrl);
     } catch (error) {
       if (error instanceof HttpError && error.status === 429) return;
-      toast.error('Unable to connect bank', {
+      toast.error('Unable to add bank connection', {
         description: 'Please try again in a moment.',
         id: 'bank-connection-start-failed',
       });
@@ -80,7 +80,7 @@ export function BankConnectionList({bankConnections, isPending}: BankConnectionL
     <div className='flex flex-col gap-4'>
       <div className='flex items-end justify-between gap-4'>
         <div>
-          <h1 className='text-2xl font-semibold'>Connected Banks</h1>
+          <h1 className='text-2xl font-semibold'>Bank connections</h1>
           <p className='mt-1 text-sm text-muted-foreground'>
             Read-only connections to your financial institutions.
           </p>
@@ -97,10 +97,10 @@ export function BankConnectionList({bankConnections, isPending}: BankConnectionL
         <Card>
           <CardContent className='flex flex-col items-center py-16 text-center'>
             <Building2 className='mb-5 h-12 w-12 text-muted-foreground' />
-            <h2 className='text-xl font-semibold'>No banks connected</h2>
+            <h2 className='text-xl font-semibold'>No bank connections</h2>
             <p className='mt-2 max-w-md text-sm text-muted-foreground'>
-              Connect {targetBank.displayName} to make its available accounts part of your financial
-              history.
+              Connect {targetBank.displayName} to make its available bank accounts part of your
+              financial history.
             </p>
             <ConnectBankButton onClick={connectBank} isPending={isStarting} className='mt-6' />
           </CardContent>
@@ -127,32 +127,32 @@ function BankConnectionCard({connection}: {connection: BankConnection}) {
     try {
       const run = await syncBankConnection(connection.id);
       if (run.rateLimitSource === 'enable-banking') {
-        toast.warning('Bank sync rate-limited', {
-          description: `The bank is temporarily limiting background access. ${formatRetryAfter(run.retryAfterSeconds)}`,
+        toast.warning('Bank connection sync rate-limited', {
+          description: `The bank connection is temporarily limiting background access. ${formatRetryAfter(run.retryAfterSeconds)}`,
           id: `bank-sync-rate-limit-${connection.id}`,
         });
       } else if (run.status === 'SUCCEEDED') {
         const transactionLabel = run.transactionsFetched === 1 ? 'transaction' : 'transactions';
         const balanceLabel = run.balancesFetched === 1 ? 'balance' : 'balances';
 
-        toast.success('Bank synchronized', {
+        toast.success('Bank connection synchronized', {
           description: `${run.transactionsFetched} ${transactionLabel} and ${run.balancesFetched} ${balanceLabel} fetched.`,
           id: `bank-sync-success-${connection.id}`,
         });
       } else if (run.status === 'PARTIAL') {
-        toast.warning('Bank partially synchronized', {
-          description: 'Some bank data could not be synchronized.',
+        toast.warning('Bank connection partially synchronized', {
+          description: 'Some bank connection data could not be synchronized.',
           id: `bank-sync-partial-${connection.id}`,
         });
       } else {
-        toast.error('Bank synchronization failed', {
+        toast.error('Bank connection synchronization failed', {
           description: 'Please try again later.',
           id: `bank-sync-failed-${connection.id}`,
         });
       }
     } catch (error) {
       if (error instanceof HttpError && error.status === 429) return;
-      toast.error('Unable to synchronize bank', {
+      toast.error('Unable to synchronize bank connection', {
         description: 'Please try again in a moment.',
         id: `bank-sync-request-failed-${connection.id}`,
       });
@@ -186,19 +186,17 @@ function BankConnectionCard({connection}: {connection: BankConnection}) {
       </CardHeader>
       <CardContent>
         {connection.externalAccounts.length === 0 ? (
-          <p className='text-sm text-muted-foreground'>No fetchable accounts were returned.</p>
+          <p className='text-sm text-muted-foreground'>No bank accounts were returned.</p>
         ) : (
           <div className='divide-y rounded-md border'>
             {connection.externalAccounts.map((account) => (
               <div key={account.id} className='flex items-center justify-between gap-4 p-4'>
                 <div className='min-w-0 flex-1'>
-                  <p className='font-medium'>
-                    {account.alias || account.name || 'External account'}
-                  </p>
+                  <p className='font-medium'>{account.alias || account.name || 'Bank account'}</p>
                   <p className='text-sm text-muted-foreground'>
                     {[account.details, account.cashAccountType, account.usage]
                       .filter(Boolean)
-                      .join(' | ') || 'Account details will appear after synchronization.'}
+                      .join(' | ') || 'Bank account details will appear after synchronization.'}
                   </p>
                   {(account.latestBalances ?? []).length > 0 && (
                     <div className='mt-3 flex flex-wrap gap-x-6 gap-y-2'>

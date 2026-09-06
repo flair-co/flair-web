@@ -32,12 +32,12 @@ function BankConnectionsIndex() {
     if (!result) return;
 
     if (result === 'connected') {
-      toast.success('Bank connected', {id: 'bank-connection-success'});
+      toast.success('Bank connection added', {id: 'bank-connection-success'});
     } else if (result === 'cancelled') {
       toast.info('Bank connection cancelled', {id: 'bank-connection-cancelled'});
     } else {
       toast.error('Bank connection failed', {
-        description: 'No account data was changed. Please try again.',
+        description: 'No bank account data was changed. Please try again.',
         id: 'bank-connection-error',
       });
     }
@@ -49,7 +49,7 @@ function BankConnectionsIndex() {
     <>
       <LoadingBar isPending={isPending} />
       <AppHeaderLayout>
-        <span className='text-sm font-medium'>Connected Banks</span>
+        <span className='text-sm font-medium'>Bank connections</span>
       </AppHeaderLayout>
       <AppBodyLayout>
         <BankConnectionList bankConnections={bankConnections || []} isPending={isPending} />

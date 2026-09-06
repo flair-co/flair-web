@@ -47,7 +47,7 @@ export function BankTransactionAccountFilter({
       bankConnections?.flatMap((connection) =>
         connection.externalAccounts.map((account) => ({
           id: account.id,
-          label: account.alias || account.name || 'External account',
+          label: account.alias || account.name || 'Bank account',
           bankName: connection.aspspName,
           currency: account.currency,
         })),
@@ -97,7 +97,7 @@ export function BankTransactionAccountFilter({
           ) : (
             <Landmark className='mr-2' />
           )}
-          Accounts
+          Bank accounts
           {selectedAccounts.length > 0 && !isDisabled && (
             <>
               <Separator orientation='vertical' className='mx-2 h-4' />
@@ -124,10 +124,10 @@ export function BankTransactionAccountFilter({
       </PopoverTrigger>
       <PopoverContent className='w-[260px] p-0' align='start'>
         <Command>
-          <CommandInput placeholder='Search connected accounts...' />
+          <CommandInput placeholder='Search bank accounts...' />
           <ScrollArea className='h-fit max-h-[240px]'>
             <CommandList>
-              <CommandEmpty>No connected accounts found.</CommandEmpty>
+              <CommandEmpty>No bank accounts found.</CommandEmpty>
               <CommandGroup>
                 {accounts.map((account) => {
                   const isSelected = selectedValues.includes(account.id);

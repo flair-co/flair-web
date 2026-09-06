@@ -120,7 +120,7 @@ export function BankTransactionTable({
       <EmptyState
         icon={Search}
         title='No bank transactions found'
-        description='Synchronize a connected bank to make its transactions appear here.'
+        description='Synchronize a bank connection to make its transactions appear here.'
       />
     );
   }

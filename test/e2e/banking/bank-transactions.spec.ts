@@ -5,7 +5,7 @@ import {PW_CHANGE_USER_AUTH_FILE, VERIFIED_USER_AUTH_FILE} from '../../constants
 test.describe('bank transactions', () => {
   test.use({storageState: VERIFIED_USER_AUTH_FILE});
 
-  test('renders, searches, filters by account, and opens transaction detail', async ({page}) => {
+  test('renders, searches, filters by bank account, and opens transaction detail', async ({page}) => {
     await page.goto('/bank-transactions');
 
     const firstTransactionRow = page
@@ -32,6 +32,7 @@ test.describe('bank transactions', () => {
     await expect(page.getByText('Bank transaction', {exact: true})).toBeVisible();
     await expect(page.getByText('Morning coffee')).toBeVisible();
     await expect(page.getByText('Merchant category code')).toBeVisible();
+    await expect(page.getByText('Bank account', {exact: true})).toBeVisible();
     await expect(page.getByText('Daily spending')).toBeVisible();
     await expect(page.getByText('Transaction date')).toBeVisible();
     await expect(page.getByText('Card payment', {exact: true})).toBeVisible();
@@ -43,10 +44,10 @@ test.describe('bank transactions', () => {
     await expect(page.getByText('Category', {exact: true})).not.toBeVisible();
   });
 
-  test('filters seeded transactions by account and booking date', async ({page}) => {
+  test('filters seeded transactions by bank account and booking date', async ({page}) => {
     await page.goto('/bank-transactions');
 
-    await page.getByRole('button', {name: 'Accounts'}).click();
+    await page.getByRole('button', {name: 'Bank accounts'}).click();
     await expect(page.getByRole('option', {name: /Daily spending/})).toBeVisible();
     await page.getByRole('option', {name: /Daily spending/}).click();
     await expect(page).toHaveURL(/externalAccountIds/);
@@ -92,7 +93,7 @@ test.describe('bank transactions without synced data', () => {
 
     await expect(page.getByRole('heading', {name: 'No bank transactions found'})).toBeVisible();
     await expect(
-      page.getByText('Synchronize a connected bank to make its transactions appear here.'),
+      page.getByText('Synchronize a bank connection to make its transactions appear here.'),
     ).toBeVisible();
   });
 });

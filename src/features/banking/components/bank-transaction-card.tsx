@@ -60,8 +60,10 @@ export function BankTransactionCard({transaction, isPending}: BankTransactionCar
           <Detail label='Direction' value={formatBankTransactionDirection(transaction.direction)} />
           <Detail label='Bank' value={`${transaction.bankName} (${transaction.bankCountry})`} />
           <Detail
-            label='Account'
-            value={transaction.externalAccountAlias || transaction.externalAccountName || 'Account'}
+            label='Bank account'
+            value={
+              transaction.externalAccountAlias || transaction.externalAccountName || 'Bank account'
+            }
           />
           <Detail label='Counterparty' value={transaction.counterpartyName || '—'} />
           <Detail label='Merchant category code' value={transaction.merchantCategoryCode || '—'} />

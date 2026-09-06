@@ -27,7 +27,7 @@ import {cn} from '@/utils/cn';
 
 const navItems = [
   {label: 'Home', route: '/', icon: Home},
-  {label: 'Connected Banks', route: '/bank-connections', icon: Building2},
+  {label: 'Bank connections', route: '/bank-connections', icon: Building2},
   {label: 'Bank Transactions', route: '/bank-transactions', icon: List},
 ];
 

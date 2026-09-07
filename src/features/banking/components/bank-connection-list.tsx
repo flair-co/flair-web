@@ -31,7 +31,7 @@ const MOCK_ASPSP = {
   testId: 'connect-mock-aspsp-button',
 };
 
-const targetBank = import.meta.env.DEV ? MOCK_ASPSP : ABN_AMRO;
+const targetBank = import.meta.env.MODE === 'development' ? MOCK_ASPSP : ABN_AMRO;
 
 type ConnectBankButtonProps = {
   onClick: () => void;

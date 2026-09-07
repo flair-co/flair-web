@@ -129,7 +129,7 @@ export function AccountDeleteDialog({children}: AccountDeleteDialogProps) {
                   type='submit'
                   variant='destructive'
                   disabled={!canSubmit}
-                  className='order-1 md:order-2'
+                  className='order-1 text-foreground md:order-2'
                   data-testid='delete-account-confirm'
                 >
                   {isPending ? (

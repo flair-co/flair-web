@@ -22,11 +22,10 @@ import {
 import {useCurrentAccount} from '@/hooks/use-current-account';
 
 import {useDeleteAccount} from '../../api/use-delete-account';
-import {AccountDeleteDto} from '../../types/account-delete.dto';
+import {AccountDeleteDto, accountDeleteDtoSchema} from '../../types/account-delete.dto';
 
-const accountDeleteFormSchema = z.object({
+const accountDeleteFormSchema = accountDeleteDtoSchema.extend({
   email: z.string().min(1, 'Please type your email to confirm.'),
-  password: z.string().min(1, 'Please enter your password.'),
 });
 
 type AccountDeleteFormValues = z.infer<typeof accountDeleteFormSchema>;

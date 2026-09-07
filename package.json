@@ -16,7 +16,7 @@
     "lint": "eslint \"{src,test}/**/*.{ts,tsx}\" --report-unused-disable-directives --max-warnings 0 --fix",
     "lint:check": "eslint \"{src,test}/**/*.{ts,tsx}\" --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview --port 5173",
-    "db:seed:e2e": "docker compose -p flair-web -f docker-compose.e2e.yml exec -T api node ./dist/scripts/seed.js",
+    "db:seed:e2e": "docker compose -p flair-web -f docker-compose.e2e.yml exec -T api sh -c \"until wget -qO- http://127.0.0.1:3000/health >/dev/null 2>&1; do sleep 1; done; node ./dist/scripts/seed.js\"",
     "test:e2e": "npx playwright test",
     "test:e2e:local": "npm run docker:test:down && npm run docker:test:up && npm run db:seed:e2e && npx playwright test --ui",
     "docker:test:up": "docker compose -p flair-web -f docker-compose.e2e.yml pull api && docker compose -p flair-web -f docker-compose.e2e.yml up -d",

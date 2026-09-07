@@ -1,6 +1,5 @@
 import {faker} from '@faker-js/faker';
-import {expect, test, type APIRequestContext, type Page} from '@playwright/test';
-import {loadEnv} from 'vite';
+import {expect, test} from '@playwright/test';
 import {HomePage} from 'test/pages/home.page';
 import {EmailUtils} from 'test/utils/email-utils';
 
@@ -26,20 +25,7 @@ test.describe.serial('Account Settings: Delete account', () => {
     loginPage = new LoginPage(page);
   });
 
-
-  test('should delete the account after email and password confirmation', async ({
-    page,
-    request,
-  }: {
-    page: Page;
-    request: APIRequestContext;
-  }) => {
-    // The web e2e stack runs the published tempo-api image. Skip until the API
-    // PR with DELETE /accounts/me is merged (404 = route not deployed yet).
-    const apiUrl = loadEnv('development', process.cwd(), '').VITE_API_URL;
-    const probe = await request.delete(`${apiUrl}/accounts/me`);
-    test.skip(probe.status() === 404, 'tempo-api image does not expose DELETE /accounts/me yet.');
-
+  test('should delete the account after email and password confirmation', async ({page}) => {
     await EmailUtils.clearEmails();
     email = faker.internet.email().toLowerCase();
     const name = faker.person.fullName();

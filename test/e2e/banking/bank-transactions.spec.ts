@@ -81,7 +81,32 @@ test.describe('bank transactions', () => {
     const descriptionLink = firstTransactionRow.locator('a');
 
     await expect(page.getByRole('heading', {name: 'Bank transactions'})).toBeVisible();
+    const headingGroup = page.getByTestId('bank-transactions-heading');
+    const [headingBox, summaryBox] = await Promise.all([
+      headingGroup.getByRole('heading').boundingBox(),
+      headingGroup.locator('p').boundingBox(),
+    ]);
+    expect(headingBox).not.toBeNull();
+    expect(summaryBox).not.toBeNull();
+    expect(summaryBox!.y).toBeLessThan(headingBox!.y + headingBox!.height);
+    await expect(page.getByRole('button', {name: 'Bank accounts', exact: true})).not.toBeVisible();
+    const bookingDateFilter = page.getByRole('button', {name: 'Booking date', exact: true}).first();
+    await expect(bookingDateFilter).toBeVisible();
+    const bookingDateBox = await bookingDateFilter.boundingBox();
+    expect(bookingDateBox).not.toBeNull();
+    expect(bookingDateBox!.width).toBe(361);
     await expect(firstTransactionRow).toBeVisible();
+    const [tableBox, firstTransactionRowBox] = await Promise.all([
+      table.boundingBox(),
+      firstTransactionRow.boundingBox(),
+    ]);
+    expect(tableBox).not.toBeNull();
+    expect(firstTransactionRowBox).not.toBeNull();
+    expect(firstTransactionRowBox!.x).toBeCloseTo(tableBox!.x, 0);
+    expect(firstTransactionRowBox!.x + firstTransactionRowBox!.width).toBeCloseTo(
+      tableBox!.x + tableBox!.width,
+      0,
+    );
     await expect(descriptionLink).toHaveCount(1);
     await expect(table).toHaveAttribute('aria-label', 'Bank transactions');
     const mobileMeta = firstTransactionRow.getByTestId('bank-transaction-mobile-meta');
@@ -97,6 +122,16 @@ test.describe('bank transactions', () => {
     await expect(pagination.getByRole('button', {name: 'Go to next page'})).toBeVisible();
     await expect(pagination.getByRole('button', {name: 'Go to first page'})).not.toBeVisible();
     await expect(pagination.getByRole('button', {name: 'Go to last page'})).not.toBeVisible();
+    const rowsSelector = pagination.getByRole('combobox', {name: 'Rows per page'});
+    const rowsValue = rowsSelector.locator(':scope > span');
+    const rowsChevron = rowsSelector.locator('svg');
+    const [rowsValueBox, rowsChevronBox] = await Promise.all([
+      rowsValue.boundingBox(),
+      rowsChevron.boundingBox(),
+    ]);
+    expect(rowsValueBox).not.toBeNull();
+    expect(rowsChevronBox).not.toBeNull();
+    expect(rowsChevronBox!.x - (rowsValueBox!.x + rowsValueBox!.width)).toBeGreaterThanOrEqual(8);
     await expect
       .poll(() => pagination.evaluate((element) => element.getBoundingClientRect().height))
       .toBeLessThan(52);
@@ -104,8 +139,24 @@ test.describe('bank transactions', () => {
       .poll(() => firstTransactionRow.evaluate((element) => element.getBoundingClientRect().height))
       .toBeLessThan(80);
     const tableWrapper = table.locator('xpath=../../..');
-    await expect(tableWrapper).toHaveCSS('border-top-width', '1px');
-    await expect(tableWrapper).toHaveCSS('border-radius', '8px');
+    await expect(tableWrapper).toHaveCSS('border-top-width', '0px');
+    await expect(tableWrapper).toHaveCSS('border-radius', '0px');
+    await expect(firstTransactionRow).toHaveCSS('border-top-width', '1px');
+    const mobileMetaContainer = firstTransactionRow.getByTestId('bank-transaction-mobile-meta');
+    const mobileMetaRight = firstTransactionRow.getByTestId('bank-transaction-mobile-meta-right');
+    const mobileAmount = firstTransactionRow.locator('td').filter({hasText: '-€4.50'});
+    await expect(mobileMetaRight).toBeVisible();
+    await expect(mobileMetaRight).toHaveCSS('text-align', 'right');
+    const [metaBox, metaRightBox, amountBox] = await Promise.all([
+      mobileMetaContainer.boundingBox(),
+      mobileMetaRight.boundingBox(),
+      mobileAmount.boundingBox(),
+    ]);
+    expect(metaBox).not.toBeNull();
+    expect(metaRightBox).not.toBeNull();
+    expect(amountBox).not.toBeNull();
+    expect(metaRightBox!.x + metaRightBox!.width).toBeCloseTo(amountBox!.x + amountBox!.width, 0);
+    expect(metaRightBox!.y).toBeGreaterThan(amountBox!.y);
     await expect
       .poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth))
       .toBe(true);
@@ -114,6 +165,33 @@ test.describe('bank transactions', () => {
     await expect(descriptionLink).toBeFocused();
     await descriptionLink.press('Enter');
     await expect(page).toHaveURL(/\/bank-transactions\/[0-9a-f-]+$/);
+  });
+
+  test('keeps a selected booking date range within a phone viewport', async ({page}) => {
+    await page.setViewportSize({width: 320, height: 852});
+    await page.goto('/bank-transactions');
+
+    await page.getByRole('button', {name: 'Booking date', exact: true}).first().click();
+    const dialog = page.getByRole('dialog');
+    let dayButtons = dialog.locator('button[name="day"]:not([disabled]):not(.day-outside)');
+    if ((await dayButtons.count()) < 2) {
+      await dialog.getByRole('button', {name: 'Go to previous month'}).click();
+      dayButtons = dialog.locator('button[name="day"]:not([disabled]):not(.day-outside)');
+    }
+    await dayButtons.nth(0).click();
+    await dayButtons.nth(1).click();
+
+    const bookingDate = page.getByRole('button', {name: /^Booking date/}).first();
+    await expect(bookingDate).toContainText(' - ');
+    await expect(bookingDate).toHaveAttribute('aria-label', /^Booking date: .+ - .+$/);
+    const metrics = await bookingDate.evaluate((element) => ({
+      scrollWidth: element.scrollWidth,
+      clientWidth: element.clientWidth,
+    }));
+    expect(metrics.scrollWidth).toBeLessThanOrEqual(metrics.clientWidth);
+    await expect
+      .poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth))
+      .toBe(true);
   });
 
   test('sorts and paginates with the shared table controls', async ({page}) => {

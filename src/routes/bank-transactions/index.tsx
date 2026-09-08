@@ -47,11 +47,16 @@ function BankTransactionsIndex() {
       <AppHeaderLayout>
         <BankTransactionBreadcrumb />
       </AppHeaderLayout>
-      <AppBodyLayout>
-        <div className='space-y-6'>
-          <div>
+      <AppBodyLayout className='max-md:my-6'>
+        <div className='space-y-6 max-md:space-y-4'>
+          <div
+            data-testid='bank-transactions-heading'
+            className='max-md:flex max-md:flex-wrap max-md:items-baseline max-md:justify-between max-md:gap-x-3 max-md:gap-y-1'
+          >
             <h1 className='text-2xl font-semibold tracking-tight'>Bank transactions</h1>
-            <p className='mt-1 text-sm text-muted-foreground'>{resultSummary}</p>
+            <p className='mt-1 text-sm text-muted-foreground max-md:mt-0 max-md:text-right'>
+              {resultSummary}
+            </p>
           </div>
           <BankTransactionTable
             transactions={data?.transactions || []}

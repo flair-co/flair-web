@@ -51,7 +51,7 @@ function BankConnectionsIndex() {
       <AppHeaderLayout>
         <span className='text-sm font-medium'>Bank connections</span>
       </AppHeaderLayout>
-      <AppBodyLayout>
+      <AppBodyLayout className='max-md:my-6'>
         <BankConnectionList bankConnections={bankConnections || []} isPending={isPending} />
       </AppBodyLayout>
     </>

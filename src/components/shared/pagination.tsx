@@ -96,7 +96,10 @@ export function Pagination({
           <span className='hidden sm:inline'>Rows per page</span>
         </p>
         <Select value={`${pagination.pageSize}`} onValueChange={handlePageSizeChange}>
-          <SelectTrigger aria-label='Rows per page' className='h-11 w-14 sm:h-8 sm:w-[70px]'>
+          <SelectTrigger
+            aria-label='Rows per page'
+            className='h-11 w-[4.5rem] gap-2 sm:h-8 sm:w-[70px]'
+          >
             <SelectValue placeholder={pagination.pageSize} />
           </SelectTrigger>
           <SelectContent side='top'>

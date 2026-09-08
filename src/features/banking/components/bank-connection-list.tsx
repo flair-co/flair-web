@@ -77,9 +77,12 @@ export function BankConnectionList({bankConnections, isPending}: BankConnectionL
   }
 
   return (
-    <div className='flex flex-col gap-4'>
-      <div className='flex items-end justify-between gap-4'>
-        <div>
+    <div className='flex flex-col gap-4 max-md:gap-3'>
+      <div
+        data-testid='bank-connections-heading'
+        className='flex items-end justify-between gap-4 max-md:flex-col max-md:items-stretch max-md:gap-3'
+      >
+        <div className='min-w-0'>
           <h1 className='text-2xl font-semibold'>Bank connections</h1>
           <p className='mt-1 text-sm text-muted-foreground'>
             Read-only connections to your financial institutions.
@@ -90,6 +93,7 @@ export function BankConnectionList({bankConnections, isPending}: BankConnectionL
           isPending={isStarting}
           testId={targetBank.testId}
           showIcon
+          className='max-md:self-start'
         />
       </div>
 

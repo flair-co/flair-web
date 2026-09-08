@@ -166,7 +166,7 @@ export function BankTransactionTable({
 
   return (
     <>
-      <div className='mb-5 flex flex-wrap items-center gap-3'>
+      <div className='mb-5 flex flex-wrap items-center gap-3 max-md:mb-4 max-md:gap-2'>
         <div className='relative min-w-[14rem] flex-1 md:max-w-sm'>
           <Search className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground' />
           <Input
@@ -178,8 +178,18 @@ export function BankTransactionTable({
             data-testid='bank-transactions-search'
           />
         </div>
-        <BankTransactionDateFilter filters={filters} setFilters={setFilters} />
-        <BankTransactionAccountFilter filters={filters} setFilters={setFilters} />
+        <div className='flex w-full gap-2 md:contents'>
+          <BankTransactionDateFilter
+            filters={filters}
+            setFilters={setFilters}
+            className='max-md:min-w-0 max-md:flex-1'
+          />
+          <BankTransactionAccountFilter
+            filters={filters}
+            setFilters={setFilters}
+            className='max-md:min-w-0 max-md:flex-1'
+          />
+        </div>
         {isFilteringApplied && (
           <Button variant='secondary' size='sm' className='h-10 sm:h-8' onClick={clearFilters}>
             Clear filters
@@ -191,7 +201,7 @@ export function BankTransactionTable({
         <Table
           data-testid='bank-transactions-table'
           aria-label='Bank transactions'
-          wrapperClassName='max-md:rounded-md max-md:border'
+          wrapperClassName='max-md:rounded-none max-md:border-0'
           className='max-md:block max-md:w-full'
         >
           <TableCaption className='sr-only'>
@@ -224,7 +234,7 @@ export function BankTransactionTable({
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody className='max-md:block max-md:p-1.5'>
+          <TableBody className='max-md:block'>
             {totalTransactions === 0 && isFilteringApplied ? (
               <TableRow>
                 <TableCell
@@ -294,25 +304,6 @@ export function BankTransactionTable({
                               onClick={(event) => event.stopPropagation()}
                             >
                               {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                              <div
-                                data-testid='bank-transaction-mobile-meta'
-                                className='mt-1 flex min-w-0 items-center justify-between gap-3 text-xs text-muted-foreground md:hidden'
-                              >
-                                <span className='min-w-0 flex-1 truncate'>
-                                  {formatBankTransactionCompactDate(row.original.bookingDate)}
-                                  <span aria-hidden='true'> · </span>
-                                  {getMobileTransactionAccount(row.original)}
-                                </span>
-                                <span className='flex min-w-0 max-w-[55%] shrink-0 items-center justify-end gap-1.5 text-right'>
-                                  <span className='truncate'>{row.original.bankName}</span>
-                                  {mobileTransactionType && (
-                                    <>
-                                      <span aria-hidden='true'>·</span>
-                                      <span className='shrink-0'>{mobileTransactionType}</span>
-                                    </>
-                                  )}
-                                </span>
-                              </div>
                             </Link>
                           ) : (
                             flexRender(cell.column.columnDef.cell, cell.getContext())
@@ -320,6 +311,30 @@ export function BankTransactionTable({
                         </TableCell>
                       );
                     })}
+                    <TableCell className='hidden max-md:order-3 max-md:col-span-2 max-md:block max-md:border-0 max-md:p-0'>
+                      <div
+                        data-testid='bank-transaction-mobile-meta'
+                        className='flex min-w-0 items-center justify-between gap-3 text-xs text-muted-foreground'
+                      >
+                        <span className='min-w-0 flex-1 truncate'>
+                          {formatBankTransactionCompactDate(row.original.bookingDate)}
+                          <span aria-hidden='true'> · </span>
+                          {getMobileTransactionAccount(row.original)}
+                        </span>
+                        <span
+                          data-testid='bank-transaction-mobile-meta-right'
+                          className='flex min-w-0 max-w-[55%] shrink-0 items-center justify-end gap-1.5 text-right'
+                        >
+                          <span className='truncate'>{row.original.bankName}</span>
+                          {mobileTransactionType && (
+                            <>
+                              <span aria-hidden='true'>·</span>
+                              <span className='shrink-0'>{mobileTransactionType}</span>
+                            </>
+                          )}
+                        </span>
+                      </div>
+                    </TableCell>
                   </TableRow>
                 );
               })

@@ -25,6 +25,7 @@ import {BankTransactionFilterParams} from '../types/bank-transaction';
 type BankTransactionAccountFilterProps = {
   filters: BankTransactionFilterParams;
   setFilters: React.Dispatch<React.SetStateAction<BankTransactionFilterParams>>;
+  className?: string;
 };
 
 type AccountOption = {
@@ -37,6 +38,7 @@ type AccountOption = {
 export function BankTransactionAccountFilter({
   filters,
   setFilters,
+  className,
 }: BankTransactionAccountFilterProps) {
   const navigate = useNavigate({from: '/bank-transactions/'});
   const {bankConnections, isPending} = useGetAllBankConnections();
@@ -78,6 +80,7 @@ export function BankTransactionAccountFilter({
   };
 
   const isDisabled = isPending || accounts.length === 0;
+  const hideOnMobile = !isPending && accounts.length <= 1 && selectedValues.length === 0;
 
   return (
     <Popover>
@@ -90,6 +93,8 @@ export function BankTransactionAccountFilter({
             'h-10 sm:h-8',
             selectedValues.length === 0 && !isDisabled ? 'border-dashed' : 'border',
             isDisabled && 'cursor-not-allowed opacity-50',
+            hideOnMobile && 'max-md:hidden',
+            className,
           )}
         >
           {isPending ? (

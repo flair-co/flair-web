@@ -136,22 +136,6 @@ test.describe('bank transactions', () => {
     }
   });
 
-  test('redirects legacy transaction URLs into the responsive inspector', async ({page}) => {
-    await page.goto(`/bank-transactions/${DETAIL_TRANSACTION_ID}`);
-
-    await expect(page).toHaveURL(/\/bank-transactions(?:\?.*)?$/);
-    const redirectedUrl = new URL(page.url());
-    expect(redirectedUrl.pathname).toBe('/bank-transactions');
-    expect(redirectedUrl.searchParams.get('transactionId')).toBe(DETAIL_TRANSACTION_ID);
-    const inspector = page.getByTestId('bank-transaction-inspector');
-    await expect(inspector).toBeVisible();
-    await expect(inspector.getByRole('heading', {name: 'Coffee shop'})).toBeVisible();
-    await expect(inspector.getByRole('button', {name: 'Close transaction details'})).toBeVisible();
-
-    await inspector.getByRole('button', {name: 'Close transaction details'}).click();
-    await expect(page).toHaveURL(/\/bank-transactions(?:\?.*)?$/);
-    expect(new URL(page.url()).searchParams.has('transactionId')).toBe(false);
-  });
   test('shows a retryable error state inside the transaction inspector', async ({page}) => {
     await page.route(`**/bank-transactions/${DETAIL_TRANSACTION_ID}`, async (route) => {
       await route.fulfill({

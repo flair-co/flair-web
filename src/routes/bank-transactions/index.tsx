@@ -24,6 +24,8 @@ function BankTransactionsIndex() {
     data,
     isPending,
     isPlaceholderData,
+    isError,
+    refetch,
     pagination,
     setPagination,
     filters,
@@ -31,6 +33,13 @@ function BankTransactionsIndex() {
     sort,
     setSort,
   } = useGetBankTransactions(searchParams);
+  const totalTransactions = data?.total ?? 0;
+  const transactionCountLabel = totalTransactions === 1 ? 'transaction' : 'transactions';
+  const resultSummary = isPending
+    ? 'Loading synchronized records...'
+    : isError
+      ? 'Transaction data is unavailable right now'
+      : `${totalTransactions} ${transactionCountLabel}`;
 
   return (
     <>
@@ -39,18 +48,26 @@ function BankTransactionsIndex() {
         <BankTransactionBreadcrumb />
       </AppHeaderLayout>
       <AppBodyLayout>
-        <BankTransactionTable
-          transactions={data?.transactions || []}
-          totalTransactions={data?.total || 0}
-          isPending={isPending}
-          isPlaceholderData={isPlaceholderData}
-          pagination={pagination}
-          setPagination={setPagination}
-          filters={filters}
-          setFilters={setFilters}
-          sort={sort}
-          setSort={setSort}
-        />
+        <div className='space-y-6'>
+          <div>
+            <h1 className='text-2xl font-semibold tracking-tight'>Bank transactions</h1>
+            <p className='mt-1 text-sm text-muted-foreground'>{resultSummary}</p>
+          </div>
+          <BankTransactionTable
+            transactions={data?.transactions || []}
+            totalTransactions={totalTransactions}
+            isPending={isPending}
+            isPlaceholderData={isPlaceholderData}
+            pagination={pagination}
+            setPagination={setPagination}
+            filters={filters}
+            setFilters={setFilters}
+            sort={sort}
+            setSort={setSort}
+            isError={isError}
+            onRetry={() => void refetch()}
+          />
+        </div>
       </AppBodyLayout>
     </>
   );

@@ -39,7 +39,7 @@ export function BankTransactionDateFilter({filters, setFilters}: BankTransaction
         <Button
           variant='outline'
           size='sm'
-          className={cn('h-8', filters.bookingDate ? 'border' : 'border-dashed')}
+          className={cn('h-10 sm:h-8', filters.bookingDate ? 'border' : 'border-dashed')}
         >
           <CalendarIcon />
           Booking date
@@ -68,7 +68,11 @@ export function BankTransactionDateFilter({filters, setFilters}: BankTransaction
           <>
             <Separator className='w-full' />
             <div className='p-1'>
-              <Button className='h-8 w-full rounded-sm' variant='ghost' onClick={handleReset}>
+              <Button
+                className='h-10 w-full rounded-sm sm:h-8'
+                variant='ghost'
+                onClick={handleReset}
+              >
                 Reset
               </Button>
             </div>

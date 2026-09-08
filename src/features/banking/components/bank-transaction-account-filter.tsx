@@ -87,7 +87,7 @@ export function BankTransactionAccountFilter({
           size='sm'
           disabled={isDisabled}
           className={cn(
-            'h-8',
+            'h-10 sm:h-8',
             selectedValues.length === 0 && !isDisabled ? 'border-dashed' : 'border',
             isDisabled && 'cursor-not-allowed opacity-50',
           )}

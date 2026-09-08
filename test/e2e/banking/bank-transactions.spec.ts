@@ -67,6 +67,30 @@ test.describe('bank transactions', () => {
     await expect(page.getByText('Provider purchase')).not.toBeVisible();
   });
 
+  test('reflows transaction records for a phone viewport', async ({page}) => {
+    await page.setViewportSize({width: 393, height: 852});
+    await page.goto('/bank-transactions');
+
+    const table = page.getByTestId('bank-transactions-table');
+    const firstTransactionRow = page
+      .getByTestId(/^bank-transaction-row-/)
+      .filter({hasText: 'Coffee shop'});
+    const descriptionLink = firstTransactionRow.locator('a');
+
+    await expect(page.getByRole('heading', {name: 'Bank transactions'})).toBeVisible();
+    await expect(firstTransactionRow).toBeVisible();
+    await expect(descriptionLink).toHaveCount(1);
+    await expect(table).toHaveAttribute('aria-label', 'Bank transactions');
+    await expect
+      .poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth))
+      .toBe(true);
+
+    await descriptionLink.focus();
+    await expect(descriptionLink).toBeFocused();
+    await descriptionLink.press('Enter');
+    await expect(page).toHaveURL(/\/bank-transactions\/[0-9a-f-]+$/);
+  });
+
   test('sorts and paginates with the shared table controls', async ({page}) => {
     await page.goto('/bank-transactions');
 

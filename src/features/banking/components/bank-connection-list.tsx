@@ -16,13 +16,13 @@ import {useStartBankConnection} from '../api/use-start-bank-connection';
 import {useSyncBankConnection} from '../api/use-sync-bank-connection';
 import {BankConnection, BankTransaction} from '../types/bank-connection';
 import {formatBankTransactionCompactDate, formatBankTransactionStatus} from '../utils/formatters';
-import {BankTransactionDetailsDialog} from './bank-transaction-details-dialog';
 
 type BankConnectionListProps = {
   bankConnections: BankConnection[];
   isPending: boolean;
   isError: boolean;
   onRetry: () => void;
+  onTransactionSelect: (transactionId: BankTransaction['id'], trigger: HTMLButtonElement) => void;
 };
 
 const ABN_AMRO = {
@@ -113,6 +113,7 @@ export function BankConnectionList({
   isPending,
   isError,
   onRetry,
+  onTransactionSelect,
 }: BankConnectionListProps) {
   const {startBankConnection, isPending: isStarting} = useStartBankConnection();
 
@@ -172,14 +173,24 @@ export function BankConnectionList({
         </Card>
       ) : (
         bankConnections.map((connection) => (
-          <BankConnectionCard key={connection.id} connection={connection} />
+          <BankConnectionCard
+            key={connection.id}
+            connection={connection}
+            onTransactionSelect={onTransactionSelect}
+          />
         ))
       )}
     </ConnectionPageFrame>
   );
 }
 
-function BankConnectionCard({connection}: {connection: BankConnection}) {
+function BankConnectionCard({
+  connection,
+  onTransactionSelect,
+}: {
+  connection: BankConnection;
+  onTransactionSelect: BankConnectionListProps['onTransactionSelect'];
+}) {
   const isAuthorized = connection.status === 'AUTHORIZED';
   const connectionHeadingId = `bank-connection-${connection.id}-heading`;
   const accountsHeadingId = `bank-connection-${connection.id}-accounts`;
@@ -333,7 +344,11 @@ function BankConnectionCard({connection}: {connection: BankConnection}) {
                   data-testid={`bank-transactions-${connection.id}`}
                 >
                   {transactions.map((transaction) => (
-                    <BankTransactionRow key={transaction.id} transaction={transaction} />
+                    <BankTransactionRow
+                      key={transaction.id}
+                      transaction={transaction}
+                      onTransactionSelect={onTransactionSelect}
+                    />
                   ))}
                 </div>
               ) : (
@@ -488,7 +503,13 @@ function BankAccountRow({account}: {account: BankConnection['bankAccounts'][numb
   );
 }
 
-function BankTransactionRow({transaction}: {transaction: BankTransaction}) {
+function BankTransactionRow({
+  transaction,
+  onTransactionSelect,
+}: {
+  transaction: BankTransaction;
+  onTransactionSelect: BankConnectionListProps['onTransactionSelect'];
+}) {
   const description = transaction.description || transaction.counterpartyName || 'Transaction';
   const date = formatBankTransactionCompactDate(transaction.bookingDate || transaction.valueDate);
   const metadata = [
@@ -501,16 +522,15 @@ function BankTransactionRow({transaction}: {transaction: BankTransaction}) {
   return (
     <div className='grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 p-3 sm:p-4'>
       <div className='min-w-0'>
-        <BankTransactionDetailsDialog transactionId={transaction.id}>
-          <button
-            type='button'
-            aria-label={`View transaction details for ${description}`}
-            className='block w-full truncate rounded-sm text-left text-sm font-medium text-primary hover:underline hover:underline-offset-2 focus-visible:relative focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
-            title={description}
-          >
-            {description}
-          </button>
-        </BankTransactionDetailsDialog>
+        <button
+          type='button'
+          aria-label={`View transaction details for ${description}`}
+          onClick={(event) => onTransactionSelect(transaction.id, event.currentTarget)}
+          className='block w-full truncate rounded-sm text-left text-sm font-medium text-primary hover:underline hover:underline-offset-2 focus-visible:relative focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
+          title={description}
+        >
+          {description}
+        </button>
         <p className='truncate text-xs text-muted-foreground'>{metadata}</p>
       </div>
       <div className='text-right'>

@@ -1,5 +1,4 @@
 import {FileQuestion, RefreshCw, X} from 'lucide-react';
-import * as React from 'react';
 
 import {EmptyState} from '@/components/shared/layout/app-empty-state';
 import {Button} from '@/components/ui/button';
@@ -10,8 +9,8 @@ import {
   ResponsiveDialogDescription,
   ResponsiveDialogHeader,
   ResponsiveDialogTitle,
-  ResponsiveDialogTrigger,
 } from '@/components/ui/responsive-dialog';
+import {ScrollArea} from '@/components/ui/scroll-area';
 import {Skeleton} from '@/components/ui/skeleton';
 import {HttpError} from '@/utils/api';
 
@@ -21,19 +20,15 @@ import {BankTransactionDetails} from './bank-transaction-details';
 
 type BankTransactionDetailsDialogProps = {
   transactionId: BankTransaction['id'];
-  children?: React.ReactElement;
-  open?: boolean;
-  onOpenChange?: (open: boolean) => void;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 };
 
 export function BankTransactionDetailsDialog({
   transactionId,
-  children,
-  open: controlledOpen,
+  open,
   onOpenChange,
 }: BankTransactionDetailsDialogProps) {
-  const [internalOpen, setInternalOpen] = React.useState(false);
-  const open = controlledOpen ?? internalOpen;
   const {transaction, isPending, isFetching, isError, error, refetch} = useGetBankTransaction(
     transactionId,
     open,
@@ -42,16 +37,9 @@ export function BankTransactionDetailsDialog({
   const transactionTitle = transaction
     ? transaction.description || transaction.counterpartyName || 'Transaction'
     : 'Transaction details';
-  const handleOpenChange = (nextOpen: boolean) => {
-    if (controlledOpen === undefined) {
-      setInternalOpen(nextOpen);
-    }
-    onOpenChange?.(nextOpen);
-  };
 
   return (
-    <ResponsiveDialog open={open} onOpenChange={handleOpenChange}>
-      {children ? <ResponsiveDialogTrigger asChild>{children}</ResponsiveDialogTrigger> : null}
+    <ResponsiveDialog open={open} onOpenChange={onOpenChange}>
       <ResponsiveDialogContent
         data-testid='bank-transaction-inspector'
         className='flex h-[min(90dvh,56rem)] max-h-[90dvh] flex-col gap-0 overflow-hidden p-0 sm:max-h-[90vh] sm:max-w-4xl [&>button:last-child]:hidden'
@@ -72,9 +60,10 @@ export function BankTransactionDetailsDialog({
           </ResponsiveDialogDescription>
         </ResponsiveDialogHeader>
 
-        <div
+        <ScrollArea
+          type='always'
           data-testid='bank-transaction-inspector-body'
-          className='min-h-0 flex-1 overflow-y-auto overscroll-contain'
+          className='min-h-0 flex-1'
           aria-busy={isPending || isFetching}
         >
           {isPending || isFetching ? (
@@ -110,7 +99,7 @@ export function BankTransactionDetailsDialog({
           ) : (
             <BankTransactionDetails transaction={transaction} />
           )}
-        </div>
+        </ScrollArea>
       </ResponsiveDialogContent>
     </ResponsiveDialog>
   );

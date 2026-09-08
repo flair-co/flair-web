@@ -1,5 +1,6 @@
 import {createFileRoute, useNavigate} from '@tanstack/react-router';
 import {zodValidator} from '@tanstack/zod-adapter';
+import {useRef} from 'react';
 
 import {AppBodyLayout} from '@/components/shared/layout/app-body';
 import {AppHeaderLayout} from '@/components/shared/layout/app-header-layout';
@@ -23,6 +24,7 @@ function BankTransactionsIndex() {
   const searchParams = Route.useSearch();
   const navigate = useNavigate({from: '/bank-transactions/'});
   const transactionId = searchParams.transactionId;
+  const transactionTriggerRef = useRef<HTMLButtonElement | null>(null);
   const {
     data,
     isPending,
@@ -43,6 +45,26 @@ function BankTransactionsIndex() {
     : isError
       ? 'Transaction data is unavailable right now'
       : `${totalTransactions} ${transactionCountLabel}`;
+
+  const openTransaction = (selectedTransactionId: string, trigger: HTMLButtonElement) => {
+    transactionTriggerRef.current = trigger;
+    void navigate({
+      search: (prev) => ({...prev, transactionId: selectedTransactionId}),
+    });
+  };
+
+  const closeTransaction = (open: boolean) => {
+    if (open) return;
+
+    const trigger = transactionTriggerRef.current;
+    transactionTriggerRef.current = null;
+    void navigate({
+      replace: true,
+      search: (prev) => ({...prev, transactionId: undefined}),
+    }).then(() => {
+      if (trigger?.isConnected) trigger.focus();
+    });
+  };
 
   return (
     <>
@@ -74,19 +96,14 @@ function BankTransactionsIndex() {
             setSort={setSort}
             isError={isError}
             onRetry={() => void refetch()}
+            onTransactionSelect={openTransaction}
           />
         </div>
       </AppBodyLayout>
       <BankTransactionDetailsDialog
         transactionId={transactionId ?? ''}
         open={Boolean(transactionId)}
-        onOpenChange={(open) => {
-          if (open) return;
-          void navigate({
-            replace: true,
-            search: (prev) => ({...prev, transactionId: undefined}),
-          });
-        }}
+        onOpenChange={closeTransaction}
       />
     </>
   );

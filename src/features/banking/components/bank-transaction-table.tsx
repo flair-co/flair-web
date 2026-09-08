@@ -32,7 +32,6 @@ import {
 import {formatBankTransactionCompactDate, formatBankTransactionType} from '../utils/formatters';
 import {BankTransactionAccountFilter} from './bank-transaction-account-filter';
 import {BankTransactionDateFilter} from './bank-transaction-date-filter';
-import {BankTransactionDetailsDialog} from './bank-transaction-details-dialog';
 import {bankTransactionTableColumns} from './bank-transaction-table-columns';
 
 type BankTransactionTableProps = {
@@ -48,6 +47,7 @@ type BankTransactionTableProps = {
   setSort: React.Dispatch<React.SetStateAction<BankTransactionSortParams>>;
   isError: boolean;
   onRetry: () => void;
+  onTransactionSelect: (transactionId: BankTransaction['id'], trigger: HTMLButtonElement) => void;
 };
 
 export function BankTransactionTable({
@@ -63,6 +63,7 @@ export function BankTransactionTable({
   setSort,
   isError,
   onRetry,
+  onTransactionSelect,
 }: BankTransactionTableProps) {
   const navigate = useNavigate({from: '/bank-transactions/'});
   const [searchInput, setSearchInput] = useState(filters.search || '');
@@ -298,17 +299,18 @@ export function BankTransactionTable({
                           )}
                         >
                           {isDescriptionCell ? (
-                            <BankTransactionDetailsDialog transactionId={row.original.id}>
-                              <button
-                                type='button'
-                                data-bank-transaction-detail-trigger
-                                aria-label={`View ${transactionLabel} transaction details`}
-                                className='block w-full truncate rounded-sm text-left focus-visible:relative focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
-                                title={transactionLabel}
-                              >
-                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                              </button>
-                            </BankTransactionDetailsDialog>
+                            <button
+                              type='button'
+                              data-bank-transaction-detail-trigger
+                              aria-label={`View ${transactionLabel} transaction details`}
+                              className='block w-full truncate rounded-sm text-left focus-visible:relative focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
+                              title={transactionLabel}
+                              onClick={(event) =>
+                                onTransactionSelect(row.original.id, event.currentTarget)
+                              }
+                            >
+                              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                            </button>
                           ) : (
                             flexRender(cell.column.columnDef.cell, cell.getContext())
                           )}

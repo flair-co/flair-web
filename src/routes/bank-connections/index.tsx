@@ -1,6 +1,6 @@
 import {createFileRoute, useNavigate} from '@tanstack/react-router';
 import {zodValidator} from '@tanstack/zod-adapter';
-import {useEffect} from 'react';
+import {useEffect, useRef} from 'react';
 import {toast} from 'sonner';
 import {z} from 'zod';
 
@@ -9,10 +9,12 @@ import {AppHeaderLayout} from '@/components/shared/layout/app-header-layout';
 import {LoadingBar} from '@/components/shared/loading-bar';
 import {useGetAllBankConnections} from '@/features/banking/api/use-get-all-bank-connections';
 import {BankConnectionList} from '@/features/banking/components/bank-connection-list';
+import {BankTransactionDetailsDialog} from '@/features/banking/components/bank-transaction-details-dialog';
 import {handleAuthenticatedRedirect} from '@/utils/handle-redirect';
 
 const searchSchema = z.object({
   result: z.enum(['connected', 'cancelled', 'error']).optional(),
+  transactionId: z.string().optional(),
 });
 
 export const Route = createFileRoute('/bank-connections/')({
@@ -25,7 +27,8 @@ export const Route = createFileRoute('/bank-connections/')({
 
 function BankConnectionsIndex() {
   const navigate = useNavigate();
-  const {result} = Route.useSearch();
+  const {result, transactionId} = Route.useSearch();
+  const transactionTriggerRef = useRef<HTMLButtonElement | null>(null);
   const {bankConnections, isPending, isError, refetch} = useGetAllBankConnections();
 
   useEffect(() => {
@@ -45,6 +48,28 @@ function BankConnectionsIndex() {
     void navigate({to: '/bank-connections', search: {}});
   }, [navigate, result]);
 
+  const openTransaction = (selectedTransactionId: string, trigger: HTMLButtonElement) => {
+    transactionTriggerRef.current = trigger;
+    void navigate({
+      to: '/bank-connections',
+      search: (prev) => ({...prev, transactionId: selectedTransactionId}),
+    });
+  };
+
+  const closeTransaction = (open: boolean) => {
+    if (open) return;
+
+    const trigger = transactionTriggerRef.current;
+    transactionTriggerRef.current = null;
+    void navigate({
+      to: '/bank-connections',
+      replace: true,
+      search: (prev) => ({...prev, transactionId: undefined}),
+    }).then(() => {
+      if (trigger?.isConnected) trigger.focus();
+    });
+  };
+
   return (
     <>
       <LoadingBar isPending={isPending} />
@@ -57,8 +82,14 @@ function BankConnectionsIndex() {
           isPending={isPending}
           isError={isError}
           onRetry={() => void refetch()}
+          onTransactionSelect={openTransaction}
         />
       </AppBodyLayout>
+      <BankTransactionDetailsDialog
+        transactionId={transactionId ?? ''}
+        open={Boolean(transactionId)}
+        onOpenChange={closeTransaction}
+      />
     </>
   );
 }

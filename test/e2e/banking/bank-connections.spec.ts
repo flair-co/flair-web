@@ -2,6 +2,8 @@ import {expect, test} from '@playwright/test';
 
 import {PW_CHANGE_USER_AUTH_FILE, VERIFIED_USER_AUTH_FILE} from '../../constants/auth.constants';
 
+const DETAIL_TRANSACTION_ID = '00000000-0000-4000-8000-000000000014';
+
 test.describe('bank connections', () => {
   test.use({storageState: VERIFIED_USER_AUTH_FILE});
 
@@ -39,13 +41,33 @@ test.describe('bank connections', () => {
     await transactionTrigger.click();
     const inspector = page.getByTestId('bank-transaction-inspector');
     await expect(inspector).toBeVisible();
+    expect(new URL(page.url()).searchParams.get('transactionId')).toBe(DETAIL_TRANSACTION_ID);
     await expect(inspector.getByRole('heading', {name: 'Provider purchase'})).toBeVisible();
     await expect(inspector.getByText('Bank transaction', {exact: true})).toBeVisible();
     await inspector.getByRole('button', {name: 'Close transaction details'}).click();
     await expect(inspector).toBeHidden();
     await expect(transactionTrigger).toBeFocused();
+    expect(new URL(page.url()).searchParams.has('transactionId')).toBe(false);
     await expect(page.getByText('Bank connection added')).toBeVisible();
     await expect(page).toHaveURL(/\/bank-connections$/);
+  });
+
+  test('reopens a connection transaction inspector from its shareable URL', async ({page}) => {
+    await page.goto('/bank-connections');
+
+    const transactionTrigger = page.getByRole('button', {
+      name: 'View transaction details for Provider purchase',
+    });
+    await transactionTrigger.click();
+
+    const sharedUrl = page.url();
+    expect(new URL(sharedUrl).searchParams.get('transactionId')).toBe(DETAIL_TRANSACTION_ID);
+
+    await page.goto(sharedUrl);
+    const inspector = page.getByTestId('bank-transaction-inspector');
+    await expect(inspector).toBeVisible();
+    await expect(inspector.getByRole('heading', {name: 'Provider purchase'})).toBeVisible();
+    expect(new URL(page.url()).searchParams.get('transactionId')).toBe(DETAIL_TRANSACTION_ID);
   });
 
   test('keeps the connection overview usable at phone widths', async ({page}) => {

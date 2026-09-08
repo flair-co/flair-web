@@ -37,6 +37,8 @@ test.describe('bank transactions', () => {
     await firstTransactionRow.click({position: {x: 8, y: 8}});
     const inspector = page.getByTestId('bank-transaction-inspector');
     await expect(page).toHaveURL(/\/bank-transactions(?:\?.*)?$/);
+    const openedUrl = new URL(page.url());
+    expect(openedUrl.searchParams.get('transactionId')).toBe(DETAIL_TRANSACTION_ID);
     await expect(inspector).toBeVisible();
     await expect(inspector.getByRole('heading', {name: 'Coffee shop'})).toBeVisible();
     await expect(inspector.getByText('Bank transaction', {exact: true})).toBeVisible();
@@ -60,6 +62,26 @@ test.describe('bank transactions', () => {
     const closeButton = inspector.getByRole('button', {name: 'Close transaction details'});
     await closeButton.click();
     await expect(inspector).toBeHidden();
+    expect(new URL(page.url()).searchParams.has('transactionId')).toBe(false);
+  });
+
+  test('reopens a transaction inspector from its shareable URL', async ({page}) => {
+    await page.goto('/bank-transactions');
+
+    const transactionTrigger = page
+      .getByTestId(/^bank-transaction-row-/)
+      .filter({hasText: 'Coffee shop'})
+      .getByRole('button', {name: 'View Coffee shop transaction details'});
+    await transactionTrigger.click();
+
+    const sharedUrl = page.url();
+    expect(new URL(sharedUrl).searchParams.get('transactionId')).toBe(DETAIL_TRANSACTION_ID);
+
+    await page.goto(sharedUrl);
+    const inspector = page.getByTestId('bank-transaction-inspector');
+    await expect(inspector).toBeVisible();
+    await expect(inspector.getByRole('heading', {name: 'Coffee shop'})).toBeVisible();
+    expect(new URL(page.url()).searchParams.get('transactionId')).toBe(DETAIL_TRANSACTION_ID);
   });
 
   test('presents transaction detail in a responsive inspector', async ({page}) => {
@@ -81,6 +103,7 @@ test.describe('bank transactions', () => {
 
       const inspector = page.getByTestId('bank-transaction-inspector');
       await expect(inspector).toBeVisible();
+      expect(new URL(page.url()).searchParams.get('transactionId')).toBe(DETAIL_TRANSACTION_ID);
       expect((await inspector.getAttribute('data-vaul-drawer')) !== null).toBe(
         viewport.width < 768,
       );
@@ -97,13 +120,14 @@ test.describe('bank transactions', () => {
       const inspectorBox = await inspector.boundingBox();
       expect(inspectorBox).not.toBeNull();
       expect(inspectorBox!.width).toBeLessThanOrEqual(viewport.width);
-      if (viewport.width < 768) {
-        const inspectorBody = inspector.getByTestId('bank-transaction-inspector-body');
-        await expect(inspectorBody).toHaveCSS('overflow-y', 'auto');
-        expect(await inspectorBody.evaluate((element) => element.scrollHeight)).toBeGreaterThan(
-          await inspectorBody.evaluate((element) => element.clientHeight),
-        );
-      }
+      const inspectorBody = inspector.getByTestId('bank-transaction-inspector-body');
+      const inspectorViewport = inspectorBody.locator('[data-radix-scroll-area-viewport]');
+      const inspectorScrollbar = inspectorBody.locator('[data-orientation="vertical"]');
+      await expect(inspectorScrollbar).toBeVisible();
+      await expect(inspectorScrollbar.locator('.bg-border')).toBeVisible();
+      expect(await inspectorViewport.evaluate((element) => element.scrollHeight)).toBeGreaterThan(
+        await inspectorViewport.evaluate((element) => element.clientHeight),
+      );
 
       const closeButton = inspector.getByRole('button', {name: 'Close transaction details'});
       await closeButton.click();
@@ -332,6 +356,8 @@ test.describe('bank transactions', () => {
     await bookingDateButton.click();
     let sort = new URL(page.url()).searchParams.get('sort');
     expect(sort).toBe(JSON.stringify({by: 'bookingDate', order: 'ASC'}));
+    await expect(page.getByText('Extra transaction 9')).toBeVisible();
+    await expect(page.getByText('Coffee shop')).not.toBeVisible();
 
     await bookingDateButton.click();
     sort = new URL(page.url()).searchParams.get('sort');

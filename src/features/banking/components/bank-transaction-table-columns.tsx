@@ -32,7 +32,7 @@ export const bankTransactionTableColumns: ColumnDef<BankTransaction>[] = [
           {row.original.description || row.original.counterpartyName || 'Transaction'}
         </p>
         {row.original.counterpartyName && row.original.description && (
-          <p className='overflow-hidden text-ellipsis whitespace-nowrap text-xs text-muted-foreground'>
+          <p className='overflow-hidden text-ellipsis whitespace-nowrap text-xs text-muted-foreground max-md:hidden'>
             {row.original.counterpartyName}
           </p>
         )}

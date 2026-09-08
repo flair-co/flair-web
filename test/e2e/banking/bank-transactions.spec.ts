@@ -8,6 +8,7 @@ test.describe('bank transactions', () => {
   test('renders, searches, filters by bank account, and opens transaction detail', async ({
     page,
   }) => {
+    await page.setViewportSize({width: 1280, height: 720});
     await page.goto('/bank-transactions');
 
     const firstTransactionRow = page
@@ -15,13 +16,15 @@ test.describe('bank transactions', () => {
       .filter({hasText: 'Coffee shop'});
 
     await expect(page.getByText('Coffee shop')).toBeVisible();
-    await expect(firstTransactionRow.getByText('Daily spending')).toBeVisible();
-    await expect(firstTransactionRow.getByText('Expense')).not.toBeVisible();
+    await expect(firstTransactionRow.getByText('Daily spending', {exact: true})).toBeVisible();
+    await expect(firstTransactionRow.getByText('Expense', {exact: true})).not.toBeVisible();
     await expect(
       page.getByTestId('bank-transactions-table').getByRole('columnheader', {name: 'Status'}),
     ).not.toBeVisible();
-    await expect(firstTransactionRow.getByText('Card payment')).toBeVisible();
-    await expect(firstTransactionRow.getByText('Aug 25, 2026')).toBeVisible();
+    await expect(
+      firstTransactionRow.getByRole('cell').nth(3).getByText('Card Payment', {exact: true}),
+    ).toBeVisible();
+    await expect(firstTransactionRow.getByRole('cell').nth(1)).toContainText('Aug 25, 2026');
 
     await page.getByTestId('bank-transactions-search').fill('does not exist');
     await expect(page.getByText('No bank transactions found')).toBeVisible();
@@ -81,6 +84,19 @@ test.describe('bank transactions', () => {
     await expect(firstTransactionRow).toBeVisible();
     await expect(descriptionLink).toHaveCount(1);
     await expect(table).toHaveAttribute('aria-label', 'Bank transactions');
+    await expect(
+      firstTransactionRow.getByText('Daily spending · ABN AMRO', {exact: true}),
+    ).toBeVisible();
+    await expect(
+      firstTransactionRow.getByRole('link').getByText('Card Payment', {exact: true}),
+    ).toBeVisible();
+    await expect(firstTransactionRow.getByText('Aug 25, 2026', {exact: true})).not.toBeVisible();
+    await expect
+      .poll(() => firstTransactionRow.evaluate((element) => element.getBoundingClientRect().height))
+      .toBeLessThan(80);
+    const tableWrapper = table.locator('xpath=../..');
+    await expect(tableWrapper).toHaveCSS('border-top-width', '0px');
+    await expect(tableWrapper).toHaveCSS('border-radius', '0px');
     await expect
       .poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth))
       .toBe(true);

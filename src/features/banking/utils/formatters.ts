@@ -8,6 +8,12 @@ export function formatBankTransactionDate(value: string | null) {
   return Number.isNaN(date.getTime()) ? value : format(date, 'MMM d, yyyy');
 }
 
+export function formatBankTransactionCompactDate(value: string | null) {
+  if (!value) return '—';
+  const date = parseISO(value);
+  return Number.isNaN(date.getTime()) ? value : format(date, 'd MMM');
+}
+
 export function formatBankTransactionType(value: string | null) {
   if (!value) return 'Other';
   return value

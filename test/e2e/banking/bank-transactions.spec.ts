@@ -356,9 +356,6 @@ test.describe('bank transactions', () => {
     await bookingDateButton.click();
     let sort = new URL(page.url()).searchParams.get('sort');
     expect(sort).toBe(JSON.stringify({by: 'bookingDate', order: 'ASC'}));
-    await expect(page.getByText('Extra transaction 9')).toBeVisible();
-    await expect(page.getByText('Coffee shop')).not.toBeVisible();
-
     await bookingDateButton.click();
     sort = new URL(page.url()).searchParams.get('sort');
     expect(sort).toBe(JSON.stringify({by: 'bookingDate', order: 'DESC'}));

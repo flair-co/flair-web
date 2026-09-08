@@ -1,6 +1,5 @@
-import {createFileRoute, useNavigate} from '@tanstack/react-router';
+import {createFileRoute} from '@tanstack/react-router';
 import {zodValidator} from '@tanstack/zod-adapter';
-import {useRef} from 'react';
 
 import {AppBodyLayout} from '@/components/shared/layout/app-body';
 import {AppHeaderLayout} from '@/components/shared/layout/app-header-layout';
@@ -10,6 +9,7 @@ import {BankTransactionBreadcrumb} from '@/features/banking/components/bank-tran
 import {BankTransactionDetailsDialog} from '@/features/banking/components/bank-transaction-details-dialog';
 import {BankTransactionTable} from '@/features/banking/components/bank-transaction-table';
 import {bankTransactionSearchParamsSchema} from '@/features/banking/types/bank-transaction';
+import {useBankTransactionInspector} from '@/hooks/use-bank-transaction-inspector';
 import {handleAuthenticatedRedirect} from '@/utils/handle-redirect';
 
 export const Route = createFileRoute('/bank-transactions/')({
@@ -22,9 +22,8 @@ export const Route = createFileRoute('/bank-transactions/')({
 
 function BankTransactionsIndex() {
   const searchParams = Route.useSearch();
-  const navigate = useNavigate({from: '/bank-transactions/'});
   const transactionId = searchParams.transactionId;
-  const transactionTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const {openTransaction, closeTransaction} = useBankTransactionInspector('/bank-transactions/');
   const {
     data,
     isPending,
@@ -45,26 +44,6 @@ function BankTransactionsIndex() {
     : isError
       ? 'Transaction data is unavailable right now'
       : `${totalTransactions} ${transactionCountLabel}`;
-
-  const openTransaction = (selectedTransactionId: string, trigger: HTMLButtonElement) => {
-    transactionTriggerRef.current = trigger;
-    void navigate({
-      search: (prev) => ({...prev, transactionId: selectedTransactionId}),
-    });
-  };
-
-  const closeTransaction = (open: boolean) => {
-    if (open) return;
-
-    const trigger = transactionTriggerRef.current;
-    transactionTriggerRef.current = null;
-    void navigate({
-      replace: true,
-      search: (prev) => ({...prev, transactionId: undefined}),
-    }).then(() => {
-      if (trigger?.isConnected) trigger.focus();
-    });
-  };
 
   return (
     <>

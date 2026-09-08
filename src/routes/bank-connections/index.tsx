@@ -1,6 +1,6 @@
 import {createFileRoute, useNavigate} from '@tanstack/react-router';
 import {zodValidator} from '@tanstack/zod-adapter';
-import {useEffect, useRef} from 'react';
+import {useEffect} from 'react';
 import {toast} from 'sonner';
 import {z} from 'zod';
 
@@ -10,6 +10,7 @@ import {LoadingBar} from '@/components/shared/loading-bar';
 import {useGetAllBankConnections} from '@/features/banking/api/use-get-all-bank-connections';
 import {BankConnectionList} from '@/features/banking/components/bank-connection-list';
 import {BankTransactionDetailsDialog} from '@/features/banking/components/bank-transaction-details-dialog';
+import {useBankTransactionInspector} from '@/hooks/use-bank-transaction-inspector';
 import {handleAuthenticatedRedirect} from '@/utils/handle-redirect';
 
 const searchSchema = z.object({
@@ -28,7 +29,7 @@ export const Route = createFileRoute('/bank-connections/')({
 function BankConnectionsIndex() {
   const navigate = useNavigate();
   const {result, transactionId} = Route.useSearch();
-  const transactionTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const {openTransaction, closeTransaction} = useBankTransactionInspector('/bank-connections/');
   const {bankConnections, isPending, isError, refetch} = useGetAllBankConnections();
 
   useEffect(() => {
@@ -47,28 +48,6 @@ function BankConnectionsIndex() {
 
     void navigate({to: '/bank-connections', search: {}});
   }, [navigate, result]);
-
-  const openTransaction = (selectedTransactionId: string, trigger: HTMLButtonElement) => {
-    transactionTriggerRef.current = trigger;
-    void navigate({
-      to: '/bank-connections',
-      search: (prev) => ({...prev, transactionId: selectedTransactionId}),
-    });
-  };
-
-  const closeTransaction = (open: boolean) => {
-    if (open) return;
-
-    const trigger = transactionTriggerRef.current;
-    transactionTriggerRef.current = null;
-    void navigate({
-      to: '/bank-connections',
-      replace: true,
-      search: (prev) => ({...prev, transactionId: undefined}),
-    }).then(() => {
-      if (trigger?.isConnected) trigger.focus();
-    });
-  };
 
   return (
     <>

@@ -15,7 +15,11 @@ import {useGetBankConnectionTransactions} from '../api/use-get-bank-connection-t
 import {useStartBankConnection} from '../api/use-start-bank-connection';
 import {useSyncBankConnection} from '../api/use-sync-bank-connection';
 import {BankConnection, BankTransaction} from '../types/bank-connection';
-import {formatBankTransactionCompactDate, formatBankTransactionStatus} from '../utils/formatters';
+import {
+  formatBankTransactionCompactDate,
+  formatBankTransactionStatus,
+  formatBankingWords,
+} from '../utils/formatters';
 
 type BankConnectionListProps = {
   bankConnections: BankConnection[];
@@ -546,11 +550,11 @@ function formatConnectionStatus(value: string) {
   if (normalized === 'REVOKED') return 'Disconnected';
   if (normalized === 'PENDING') return 'Pending';
   if (normalized === 'EXPIRED') return 'Expired';
-  return formatWords(value);
+  return formatBankingWords(value);
 }
 
 function formatProvider(value: string) {
-  return formatWords(value);
+  return formatBankingWords(value);
 }
 
 function formatCountry(value: string) {
@@ -564,7 +568,7 @@ function formatAccountType(value: string | null) {
   if (normalized === 'CACC') return 'Current account';
   if (normalized === 'SVGS') return 'Savings account';
   if (normalized === 'CARD') return 'Card account';
-  return formatWords(value);
+  return formatBankingWords(value);
 }
 
 function formatAccountUsage(value: string | null) {
@@ -572,7 +576,7 @@ function formatAccountUsage(value: string | null) {
   const normalized = value.toUpperCase();
   if (normalized === 'PRIV') return 'Personal';
   if (normalized === 'ORGA') return 'Business';
-  return formatWords(value);
+  return formatBankingWords(value);
 }
 
 function formatBalanceType(value: string) {
@@ -580,15 +584,6 @@ function formatBalanceType(value: string) {
     .replace(/([a-z])([A-Z])/g, '$1 $2')
     .replace(/[_-]/g, ' ')
     .toLowerCase();
-}
-
-function formatWords(value: string) {
-  return value
-    .toLowerCase()
-    .split(/[_-]+/)
-    .filter(Boolean)
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(' ');
 }
 
 function formatDate(value: string) {

@@ -84,12 +84,11 @@ test.describe('bank transactions', () => {
     await expect(firstTransactionRow).toBeVisible();
     await expect(descriptionLink).toHaveCount(1);
     await expect(table).toHaveAttribute('aria-label', 'Bank transactions');
-    await expect(
-      firstTransactionRow.getByText('Daily spending · ABN AMRO', {exact: true}),
-    ).toBeVisible();
-    await expect(
-      firstTransactionRow.getByRole('link').getByText('Card Payment', {exact: true}),
-    ).toBeVisible();
+    const mobileMeta = firstTransactionRow.getByTestId('bank-transaction-mobile-meta');
+    await expect(mobileMeta).toContainText('26 Aug');
+    await expect(mobileMeta).toContainText('Daily spending');
+    await expect(mobileMeta).toContainText('ABN AMRO');
+    await expect(mobileMeta).toContainText('Card Payment');
     await expect(firstTransactionRow.getByText('Aug 25, 2026', {exact: true})).not.toBeVisible();
     const pagination = page.getByTestId('pagination');
     await expect(pagination).toBeVisible();
@@ -104,9 +103,9 @@ test.describe('bank transactions', () => {
     await expect
       .poll(() => firstTransactionRow.evaluate((element) => element.getBoundingClientRect().height))
       .toBeLessThan(80);
-    const tableWrapper = table.locator('xpath=../..');
-    await expect(tableWrapper).toHaveCSS('border-top-width', '0px');
-    await expect(tableWrapper).toHaveCSS('border-radius', '0px');
+    const tableWrapper = table.locator('xpath=../../..');
+    await expect(tableWrapper).toHaveCSS('border-top-width', '1px');
+    await expect(tableWrapper).toHaveCSS('border-radius', '8px');
     await expect
       .poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth))
       .toBe(true);

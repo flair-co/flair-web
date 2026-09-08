@@ -191,7 +191,7 @@ export function BankTransactionTable({
         <Table
           data-testid='bank-transactions-table'
           aria-label='Bank transactions'
-          wrapperClassName='max-md:rounded-none max-md:border-0'
+          wrapperClassName='max-md:rounded-md max-md:border'
           className='max-md:block max-md:w-full'
         >
           <TableCaption className='sr-only'>
@@ -224,7 +224,7 @@ export function BankTransactionTable({
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody className='max-md:block max-md:p-0'>
+          <TableBody className='max-md:block max-md:p-1.5'>
             {totalTransactions === 0 && isFilteringApplied ? (
               <TableRow>
                 <TableCell
@@ -253,7 +253,7 @@ export function BankTransactionTable({
                 return (
                   <TableRow
                     key={row.id}
-                    className='cursor-pointer focus-within:bg-accent hover:bg-card max-md:grid max-md:grid-cols-[minmax(0,1fr)_auto] max-md:gap-x-3 max-md:gap-y-0.5 max-md:border-b max-md:bg-transparent max-md:px-0 max-md:py-2'
+                    className='cursor-pointer focus-within:bg-accent hover:bg-card max-md:mb-1.5 max-md:grid max-md:grid-cols-[minmax(0,1fr)_auto] max-md:gap-x-3 max-md:gap-y-0.5 max-md:rounded-md max-md:border max-md:bg-card max-md:p-2'
                     data-testid={`bank-transaction-row-${row.original.id}`}
                     onClick={(event) => {
                       if (event.target instanceof Element && event.target.closest('a,button')) {
@@ -294,20 +294,24 @@ export function BankTransactionTable({
                               onClick={(event) => event.stopPropagation()}
                             >
                               {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                              <div className='mt-1 flex min-w-0 items-center gap-1.5 text-xs text-muted-foreground md:hidden'>
-                                <span className='shrink-0'>
+                              <div
+                                data-testid='bank-transaction-mobile-meta'
+                                className='mt-1 flex min-w-0 items-center justify-between gap-3 text-xs text-muted-foreground md:hidden'
+                              >
+                                <span className='min-w-0 flex-1 truncate'>
                                   {formatBankTransactionCompactDate(row.original.bookingDate)}
+                                  <span aria-hidden='true'> · </span>
+                                  {getMobileTransactionAccount(row.original)}
                                 </span>
-                                <span aria-hidden='true'>·</span>
-                                <span className='min-w-0 truncate'>
-                                  {getMobileTransactionSource(row.original)}
+                                <span className='flex min-w-0 max-w-[55%] shrink-0 items-center justify-end gap-1.5 text-right'>
+                                  <span className='truncate'>{row.original.bankName}</span>
+                                  {mobileTransactionType && (
+                                    <>
+                                      <span aria-hidden='true'>·</span>
+                                      <span className='shrink-0'>{mobileTransactionType}</span>
+                                    </>
+                                  )}
                                 </span>
-                                {mobileTransactionType && (
-                                  <>
-                                    <span aria-hidden='true'>·</span>
-                                    <span className='shrink-0'>{mobileTransactionType}</span>
-                                  </>
-                                )}
                               </div>
                             </Link>
                           ) : (
@@ -339,9 +343,8 @@ function getTransactionLabel(transaction: BankTransaction) {
   return transaction.description || transaction.counterpartyName || 'bank transaction';
 }
 
-function getMobileTransactionSource(transaction: BankTransaction) {
-  const account = transaction.bankAccountAlias || transaction.bankAccountName;
-  return account ? `${account} · ${transaction.bankName}` : transaction.bankName;
+function getMobileTransactionAccount(transaction: BankTransaction) {
+  return transaction.bankAccountAlias || transaction.bankAccountName || 'Bank account';
 }
 
 function getMobileTransactionType(transaction: BankTransaction) {

@@ -126,10 +126,7 @@ jobs:
           file: Dockerfile.production
           push: true
           build-args: |
-            VITE_API_URL=/tempo/api
             VITE_APP_URL=http://127.0.0.1/tempo/
-            VITE_BASE_PATH=/tempo/
-            VITE_EMAIL_UI_URL=http://127.0.0.1:8025
           tags: |
             ghcr.io/${{ github.repository_owner }}/tempo-web:latest
             ghcr.io/${{ github.repository_owner }}/tempo-web:${{ github.sha }}

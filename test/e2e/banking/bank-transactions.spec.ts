@@ -91,6 +91,16 @@ test.describe('bank transactions', () => {
       firstTransactionRow.getByRole('link').getByText('Card Payment', {exact: true}),
     ).toBeVisible();
     await expect(firstTransactionRow.getByText('Aug 25, 2026', {exact: true})).not.toBeVisible();
+    const pagination = page.getByTestId('pagination');
+    await expect(pagination).toBeVisible();
+    await expect(pagination).toHaveCSS('width', '361px');
+    await expect(pagination.getByRole('button', {name: 'Go to previous page'})).toBeVisible();
+    await expect(pagination.getByRole('button', {name: 'Go to next page'})).toBeVisible();
+    await expect(pagination.getByRole('button', {name: 'Go to first page'})).not.toBeVisible();
+    await expect(pagination.getByRole('button', {name: 'Go to last page'})).not.toBeVisible();
+    await expect
+      .poll(() => pagination.evaluate((element) => element.getBoundingClientRect().height))
+      .toBeLessThan(52);
     await expect
       .poll(() => firstTransactionRow.evaluate((element) => element.getBoundingClientRect().height))
       .toBeLessThan(80);

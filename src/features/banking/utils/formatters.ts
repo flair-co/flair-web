@@ -28,3 +28,19 @@ export function formatBankTransactionDirection(value: BankTransactionDirection) 
   if (value === BankTransactionDirection.EXPENSE) return 'Expense';
   return 'Unknown direction';
 }
+
+export function formatBankTransactionStatus(value: string | null) {
+  if (!value) return 'Unknown status';
+  const normalized = value.toUpperCase();
+  if (normalized === 'BOOK') return 'Booked';
+  if (normalized === 'PENDING') return 'Pending';
+  if (normalized === 'EXPECTED') return 'Expected';
+  if (normalized === 'REJECTED') return 'Rejected';
+  if (normalized === 'DELETED') return 'Removed';
+  return value
+    .toLowerCase()
+    .split(/[_-]+/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ');
+}

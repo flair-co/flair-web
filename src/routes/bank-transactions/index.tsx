@@ -1,4 +1,4 @@
-import {createFileRoute} from '@tanstack/react-router';
+import {createFileRoute, useNavigate} from '@tanstack/react-router';
 import {zodValidator} from '@tanstack/zod-adapter';
 
 import {AppBodyLayout} from '@/components/shared/layout/app-body';
@@ -6,6 +6,7 @@ import {AppHeaderLayout} from '@/components/shared/layout/app-header-layout';
 import {LoadingBar} from '@/components/shared/loading-bar';
 import {useGetBankTransactions} from '@/features/banking/api/use-get-bank-transactions';
 import {BankTransactionBreadcrumb} from '@/features/banking/components/bank-transaction-breadcrumb';
+import {BankTransactionDetailsDialog} from '@/features/banking/components/bank-transaction-details-dialog';
 import {BankTransactionTable} from '@/features/banking/components/bank-transaction-table';
 import {bankTransactionSearchParamsSchema} from '@/features/banking/types/bank-transaction';
 import {handleAuthenticatedRedirect} from '@/utils/handle-redirect';
@@ -20,6 +21,8 @@ export const Route = createFileRoute('/bank-transactions/')({
 
 function BankTransactionsIndex() {
   const searchParams = Route.useSearch();
+  const navigate = useNavigate({from: '/bank-transactions/'});
+  const transactionId = searchParams.transactionId;
   const {
     data,
     isPending,
@@ -74,6 +77,17 @@ function BankTransactionsIndex() {
           />
         </div>
       </AppBodyLayout>
+      <BankTransactionDetailsDialog
+        transactionId={transactionId ?? ''}
+        open={Boolean(transactionId)}
+        onOpenChange={(open) => {
+          if (open) return;
+          void navigate({
+            replace: true,
+            search: (prev) => ({...prev, transactionId: undefined}),
+          });
+        }}
+      />
     </>
   );
 }

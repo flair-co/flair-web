@@ -1,4 +1,4 @@
-import {Link, useNavigate} from '@tanstack/react-router';
+import {useNavigate} from '@tanstack/react-router';
 import {SortingState, flexRender, getCoreRowModel, useReactTable} from '@tanstack/react-table';
 import {RefreshCw, Search, SearchX} from 'lucide-react';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
@@ -32,6 +32,7 @@ import {
 import {formatBankTransactionCompactDate, formatBankTransactionType} from '../utils/formatters';
 import {BankTransactionAccountFilter} from './bank-transaction-account-filter';
 import {BankTransactionDateFilter} from './bank-transaction-date-filter';
+import {BankTransactionDetailsDialog} from './bank-transaction-details-dialog';
 import {bankTransactionTableColumns} from './bank-transaction-table-columns';
 
 type BankTransactionTableProps = {
@@ -270,10 +271,11 @@ export function BankTransactionTable({
                         return;
                       }
 
-                      void navigate({
-                        to: '/bank-transactions/$transactionId',
-                        params: {transactionId: row.original.id},
-                      });
+                      const trigger = event.currentTarget.querySelector<HTMLButtonElement>(
+                        '[data-bank-transaction-detail-trigger]',
+                      );
+                      trigger?.focus();
+                      trigger?.click();
                     }}
                   >
                     {row.getVisibleCells().map((cell) => {
@@ -296,15 +298,17 @@ export function BankTransactionTable({
                           )}
                         >
                           {isDescriptionCell ? (
-                            <Link
-                              to='/bank-transactions/$transactionId'
-                              params={{transactionId: row.original.id}}
-                              aria-label={`View ${transactionLabel} transaction details`}
-                              className='block rounded-sm focus-visible:relative focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
-                              onClick={(event) => event.stopPropagation()}
-                            >
-                              {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                            </Link>
+                            <BankTransactionDetailsDialog transactionId={row.original.id}>
+                              <button
+                                type='button'
+                                data-bank-transaction-detail-trigger
+                                aria-label={`View ${transactionLabel} transaction details`}
+                                className='block w-full truncate rounded-sm text-left focus-visible:relative focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
+                                title={transactionLabel}
+                              >
+                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                              </button>
+                            </BankTransactionDetailsDialog>
                           ) : (
                             flexRender(cell.column.columnDef.cell, cell.getContext())
                           )}

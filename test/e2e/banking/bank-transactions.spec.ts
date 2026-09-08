@@ -7,7 +7,7 @@ const DETAIL_TRANSACTION_ID = '00000000-0000-4000-8000-000000000011';
 test.describe('bank transactions', () => {
   test.use({storageState: VERIFIED_USER_AUTH_FILE});
 
-  test('renders, searches, filters by bank account, and opens transaction detail', async ({
+  test('renders, searches, filters by bank account, and opens transaction detail inspector', async ({
     page,
   }) => {
     await page.setViewportSize({width: 1280, height: 720});
@@ -34,90 +34,142 @@ test.describe('bank transactions', () => {
     await page.getByRole('button', {name: 'Clear filters'}).first().click();
     await expect(page.getByText('Coffee shop')).toBeVisible();
 
-    await firstTransactionRow.click();
-    await expect(page).toHaveURL(/\/bank-transactions\/[0-9a-f-]+$/);
-    await expect(page.getByText('Bank transaction', {exact: true})).toBeVisible();
-    await expect(page.getByText('Morning coffee')).toBeVisible();
-    await expect(page.getByText('Merchant category code')).toBeVisible();
-    await expect(page.getByText('Bank account', {exact: true})).toBeVisible();
-    await expect(page.getByText('Daily spending')).toBeVisible();
-    await expect(page.getByText('Transaction date')).toBeVisible();
-    await expect(page.getByText('Card payment', {exact: true})).toBeVisible();
-    await expect(page.getByText('Provider classification')).toBeVisible();
-    await expect(page.getByText('100.50 EUR')).toBeVisible();
-    await expect(page.getByText('4.50 USD')).toBeVisible();
-    await expect(page.getByText('0.923400000000000000 USD (SPOT)')).toBeVisible();
-    await expect(page.getByText('reference-coffee (RF)')).toBeVisible();
-    await expect(page.getByText('Category', {exact: true})).not.toBeVisible();
+    await firstTransactionRow.click({position: {x: 8, y: 8}});
+    const inspector = page.getByTestId('bank-transaction-inspector');
+    await expect(page).toHaveURL(/\/bank-transactions(?:\?.*)?$/);
+    await expect(inspector).toBeVisible();
+    await expect(inspector.getByRole('heading', {name: 'Coffee shop'})).toBeVisible();
+    await expect(inspector.getByText('Bank transaction', {exact: true})).toBeVisible();
+    await expect(inspector.getByText('Morning coffee')).toBeVisible();
+    await expect(inspector.getByText('Merchant category code')).toBeVisible();
+    await expect(inspector.getByText('Bank account', {exact: true})).toBeVisible();
+    await expect(inspector.getByText('Daily spending')).toBeVisible();
+    await expect(inspector.getByText('Transaction date')).toBeVisible();
+    await expect(inspector.getByText('Card payment', {exact: true})).toBeVisible();
+    await expect(inspector.getByText('Provider classification')).toBeVisible();
+    await expect(inspector.getByText('100.50 EUR')).toBeVisible();
+    await expect(inspector.getByText('4.50 USD')).toBeVisible();
+    await expect(inspector.getByText('0.9234 USD (SPOT)', {exact: true})).toBeVisible();
+    await expect(
+      inspector.getByText('0.923400000000000000 USD (SPOT)', {exact: true}),
+    ).not.toBeVisible();
+    await expect(inspector.getByText('reference-coffee (RF)')).toBeVisible();
+    await expect(inspector.getByTestId('bank-transaction-id-row')).toHaveCount(0);
+    await expect(inspector.getByText('Category', {exact: true})).not.toBeVisible();
+
+    const closeButton = inspector.getByRole('button', {name: 'Close transaction details'});
+    await closeButton.click();
+    await expect(inspector).toBeHidden();
   });
 
-  test('presents transaction detail with responsive hierarchy', async ({page}) => {
+  test('presents transaction detail in a responsive inspector', async ({page}) => {
     for (const viewport of [
       {width: 1440, height: 900},
       {width: 393, height: 852},
       {width: 320, height: 852},
     ]) {
       await page.setViewportSize(viewport);
-      await page.goto(`/bank-transactions/${DETAIL_TRANSACTION_ID}`);
+      await page.goto('/bank-transactions');
 
-      await expect(page.getByTestId('bank-transaction-card')).toBeVisible();
-      await expect(page.getByRole('heading', {level: 1, name: 'Coffee shop'})).toBeVisible();
+      const firstTransactionRow = page
+        .getByTestId(/^bank-transaction-row-/)
+        .filter({hasText: 'Coffee shop'});
+      const descriptionTrigger = firstTransactionRow.getByRole('button', {
+        name: 'View Coffee shop transaction details',
+      });
+      await descriptionTrigger.click();
+
+      const inspector = page.getByTestId('bank-transaction-inspector');
+      await expect(inspector).toBeVisible();
+      expect((await inspector.getAttribute('data-vaul-drawer')) !== null).toBe(
+        viewport.width < 768,
+      );
+      await expect(inspector.getByRole('heading', {name: 'Coffee shop'})).toBeVisible();
       await expect(
-        page.getByRole('heading', {level: 2, name: 'Transaction details'}),
+        inspector.getByRole('heading', {level: 2, name: 'Transaction details'}),
       ).toBeVisible();
-      await expect(page.getByRole('heading', {level: 3, name: 'Dates'})).toBeVisible();
-      await expect(page.getByRole('heading', {level: 3, name: 'Account'})).toBeVisible();
-      const copyButton = page.getByRole('button', {name: 'Copy transaction ID'});
-      await expect(copyButton).toBeVisible();
-      const copyButtonBox = await copyButton.boundingBox();
-      expect(copyButtonBox).not.toBeNull();
-      expect(copyButtonBox!.width).toBeGreaterThanOrEqual(40);
-      expect(copyButtonBox!.height).toBeGreaterThanOrEqual(40);
-      await page.context().grantPermissions(['clipboard-write'], {origin: 'http://localhost:5173'});
-      await copyButton.click();
-      await expect(page.getByTestId('copy-status')).toHaveText('Copy transaction ID copied');
+      await expect(inspector.getByRole('heading', {level: 3, name: 'Dates'})).toBeVisible();
+      await expect(inspector.getByRole('heading', {level: 3, name: 'Account'})).toBeVisible();
       await expect
         .poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth))
         .toBe(true);
+
+      const inspectorBox = await inspector.boundingBox();
+      expect(inspectorBox).not.toBeNull();
+      expect(inspectorBox!.width).toBeLessThanOrEqual(viewport.width);
+      if (viewport.width < 768) {
+        const inspectorBody = inspector.getByTestId('bank-transaction-inspector-body');
+        await expect(inspectorBody).toHaveCSS('overflow-y', 'auto');
+        expect(await inspectorBody.evaluate((element) => element.scrollHeight)).toBeGreaterThan(
+          await inspectorBody.evaluate((element) => element.clientHeight),
+        );
+      }
+
+      const closeButton = inspector.getByRole('button', {name: 'Close transaction details'});
+      await closeButton.click();
+      await expect(inspector).toBeHidden();
+      await expect(descriptionTrigger).toBeFocused();
     }
   });
 
-  test('shows a retryable error state when transaction detail cannot load', async ({page}) => {
+  test('redirects legacy transaction URLs into the responsive inspector', async ({page}) => {
+    await page.goto(`/bank-transactions/${DETAIL_TRANSACTION_ID}`);
+
+    await expect(page).toHaveURL(/\/bank-transactions(?:\?.*)?$/);
+    const redirectedUrl = new URL(page.url());
+    expect(redirectedUrl.pathname).toBe('/bank-transactions');
+    expect(redirectedUrl.searchParams.get('transactionId')).toBe(DETAIL_TRANSACTION_ID);
+    const inspector = page.getByTestId('bank-transaction-inspector');
+    await expect(inspector).toBeVisible();
+    await expect(inspector.getByRole('heading', {name: 'Coffee shop'})).toBeVisible();
+    await expect(inspector.getByRole('button', {name: 'Close transaction details'})).toBeVisible();
+
+    await inspector.getByRole('button', {name: 'Close transaction details'}).click();
+    await expect(page).toHaveURL(/\/bank-transactions(?:\?.*)?$/);
+    expect(new URL(page.url()).searchParams.has('transactionId')).toBe(false);
+  });
+  test('shows a retryable error state inside the transaction inspector', async ({page}) => {
     await page.route(`**/bank-transactions/${DETAIL_TRANSACTION_ID}`, async (route) => {
-      if (route.request().resourceType() === 'document') {
-        await route.continue();
-        return;
-      }
       await route.fulfill({
         status: 500,
         contentType: 'application/json',
         body: JSON.stringify({message: 'Synthetic detail failure'}),
       });
     });
-    await page.goto(`/bank-transactions/${DETAIL_TRANSACTION_ID}`);
+    await page.goto('/bank-transactions');
 
+    const transactionRow = page
+      .getByTestId(/^bank-transaction-row-/)
+      .filter({hasText: 'Coffee shop'});
+    await transactionRow
+      .getByRole('button', {name: 'View Coffee shop transaction details'})
+      .click();
+    const inspector = page.getByTestId('bank-transaction-inspector');
     await expect(
-      page.getByRole('heading', {name: 'Could not load bank transaction'}),
+      inspector.getByRole('heading', {name: 'Could not load bank transaction'}),
     ).toBeVisible();
-    await expect(page.getByRole('button', {name: 'Try again'})).toBeVisible();
+    await expect(inspector.getByRole('button', {name: 'Try again'})).toBeVisible();
   });
 
   test('explains when a transaction no longer exists', async ({page}) => {
     await page.route(`**/bank-transactions/${DETAIL_TRANSACTION_ID}`, async (route) => {
-      if (route.request().resourceType() === 'document') {
-        await route.continue();
-        return;
-      }
       await route.fulfill({
         status: 404,
         contentType: 'application/json',
         body: JSON.stringify({message: 'Transaction not found'}),
       });
     });
-    await page.goto(`/bank-transactions/${DETAIL_TRANSACTION_ID}`);
+    await page.goto('/bank-transactions');
 
-    await expect(page.getByRole('heading', {name: 'Transaction not found'})).toBeVisible();
-    await expect(page.getByRole('link', {name: 'Back to bank transactions'})).toBeVisible();
+    const transactionRow = page
+      .getByTestId(/^bank-transaction-row-/)
+      .filter({hasText: 'Coffee shop'});
+    await transactionRow
+      .getByRole('button', {name: 'View Coffee shop transaction details'})
+      .click();
+    const inspector = page.getByTestId('bank-transaction-inspector');
+    await expect(inspector.getByRole('heading', {name: 'Transaction not found'})).toBeVisible();
+    await expect(inspector.getByRole('button', {name: 'Close transaction details'})).toBeVisible();
   });
 
   test('filters seeded transactions by bank account and booking date', async ({page}) => {
@@ -149,7 +201,9 @@ test.describe('bank transactions', () => {
     const firstTransactionRow = page
       .getByTestId(/^bank-transaction-row-/)
       .filter({hasText: 'Coffee shop'});
-    const descriptionLink = firstTransactionRow.locator('a');
+    const descriptionTrigger = firstTransactionRow.getByRole('button', {
+      name: 'View Coffee shop transaction details',
+    });
 
     await expect(page.getByRole('heading', {name: 'Bank transactions'})).toBeVisible();
     const headingGroup = page.getByTestId('bank-transactions-heading');
@@ -178,7 +232,7 @@ test.describe('bank transactions', () => {
       tableBox!.x + tableBox!.width,
       0,
     );
-    await expect(descriptionLink).toHaveCount(1);
+    await expect(descriptionTrigger).toHaveCount(1);
     await expect(table).toHaveAttribute('aria-label', 'Bank transactions');
     const mobileMeta = firstTransactionRow.getByTestId('bank-transaction-mobile-meta');
     await expect(mobileMeta).toContainText('26 Aug');
@@ -232,10 +286,14 @@ test.describe('bank transactions', () => {
       .poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth))
       .toBe(true);
 
-    await descriptionLink.focus();
-    await expect(descriptionLink).toBeFocused();
-    await descriptionLink.press('Enter');
-    await expect(page).toHaveURL(/\/bank-transactions\/[0-9a-f-]+$/);
+    await descriptionTrigger.focus();
+    await expect(descriptionTrigger).toBeFocused();
+    await descriptionTrigger.press('Enter');
+    const inspector = page.getByTestId('bank-transaction-inspector');
+    await expect(inspector).toBeVisible();
+    await inspector.getByRole('button', {name: 'Close transaction details'}).click();
+    await expect(inspector).toBeHidden();
+    await expect(descriptionTrigger).toBeFocused();
   });
 
   test('keeps a selected booking date range within a phone viewport', async ({page}) => {

@@ -6,6 +6,7 @@ import {LoadingBar} from '@/components/shared/loading-bar';
 import {useGetBankTransaction} from '@/features/banking/api/use-get-bank-transaction';
 import {BankTransactionBreadcrumb} from '@/features/banking/components/bank-transaction-breadcrumb';
 import {BankTransactionCard} from '@/features/banking/components/bank-transaction-card';
+import {HttpError} from '@/utils/api';
 import {handleAuthenticatedRedirect} from '@/utils/handle-redirect';
 
 export const Route = createFileRoute('/bank-transactions/$transactionId/')({
@@ -17,7 +18,7 @@ export const Route = createFileRoute('/bank-transactions/$transactionId/')({
 
 function BankTransactionIndex() {
   const {transactionId} = Route.useParams();
-  const {transaction, isPending} = useGetBankTransaction(transactionId);
+  const {transaction, isPending, isError, error, refetch} = useGetBankTransaction(transactionId);
 
   return (
     <>
@@ -25,8 +26,14 @@ function BankTransactionIndex() {
       <AppHeaderLayout>
         <BankTransactionBreadcrumb transaction={transaction} />
       </AppHeaderLayout>
-      <AppBodyLayout>
-        <BankTransactionCard transaction={transaction} isPending={isPending} />
+      <AppBodyLayout className='max-md:my-6'>
+        <BankTransactionCard
+          transaction={transaction}
+          isPending={isPending}
+          isError={isError}
+          isNotFound={error instanceof HttpError && error.status === 404}
+          onRetry={() => void refetch()}
+        />
       </AppBodyLayout>
     </>
   );

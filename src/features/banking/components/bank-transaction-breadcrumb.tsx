@@ -20,14 +20,14 @@ export function BankTransactionBreadcrumb({transaction}: BankTransactionBreadcru
 
   return (
     <Breadcrumb>
-      <BreadcrumbList>
-        <BreadcrumbItem>
+      <BreadcrumbList className='max-md:flex-nowrap max-md:overflow-hidden'>
+        <BreadcrumbItem className='max-md:shrink-0'>
           <BreadcrumbLink asChild>
             <Link to='/'>Home</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
-        <BreadcrumbItem>
+        <BreadcrumbItem className='max-md:shrink-0'>
           {transaction ? (
             <BreadcrumbLink asChild>
               <Link to='/bank-transactions'>Bank Transactions</Link>
@@ -39,8 +39,10 @@ export function BankTransactionBreadcrumb({transaction}: BankTransactionBreadcru
         {transaction && (
           <>
             <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>{label}</BreadcrumbPage>
+            <BreadcrumbItem className='max-md:min-w-0 max-md:overflow-hidden'>
+              <BreadcrumbPage className='max-md:block max-md:truncate' title={label}>
+                {label}
+              </BreadcrumbPage>
             </BreadcrumbItem>
           </>
         )}

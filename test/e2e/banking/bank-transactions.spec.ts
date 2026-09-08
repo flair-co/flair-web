@@ -2,6 +2,8 @@ import {expect, test} from '@playwright/test';
 
 import {PW_CHANGE_USER_AUTH_FILE, VERIFIED_USER_AUTH_FILE} from '../../constants/auth.constants';
 
+const DETAIL_TRANSACTION_ID = '00000000-0000-4000-8000-000000000011';
+
 test.describe('bank transactions', () => {
   test.use({storageState: VERIFIED_USER_AUTH_FILE});
 
@@ -47,6 +49,75 @@ test.describe('bank transactions', () => {
     await expect(page.getByText('0.923400000000000000 USD (SPOT)')).toBeVisible();
     await expect(page.getByText('reference-coffee (RF)')).toBeVisible();
     await expect(page.getByText('Category', {exact: true})).not.toBeVisible();
+  });
+
+  test('presents transaction detail with responsive hierarchy', async ({page}) => {
+    for (const viewport of [
+      {width: 1440, height: 900},
+      {width: 393, height: 852},
+      {width: 320, height: 852},
+    ]) {
+      await page.setViewportSize(viewport);
+      await page.goto(`/bank-transactions/${DETAIL_TRANSACTION_ID}`);
+
+      await expect(page.getByTestId('bank-transaction-card')).toBeVisible();
+      await expect(page.getByRole('heading', {level: 1, name: 'Coffee shop'})).toBeVisible();
+      await expect(
+        page.getByRole('heading', {level: 2, name: 'Transaction details'}),
+      ).toBeVisible();
+      await expect(page.getByRole('heading', {level: 3, name: 'Dates'})).toBeVisible();
+      await expect(page.getByRole('heading', {level: 3, name: 'Account'})).toBeVisible();
+      const copyButton = page.getByRole('button', {name: 'Copy transaction ID'});
+      await expect(copyButton).toBeVisible();
+      const copyButtonBox = await copyButton.boundingBox();
+      expect(copyButtonBox).not.toBeNull();
+      expect(copyButtonBox!.width).toBeGreaterThanOrEqual(40);
+      expect(copyButtonBox!.height).toBeGreaterThanOrEqual(40);
+      await page.context().grantPermissions(['clipboard-write'], {origin: 'http://localhost:5173'});
+      await copyButton.click();
+      await expect(page.getByTestId('copy-status')).toHaveText('Copy transaction ID copied');
+      await expect
+        .poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth))
+        .toBe(true);
+    }
+  });
+
+  test('shows a retryable error state when transaction detail cannot load', async ({page}) => {
+    await page.route(`**/bank-transactions/${DETAIL_TRANSACTION_ID}`, async (route) => {
+      if (route.request().resourceType() === 'document') {
+        await route.continue();
+        return;
+      }
+      await route.fulfill({
+        status: 500,
+        contentType: 'application/json',
+        body: JSON.stringify({message: 'Synthetic detail failure'}),
+      });
+    });
+    await page.goto(`/bank-transactions/${DETAIL_TRANSACTION_ID}`);
+
+    await expect(
+      page.getByRole('heading', {name: 'Could not load bank transaction'}),
+    ).toBeVisible();
+    await expect(page.getByRole('button', {name: 'Try again'})).toBeVisible();
+  });
+
+  test('explains when a transaction no longer exists', async ({page}) => {
+    await page.route(`**/bank-transactions/${DETAIL_TRANSACTION_ID}`, async (route) => {
+      if (route.request().resourceType() === 'document') {
+        await route.continue();
+        return;
+      }
+      await route.fulfill({
+        status: 404,
+        contentType: 'application/json',
+        body: JSON.stringify({message: 'Transaction not found'}),
+      });
+    });
+    await page.goto(`/bank-transactions/${DETAIL_TRANSACTION_ID}`);
+
+    await expect(page.getByRole('heading', {name: 'Transaction not found'})).toBeVisible();
+    await expect(page.getByRole('link', {name: 'Back to bank transactions'})).toBeVisible();
   });
 
   test('filters seeded transactions by bank account and booking date', async ({page}) => {

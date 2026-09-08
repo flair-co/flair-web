@@ -26,7 +26,7 @@ export function SessionList() {
           The devices currently logged into your account.
         </p>
       </div>
-      {isError ? (
+      {isError && sessions === undefined ? (
         <div className='flex flex-col gap-3 rounded-card border border-destructive/50 bg-destructive/10 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5'>
           <div>
             <p className='text-sm font-medium'>Sessions could not be loaded.</p>
@@ -45,6 +45,27 @@ export function SessionList() {
         </div>
       ) : (
         <div className='space-y-4'>
+          {isError && sessions !== undefined && (
+            <div
+              role='status'
+              className='flex flex-col gap-3 rounded-card border border-destructive/50 bg-destructive/10 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5'
+            >
+              <div>
+                <p className='text-sm font-medium'>Sessions could not be refreshed.</p>
+                <p className='mt-1 text-xs text-muted-foreground'>
+                  Showing the last loaded list. Try again to refresh it.
+                </p>
+              </div>
+              <Button
+                variant='outline'
+                size='sm'
+                className='min-h-11 sm:min-h-9'
+                onClick={() => void refetch()}
+              >
+                Try again
+              </Button>
+            </div>
+          )}
           {isPending && <Skeleton className='h-[4.5rem] w-full rounded-lg border bg-background' />}
           {currentSession && <SessionCard key={currentSession.id} session={currentSession} />}
           {otherSessions && otherSessions.length > 0 && (

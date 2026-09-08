@@ -24,10 +24,12 @@ export function ThemeSwitcher() {
     <Tabs
       value={theme}
       onValueChange={(v) => setTheme(v as Theme)}
-      aria-labelledby='theme-heading'
       className='w-full rounded-card border bg-card p-2 shadow-sm sm:p-3'
     >
-      <TabsList className='flex h-auto w-full gap-1 rounded-lg border bg-muted/60 p-1 md:w-auto'>
+      <TabsList
+        aria-label='Theme'
+        className='flex h-auto w-full gap-1 rounded-lg border bg-muted/60 p-1 md:w-auto'
+      >
         {themeOptions.map((opt) => (
           <TabsTrigger
             key={opt.value}

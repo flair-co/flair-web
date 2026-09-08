@@ -16,15 +16,16 @@ test.describe('Settings navigation', () => {
     for (const route of routes) {
       await page.goto(`/settings/${route.path}`);
 
-      await expect(page.getByRole('link', {name: route.label, exact: true}).last()).toHaveAttribute(
-        'aria-current',
-        'page',
+      const breadcrumb = page.getByRole('navigation', {name: 'breadcrumb'});
+      await expect(breadcrumb.getByText(route.label, {exact: true})).toBeVisible();
+
+      const activeSectionLinks = page.locator(
+        'nav[aria-label="Settings sections"] a[aria-current="page"]',
       );
-      await expect(
-        page.getByRole('link', {name: route.label, exact: true}).first(),
-      ).toHaveAttribute('aria-current', 'page');
+      await expect(activeSectionLinks).toHaveCount(2);
+      await expect(activeSectionLinks.first()).toHaveAttribute('href', `/settings/${route.path}`);
+      await expect(activeSectionLinks.last()).toHaveAttribute('href', `/settings/${route.path}`);
       await expect(page.getByRole('link', {name: 'Settings', exact: true})).toBeVisible();
-      await expect(page.getByRole('link', {name: route.label, exact: true}).first()).toBeVisible();
     }
   });
 });

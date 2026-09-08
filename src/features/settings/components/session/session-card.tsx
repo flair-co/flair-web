@@ -37,19 +37,19 @@ export function SessionCard({session, hideRevokeButton = false}: SessionCardProp
         <DialogTrigger asChild>
           <button
             type='button'
-            className={`flex min-h-[4.5rem] w-full items-center rounded-card p-4 text-left transition-colors hover:bg-accent/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${hasAction ? 'pr-24 sm:pr-4' : ''}`}
+            className={`flex min-h-[4.5rem] w-full items-center rounded-card p-4 text-left transition-colors hover:bg-accent/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${hasAction ? 'pr-24' : ''}`}
           >
-            <div className='flex min-w-0 flex-1 items-center gap-3'>
-              <div className='flex-shrink-0 rounded-lg bg-accent p-2 text-muted-foreground'>
+            <span className='flex min-w-0 flex-1 items-center gap-3'>
+              <span className='flex-shrink-0 rounded-lg bg-accent p-2 text-muted-foreground'>
                 {createElement(getSessionIcon(session), {
                   className: 'h-5 w-5 text-muted-foreground',
                 })}
-              </div>
-              <div className='min-w-0 flex-1'>
-                <p className='truncate text-sm font-medium'>{session.name}</p>
-                <div className='text-xs text-muted-foreground'>
+              </span>
+              <span className='min-w-0 flex-1'>
+                <span className='block truncate text-sm font-medium'>{session.name}</span>
+                <span className='block text-xs text-muted-foreground'>
                   {session.isCurrent ? (
-                    <div className='mt-1 flex flex-wrap items-center gap-x-1.5 gap-y-1'>
+                    <span className='mt-1 flex flex-wrap items-center gap-x-1.5 gap-y-1'>
                       <span className='inline-flex items-center gap-1.5 font-medium text-success'>
                         <span
                           aria-hidden='true'
@@ -59,20 +59,20 @@ export function SessionCard({session, hideRevokeButton = false}: SessionCardProp
                       </span>
                       <span className='hidden sm:inline'>·</span>
                       <span className='hidden sm:inline'>{session.location}</span>
-                    </div>
+                    </span>
                   ) : (
-                    <div
+                    <span
                       className='mt-1 flex flex-wrap items-center gap-x-1.5 gap-y-1'
                       title={lastSeenAt}
                     >
                       <span>{`Last seen ${lastSeenAtRelative}`}</span>
                       <span className='hidden sm:inline'>·</span>
                       <span className='hidden sm:inline'>{session.location}</span>
-                    </div>
+                    </span>
                   )}
-                </div>
-              </div>
-            </div>
+                </span>
+              </span>
+            </span>
           </button>
         </DialogTrigger>
         {hasAction && (

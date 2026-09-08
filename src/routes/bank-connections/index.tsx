@@ -26,7 +26,7 @@ export const Route = createFileRoute('/bank-connections/')({
 function BankConnectionsIndex() {
   const navigate = useNavigate();
   const {result} = Route.useSearch();
-  const {bankConnections, isPending} = useGetAllBankConnections();
+  const {bankConnections, isPending, isError, refetch} = useGetAllBankConnections();
 
   useEffect(() => {
     if (!result) return;
@@ -52,7 +52,12 @@ function BankConnectionsIndex() {
         <span className='text-sm font-medium'>Bank connections</span>
       </AppHeaderLayout>
       <AppBodyLayout className='max-md:my-6'>
-        <BankConnectionList bankConnections={bankConnections || []} isPending={isPending} />
+        <BankConnectionList
+          bankConnections={bankConnections || []}
+          isPending={isPending}
+          isError={isError}
+          onRetry={() => void refetch()}
+        />
       </AppBodyLayout>
     </>
   );

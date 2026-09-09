@@ -11,6 +11,7 @@ import {useGetAllBankConnections} from '@/features/banking/api/use-get-all-bank-
 import {BankConnectionList} from '@/features/banking/components/bank-connection-list';
 import {BankTransactionDetailsDialog} from '@/features/banking/components/bank-transaction-details-dialog';
 import {
+  BANK_CONNECTION_RESULTS,
   BANK_CONNECTION_RESULT_CHANNEL,
   type BankConnectionResult,
   createBankConnectionResultMessage,
@@ -20,7 +21,7 @@ import {useBankTransactionInspector} from '@/hooks/use-bank-transaction-inspecto
 import {handleAuthenticatedRedirect} from '@/utils/handle-redirect';
 
 const searchSchema = z.object({
-  result: z.enum(['connected', 'cancelled', 'error']).optional(),
+  result: z.enum(BANK_CONNECTION_RESULTS).optional(),
   transactionId: z.string().optional(),
 });
 
@@ -113,12 +114,12 @@ function BankConnectionsIndex() {
     const opener = getBankConnectionOpener();
     if (publishBankConnectionResult(result) && opener && !opener.closed) {
       window.close();
-      window.setTimeout(() => {
+      const fallbackTimeout = window.setTimeout(() => {
         if (window.closed) return;
         showBankConnectionResult(result);
         void navigate({to: '/bank-connections', search: {}});
       }, 250);
-      return;
+      return () => window.clearTimeout(fallbackTimeout);
     }
 
     showBankConnectionResult(result);

@@ -106,27 +106,8 @@ test.describe('bank connections', () => {
   });
 
   test('returns to the installed app after bank authorization', async ({page, context}) => {
-    await page.addInitScript(() => {
-      const nativeMatchMedia = window.matchMedia.bind(window);
-      window.matchMedia = (query) => {
-        if (query === '(display-mode: standalone)') {
-          return {
-            matches: true,
-            media: query,
-            onchange: null,
-            addListener: () => undefined,
-            removeListener: () => undefined,
-            addEventListener: () => undefined,
-            removeEventListener: () => undefined,
-            dispatchEvent: () => false,
-          } as MediaQueryList;
-        }
-        return nativeMatchMedia(query);
-      };
-    });
-
     await page.goto('/bank-connections');
-    const authorizationUrl = new URL('./mock-bank-authorization', page.url()).toString();
+    const authorizationUrl = 'https://bank.example.test/mock-bank-authorization';
     const callbackUrl = new URL('./bank-connections?result=connected', page.url()).toString();
     await page.route('**/bank-connections/authorize', async (route) => {
       await route.fulfill({

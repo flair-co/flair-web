@@ -151,8 +151,21 @@ test.describe('bank connections', () => {
     expect(new URL(page.url()).pathname).toBe('/bank-connections');
   });
 
-  test('returns the callback result to the original app window', async ({page}) => {
+  test('returns the callback result to the original app window', async ({page, context}) => {
     await page.goto('/bank-connections');
+
+    let popupConnectionListRequests = 0;
+    context.on('request', (request) => {
+      const url = new URL(request.url());
+      if (
+        request.method() === 'GET' &&
+        request.resourceType() !== 'document' &&
+        url.pathname === '/bank-connections' &&
+        request.frame().page() !== page
+      ) {
+        popupConnectionListRequests += 1;
+      }
+    });
 
     const popupPromise = page.waitForEvent('popup');
     await page.evaluate(() => {
@@ -162,6 +175,7 @@ test.describe('bank connections', () => {
 
     await expect(page.getByText('Bank connection added')).toBeVisible();
     await expect.poll(() => popup.isClosed()).toBe(true);
+    expect(popupConnectionListRequests).toBe(0);
   });
 
   test('keeps the connection overview usable at phone widths', async ({page}) => {

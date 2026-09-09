@@ -78,8 +78,9 @@ function publishBankConnectionResult(result: BankConnectionResult) {
 function BankConnectionsIndex() {
   const navigate = useNavigate();
   const {result, transactionId} = Route.useSearch();
+  const isCallbackPopup = Boolean(result && getBankConnectionOpener());
   const {openTransaction, closeTransaction} = useBankTransactionInspector('/bank-connections/');
-  const {bankConnections, isPending, isError, refetch} = useGetAllBankConnections();
+  const {bankConnections, isPending, isError, refetch} = useGetAllBankConnections(!isCallbackPopup);
 
   useEffect(() => {
     const handleResult = (value: unknown) => {

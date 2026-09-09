@@ -13,10 +13,14 @@ import {BankTransactionDetailsDialog} from '@/features/banking/components/bank-t
 import {useBankTransactionInspector} from '@/hooks/use-bank-transaction-inspector';
 import {handleAuthenticatedRedirect} from '@/utils/handle-redirect';
 
+const bankConnectionResultSchema = z.enum(['connected', 'cancelled', 'error']);
+
 const searchSchema = z.object({
-  result: z.enum(['connected', 'cancelled', 'error']).optional(),
+  result: bankConnectionResultSchema.optional(),
   transactionId: z.string().optional(),
 });
+
+type BankConnectionResult = z.infer<typeof bankConnectionResultSchema>;
 
 export const Route = createFileRoute('/bank-connections/')({
   component: BankConnectionsIndex,
@@ -26,7 +30,7 @@ export const Route = createFileRoute('/bank-connections/')({
   },
 });
 
-function showBankConnectionResult(result: 'connected' | 'cancelled' | 'error') {
+function showBankConnectionResult(result: BankConnectionResult) {
   if (result === 'connected') {
     toast.success('Bank connection added', {id: 'bank-connection-success'});
   } else if (result === 'cancelled') {

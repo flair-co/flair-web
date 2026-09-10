@@ -33,8 +33,8 @@ export function PasswordInputField<T extends FieldValues, K extends FieldPath<T>
   return (
     <FormItem>
       {label && <FormLabel htmlFor={id}>{label}</FormLabel>}
-      <FormControl>
-        <div className='flex'>
+      <div className='flex'>
+        <FormControl>
           <Input
             {...field}
             {...inputProps}
@@ -52,36 +52,36 @@ export function PasswordInputField<T extends FieldValues, K extends FieldPath<T>
               fieldState.error && 'border-destructive',
             )}
           />
-          {field.value && (
-            <TooltipProvider delayDuration={500}>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    aria-label={isPasswordVisible ? 'Hide password' : 'Show password'}
-                    onClick={() => setIsPasswordVisible(!isPasswordVisible)}
-                    variant='outline'
-                    type='button'
-                    className={cn(
-                      'rounded-l-none border-l-0',
-                      fieldState.error && 'border-destructive',
-                    )}
-                    disabled={disabled}
-                  >
-                    {isPasswordVisible ? (
-                      <EyeOff className='w-4 text-muted-foreground' />
-                    ) : (
-                      <Eye className='w-4 text-muted-foreground' />
-                    )}
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{isPasswordVisible ? 'Hide password' : 'Show password'}</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          )}
-        </div>
-      </FormControl>
+        </FormControl>
+        {field.value && (
+          <TooltipProvider delayDuration={500}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  aria-label={isPasswordVisible ? 'Hide password' : 'Show password'}
+                  onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+                  variant='outline'
+                  type='button'
+                  className={cn(
+                    'rounded-l-none border-l-0',
+                    fieldState.error && 'border-destructive',
+                  )}
+                  disabled={disabled}
+                >
+                  {isPasswordVisible ? (
+                    <EyeOff className='w-4 text-muted-foreground' />
+                  ) : (
+                    <Eye className='w-4 text-muted-foreground' />
+                  )}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{isPasswordVisible ? 'Hide password' : 'Show password'}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        )}
+      </div>
       {description && <FormDescription>{description}</FormDescription>}
       <FormMessage />
     </FormItem>

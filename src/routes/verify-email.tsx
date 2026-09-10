@@ -61,6 +61,13 @@ function VerifyEmailIndex() {
     await logOut();
   };
 
+  const handleRetryVerification = () => {
+    if (!code || !email) return;
+
+    reset();
+    void verifyEmail({code, email});
+  };
+
   if (error && error.status === 400) {
     return (
       <AuthLayout title={'Invalid or expired verification link'}>
@@ -128,6 +135,54 @@ function VerifyEmailIndex() {
                   <Link to='/'>Go home</Link>
                 </Button>
               </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </AuthLayout>
+    );
+  }
+
+  if (error) {
+    return (
+      <AuthLayout title='Verification failed'>
+        <div className='relative flex flex-col'>
+          <AnimatePresence initial={false} mode='wait'>
+            <motion.div
+              key='unknown-error-view-fade'
+              variants={switchContentVariants}
+              initial='hidden'
+              animate='visible'
+              exit='exit'
+              role='alert'
+              aria-live='assertive'
+              className='flex w-full flex-col gap-4 text-center text-sm'
+            >
+              <p className='leading-6 text-muted-foreground'>
+                We couldn&apos;t verify your email right now. Please try again.
+              </p>
+              <Button
+                type='button'
+                className='w-full'
+                onClick={handleRetryVerification}
+                disabled={isPending}
+                data-testid='retry-verification-button'
+              >
+                Try again
+              </Button>
+              <p className='text-muted-foreground'>
+                {isAuthenticated ? (
+                  <Link
+                    to='/verify-email'
+                    className='text-foreground underline-offset-4 hover:underline'
+                  >
+                    Return to verification
+                  </Link>
+                ) : (
+                  <Link to='/login' className='text-foreground underline-offset-4 hover:underline'>
+                    Log in instead
+                  </Link>
+                )}
+              </p>
             </motion.div>
           </AnimatePresence>
         </div>

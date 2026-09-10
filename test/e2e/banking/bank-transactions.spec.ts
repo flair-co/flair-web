@@ -65,6 +65,104 @@ test.describe('bank transactions', () => {
     expect(new URL(page.url()).searchParams.has('transactionId')).toBe(false);
   });
 
+  test('uses concise display descriptions while keeping raw descriptions in details', async ({
+    page,
+  }) => {
+    const googlePayDescription =
+      'BEA, Google Pay Synthetic Market,PAS601 NR:Q25S0S, 08.09.26/15:51 ALMELO';
+    const sepaIdealDescription =
+      'SEPA iDEAL/Wero IBAN: NL00BANK00000000000000 BIC: BANKNL2A Naam: Synthetic Shop Omschrijving: order-123 Kenmerk: 08-09-2026 15:51';
+    const sepaTransferDescription =
+      'SEPA Overboeking IBAN: GB00BANK00000000000000 BIC: BANKGB21 Naam: Synthetic Recipient Kenmerk: NOTPROVIDED';
+    const regularCardDescription = 'BEA, Synthetic Cafe,PAS602 NR:123456, 07.09.26/12:00 ALMELO';
+    const atmCardDescription =
+      'GEA, Betaalpas *Synthetic Bank,PAS601 NR:02052301, 06.02.26/16:57 DOR-FLUGH2, Land: DEU';
+    const longUnstructuredDescription =
+      'A long bank description without a provider-specific structure that should use the available counterparty label';
+
+    await page.route('**/bank-transactions?*', async (route) => {
+      const response = await route.fetch();
+      const payload = (await response.json()) as {
+        transactions: Array<Record<string, unknown>>;
+      };
+      payload.transactions[0] = {
+        ...payload.transactions[0],
+        description: googlePayDescription,
+        counterpartyName: null,
+      };
+      payload.transactions[1] = {
+        ...payload.transactions[1],
+        description: sepaIdealDescription,
+        counterpartyName: 'Synthetic Shop',
+      };
+      payload.transactions[2] = {
+        ...payload.transactions[2],
+        description: sepaTransferDescription,
+        counterpartyName: null,
+      };
+      payload.transactions[3] = {
+        ...payload.transactions[3],
+        description: regularCardDescription,
+        counterpartyName: null,
+      };
+      payload.transactions[4] = {
+        ...payload.transactions[4],
+        description: longUnstructuredDescription,
+        counterpartyName: 'Synthetic Counterparty',
+      };
+      payload.transactions[5] = {
+        ...payload.transactions[5],
+        description: atmCardDescription,
+        counterpartyName: null,
+      };
+      await route.fulfill({response, json: payload});
+    });
+    await page.route(`**/bank-transactions/${DETAIL_TRANSACTION_ID}`, async (route) => {
+      const response = await route.fetch();
+      const payload = (await response.json()) as Record<string, unknown>;
+      await route.fulfill({
+        response,
+        json: {...payload, description: googlePayDescription, counterpartyName: null},
+      });
+    });
+
+    await page.goto('/bank-transactions');
+
+    const rows = page.getByTestId(/^bank-transaction-row-/);
+    await expect(rows.nth(0).getByText('Synthetic Market,PAS601', {exact: true})).toBeVisible();
+    await expect(rows.nth(1).getByText('Synthetic Shop', {exact: true})).toBeVisible();
+    await expect(rows.nth(2).getByText('Synthetic Recipient', {exact: true})).toBeVisible();
+    await expect(rows.nth(3).getByText('Synthetic Cafe,PAS602', {exact: true})).toBeVisible();
+    await expect(rows.nth(4).getByText('Synthetic Counterparty', {exact: true})).toBeVisible();
+    await expect(
+      rows.nth(5).getByText('Betaalpas *Synthetic Bank,PAS601', {exact: true}),
+    ).toBeVisible();
+    await expect(page.getByTestId('bank-transactions-table')).not.toContainText(
+      googlePayDescription,
+    );
+    await expect(page.getByTestId('bank-transactions-table')).not.toContainText(
+      sepaIdealDescription,
+    );
+    await expect(page.getByTestId('bank-transactions-table')).not.toContainText(
+      sepaTransferDescription,
+    );
+    await expect(page.getByTestId('bank-transactions-table')).not.toContainText(
+      regularCardDescription,
+    );
+    await expect(page.getByTestId('bank-transactions-table')).not.toContainText(
+      longUnstructuredDescription,
+    );
+    await expect(page.getByTestId('bank-transactions-table')).not.toContainText(atmCardDescription);
+
+    await rows
+      .nth(0)
+      .getByRole('button', {name: 'View Synthetic Market,PAS601 transaction details'})
+      .click();
+    const inspector = page.getByTestId('bank-transaction-inspector');
+    await expect(inspector.getByRole('heading', {name: 'Synthetic Market,PAS601'})).toBeVisible();
+    await expect(inspector.getByText(googlePayDescription, {exact: true})).toBeVisible();
+  });
+
   test('reopens a transaction inspector from its shareable URL', async ({page}) => {
     await page.goto('/bank-transactions');
 

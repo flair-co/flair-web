@@ -1,4 +1,4 @@
-import {AlertTriangle, Building2, Loader, Plus, RefreshCw} from 'lucide-react';
+import {AlertTriangle, Building2, Loader, Plus, RefreshCw, Trash2} from 'lucide-react';
 import {toast} from 'sonner';
 
 import {CurrencyAmount} from '@/components/shared/currency-amount';
@@ -11,6 +11,7 @@ import {HttpError} from '@/utils/api';
 import {cn} from '@/utils/cn';
 import {formatRetryAfter} from '@/utils/retry-after';
 
+import {useDeleteBankConnection} from '../api/use-delete-bank-connection';
 import {useGetBankConnectionTransactions} from '../api/use-get-bank-connection-transactions';
 import {useStartBankConnection} from '../api/use-start-bank-connection';
 import {useSyncBankConnection} from '../api/use-sync-bank-connection';
@@ -197,10 +198,12 @@ function BankConnectionCard({
   onTransactionSelect: BankConnectionListProps['onTransactionSelect'];
 }) {
   const isAuthorized = connection.status === 'AUTHORIZED';
+  const isRemovable = isRemovableConnection(connection.status);
   const connectionHeadingId = `bank-connection-${connection.id}-heading`;
   const accountsHeadingId = `bank-connection-${connection.id}-accounts`;
   const transactionsHeadingId = `bank-connection-${connection.id}-transactions`;
   const {syncBankConnection, isPending: isSyncing} = useSyncBankConnection();
+  const {deleteBankConnection, isPending: isRemoving} = useDeleteBankConnection();
   const {
     transactions,
     total,
@@ -249,6 +252,20 @@ function BankConnectionCard({
     }
   };
 
+  const removeBank = async () => {
+    try {
+      await deleteBankConnection(connection.id);
+      toast.success('Bank connection removed', {
+        id: `bank-connection-removed-${connection.id}`,
+      });
+    } catch {
+      toast.error('Unable to remove bank connection', {
+        description: 'Please try again in a moment.',
+        id: `bank-connection-remove-failed-${connection.id}`,
+      });
+    }
+  };
+
   return (
     <Card
       className='overflow-hidden'
@@ -287,6 +304,19 @@ function BankConnectionCard({
             >
               <RefreshCw className={isSyncing ? 'animate-slow-spin' : undefined} />
               {isSyncing ? 'Syncing...' : 'Sync now'}
+            </Button>
+          )}
+          {isRemovable && (
+            <Button
+              variant='outline'
+              size='sm'
+              onClick={() => void removeBank()}
+              disabled={isRemoving}
+              data-testid={`remove-bank-${connection.id}`}
+              className='max-sm:min-h-11 max-sm:gap-1 max-sm:px-2'
+            >
+              <Trash2 />
+              {isRemoving ? 'Removing...' : 'Remove'}
             </Button>
           )}
         </div>
@@ -556,6 +586,10 @@ function formatConnectionStatus(value: string) {
   if (normalized === 'PENDING') return 'Pending';
   if (normalized === 'EXPIRED') return 'Expired';
   return formatBankingWords(value);
+}
+
+function isRemovableConnection(status: string) {
+  return ['PENDING_AUTHORIZATION', 'FAILED', 'CANCELLED'].includes(status.toUpperCase());
 }
 
 function formatProvider(value: string) {

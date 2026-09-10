@@ -1,5 +1,6 @@
 import {expect, test} from '@playwright/test';
 
+import type {BankConnection} from '../../../src/features/banking/types/bank-connection';
 import {PW_CHANGE_USER_AUTH_FILE, VERIFIED_USER_AUTH_FILE} from '../../constants/auth.constants';
 
 const DETAIL_TRANSACTION_ID = '00000000-0000-4000-8000-000000000014';
@@ -85,6 +86,54 @@ test.describe('bank connections', () => {
 
     await expect(page.getByText('Sync complete', {exact: true})).toBeVisible();
     await expect(page.getByText('No new transactions found.', {exact: true})).toBeVisible();
+  });
+
+  test('removes an incomplete bank connection', async ({page}) => {
+    const pendingConnectionId = '00000000-0000-4000-8000-000000000098';
+    let pendingConnectionVisible = true;
+    const pendingConnection = {
+      id: pendingConnectionId,
+      provider: 'enable-banking',
+      aspspName: 'ABN AMRO',
+      aspspCountry: 'NL',
+      status: 'PENDING_AUTHORIZATION',
+      consentValidUntil: null,
+      lastSyncedAt: null,
+      bankAccounts: [],
+    };
+
+    await page.route('**/bank-connections', async (route) => {
+      if (route.request().resourceType() === 'document') {
+        await route.continue();
+        return;
+      }
+
+      const response = await route.fetch();
+      const connections = (await response.json()) as BankConnection[];
+      await route.fulfill({
+        response,
+        json: pendingConnectionVisible ? [...connections, pendingConnection] : connections,
+      });
+    });
+    await page.route(`**/bank-connections/${pendingConnectionId}`, async (route) => {
+      if (route.request().method() !== 'DELETE') {
+        await route.continue();
+        return;
+      }
+
+      pendingConnectionVisible = false;
+      await route.fulfill({status: 204, body: ''});
+    });
+
+    await page.goto('/bank-connections');
+
+    const pendingCard = page.getByTestId(`bank-connection-${pendingConnectionId}`);
+    await expect(pendingCard).toBeVisible();
+    await expect(pendingCard.getByRole('button', {name: 'Remove'})).toBeVisible();
+    await pendingCard.getByRole('button', {name: 'Remove'}).click();
+
+    await expect(page.getByText('Bank connection removed', {exact: true})).toBeVisible();
+    await expect(pendingCard).toHaveCount(0);
   });
 
   test('reopens a connection transaction inspector from its shareable URL', async ({page}) => {

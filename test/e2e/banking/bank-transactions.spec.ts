@@ -1,5 +1,6 @@
 import {expect, test} from '@playwright/test';
 
+import type {BankConnection} from '../../../src/features/banking/types/bank-connection';
 import {PW_CHANGE_USER_AUTH_FILE, VERIFIED_USER_AUTH_FILE} from '../../constants/auth.constants';
 
 const DETAIL_TRANSACTION_ID = '00000000-0000-4000-8000-000000000011';
@@ -69,6 +70,12 @@ test.describe('bank transactions', () => {
     await closeButton.click();
     await expect(inspector).toBeHidden();
     expect(new URL(page.url()).searchParams.has('transactionId')).toBe(false);
+  });
+
+  test('does not show the bank account filter when there is one account', async ({page}) => {
+    await page.goto('/bank-transactions');
+
+    await expect(page.getByRole('button', {name: 'Bank accounts'})).toHaveCount(0);
   });
 
   test('uses concise display descriptions while keeping raw descriptions in details', async ({
@@ -314,6 +321,26 @@ test.describe('bank transactions', () => {
   });
 
   test('filters seeded transactions by bank account and booking date', async ({page}) => {
+    await page.route('**/bank-connections', async (route) => {
+      if (route.request().resourceType() === 'document') {
+        await route.continue();
+        return;
+      }
+
+      const response = await route.fetch();
+      const connections = (await response.json()) as BankConnection[];
+      const firstConnection = connections[0];
+      firstConnection.bankAccounts = [
+        ...firstConnection.bankAccounts,
+        {
+          ...firstConnection.bankAccounts[0],
+          id: '00000000-0000-4000-8000-000000000097',
+          name: 'Secondary account',
+          alias: 'Secondary spending',
+        },
+      ];
+      await route.fulfill({response, json: connections});
+    });
     await page.goto('/bank-transactions');
 
     await page.getByRole('button', {name: 'Bank accounts'}).click();

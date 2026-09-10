@@ -42,7 +42,13 @@ test.describe('bank transactions', () => {
     await expect(inspector).toBeVisible();
     await expect(inspector.getByRole('heading', {name: 'Coffee shop'})).toBeVisible();
     await expect(inspector.getByText('Bank transaction', {exact: true})).toBeVisible();
-    await expect(inspector.getByText('Morning coffee')).toBeVisible();
+    const transactionDetails = inspector.getByTestId('bank-transaction-details-sections');
+    const descriptionDetail = transactionDetails
+      .getByText('Description', {exact: true})
+      .locator('..');
+    await expect(descriptionDetail).toContainText('Coffee shop');
+    await expect(inspector.getByRole('heading', {level: 2, name: 'Notes'})).toHaveCount(0);
+    await expect(inspector.getByText('Remittance information', {exact: true})).toHaveCount(0);
     await expect(inspector.getByText('Merchant category code')).toBeVisible();
     await expect(inspector.getByText('Bank account', {exact: true})).toBeVisible();
     await expect(inspector.getByText('Daily spending')).toBeVisible();

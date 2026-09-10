@@ -5,11 +5,7 @@ import {SortButton} from '@/components/shared/sort-button';
 import {Badge} from '@/components/ui/badge';
 
 import {BankTransaction, BankTransactionSortField} from '../types/bank-transaction';
-import {
-  formatBankTransactionDate,
-  formatBankTransactionType,
-  getBankTransactionDisplayDescription,
-} from '../utils/formatters';
+import {formatBankTransactionDate, formatBankTransactionType} from '../utils/formatters';
 
 export const bankTransactionTableColumns: ColumnDef<BankTransaction>[] = [
   {
@@ -31,7 +27,7 @@ export const bankTransactionTableColumns: ColumnDef<BankTransaction>[] = [
     id: 'description',
     header: () => <p className='px-3'>Description</p>,
     cell: ({row}) => {
-      const displayDescription = getBankTransactionDisplayDescription(row.original);
+      const displayDescription = row.original.displayDescription;
       const counterpartyName = row.original.counterpartyName?.trim();
 
       return (

@@ -91,41 +91,49 @@ test.describe('bank transactions', () => {
       payload.transactions[0] = {
         ...payload.transactions[0],
         description: googlePayDescription,
+        displayDescription: 'Synthetic Market,PAS601',
         counterpartyName: null,
       };
       payload.transactions[1] = {
         ...payload.transactions[1],
         description: sepaIdealDescription,
+        displayDescription: 'Synthetic Shop',
         counterpartyName: 'Synthetic Shop',
       };
       payload.transactions[2] = {
         ...payload.transactions[2],
         description: sepaTransferDescription,
+        displayDescription: 'Synthetic Recipient',
         counterpartyName: null,
       };
       payload.transactions[3] = {
         ...payload.transactions[3],
         description: regularCardDescription,
+        displayDescription: 'Synthetic Cafe,PAS602',
         counterpartyName: null,
       };
       payload.transactions[4] = {
         ...payload.transactions[4],
         description: longUnstructuredDescription,
+        displayDescription: 'Synthetic Counterparty',
         counterpartyName: 'Synthetic Counterparty',
       };
       payload.transactions[5] = {
         ...payload.transactions[5],
         description: atmCardDescription,
+        displayDescription: 'Betaalpas *Synthetic Bank,PAS601',
         counterpartyName: null,
       };
       payload.transactions[6] = {
         ...payload.transactions[6],
         description: unrelatedGooglePayDescription,
+        displayDescription: unrelatedGooglePayDescription,
         counterpartyName: null,
       };
       payload.transactions[7] = {
         ...payload.transactions[7],
         description: ordinaryNaamDescription,
+        displayDescription: 'API-provided ordinary title',
         counterpartyName: null,
       };
       await route.fulfill({response, json: payload});
@@ -135,7 +143,12 @@ test.describe('bank transactions', () => {
       const payload = (await response.json()) as Record<string, unknown>;
       await route.fulfill({
         response,
-        json: {...payload, description: googlePayDescription, counterpartyName: null},
+        json: {
+          ...payload,
+          description: googlePayDescription,
+          displayDescription: 'API detail title',
+          counterpartyName: null,
+        },
       });
     });
 
@@ -151,7 +164,7 @@ test.describe('bank transactions', () => {
       rows.nth(5).getByText('Betaalpas *Synthetic Bank,PAS601', {exact: true}),
     ).toBeVisible();
     await expect(rows.nth(6).getByText(unrelatedGooglePayDescription, {exact: true})).toBeVisible();
-    await expect(rows.nth(7).getByText(ordinaryNaamDescription, {exact: true})).toBeVisible();
+    await expect(rows.nth(7).getByText('API-provided ordinary title', {exact: true})).toBeVisible();
     await expect(page.getByTestId('bank-transactions-table')).not.toContainText(
       googlePayDescription,
     );
@@ -174,7 +187,7 @@ test.describe('bank transactions', () => {
       .getByRole('button', {name: 'View Synthetic Market,PAS601 transaction details'})
       .click();
     const inspector = page.getByTestId('bank-transaction-inspector');
-    await expect(inspector.getByRole('heading', {name: 'Synthetic Market,PAS601'})).toBeVisible();
+    await expect(inspector.getByRole('heading', {name: 'API detail title'})).toBeVisible();
     await expect(inspector.getByText(googlePayDescription, {exact: true})).toBeVisible();
   });
 

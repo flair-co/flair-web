@@ -10,7 +10,6 @@ import {
   formatBankTransactionDirection,
   formatBankTransactionStatus,
   formatBankTransactionType,
-  getBankTransactionDisplayDescription,
 } from '../utils/formatters';
 
 type BankTransactionDetailsProps = {
@@ -18,7 +17,7 @@ type BankTransactionDetailsProps = {
 };
 
 export function BankTransactionDetails({transaction}: BankTransactionDetailsProps) {
-  const transactionTitle = getBankTransactionDisplayDescription(transaction);
+  const transactionTitle = transaction.displayDescription;
   const detailsHeadingId = `transaction-${transaction.id}-details-heading`;
   const datesHeadingId = `transaction-${transaction.id}-dates-heading`;
   const accountHeadingId = `transaction-${transaction.id}-account-heading`;

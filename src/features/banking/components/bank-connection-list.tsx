@@ -19,7 +19,6 @@ import {
   formatBankTransactionCompactDate,
   formatBankTransactionStatus,
   formatBankingWords,
-  getBankTransactionDisplayDescription,
 } from '../utils/formatters';
 
 type BankConnectionListProps = {
@@ -519,7 +518,7 @@ function BankTransactionRow({
   transaction: BankTransaction;
   onTransactionSelect: BankConnectionListProps['onTransactionSelect'];
 }) {
-  const description = getBankTransactionDisplayDescription(transaction);
+  const description = transaction.displayDescription;
   const date = formatBankTransactionCompactDate(transaction.bookingDate || transaction.valueDate);
   const metadata = [
     date,

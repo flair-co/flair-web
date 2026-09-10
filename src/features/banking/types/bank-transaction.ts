@@ -58,7 +58,7 @@ export type BankTransaction = {
   bookingDate: string | null;
   valueDate: string | null;
   description: string | null;
-  displayDescription: string;
+  displayDescription?: string | null;
   counterpartyName: string | null;
   amount: string;
   currency: string;

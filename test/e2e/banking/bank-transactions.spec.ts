@@ -124,10 +124,11 @@ test.describe('bank transactions', () => {
         displayDescription: 'Betaalpas *Synthetic Bank,PAS601',
         counterpartyName: null,
       };
+      const transactionWithoutDisplayDescription = {...payload.transactions[6]};
+      delete transactionWithoutDisplayDescription.displayDescription;
       payload.transactions[6] = {
-        ...payload.transactions[6],
+        ...transactionWithoutDisplayDescription,
         description: unrelatedGooglePayDescription,
-        displayDescription: unrelatedGooglePayDescription,
         counterpartyName: null,
       };
       payload.transactions[7] = {

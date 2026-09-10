@@ -54,7 +54,7 @@ export type BankTransaction = {
   creditDebitIndicator: string | null;
   transactionStatus: string | null;
   description: string | null;
-  displayDescription: string;
+  displayDescription?: string | null;
   counterpartyName: string | null;
   merchantCategoryCode: string | null;
   remittanceInformation: string | null;

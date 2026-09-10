@@ -63,7 +63,7 @@ function extractStructuredCounterpartyName(description: string) {
 }
 
 function extractCardDescription(description: string) {
-  const googlePayMarker = description.match(/\bgoogle\s+pay\s+/i);
+  const googlePayMarker = description.match(/^(?:bea|gea),\s*google\s+pay\s+/i);
   const cardMarker = description.match(/^(?:bea|gea),\s*/i);
   const candidate = googlePayMarker
     ? description.slice(googlePayMarker.index! + googlePayMarker[0].length)

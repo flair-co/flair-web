@@ -77,6 +77,8 @@ test.describe('bank transactions', () => {
     const regularCardDescription = 'BEA, Synthetic Cafe,PAS602 NR:123456, 07.09.26/12:00 ALMELO';
     const atmCardDescription =
       'GEA, Betaalpas *Synthetic Bank,PAS601 NR:02052301, 06.02.26/16:57 DOR-FLUGH2, Land: DEU';
+    const unrelatedGooglePayDescription =
+      'Transfer note: Google Pay anniversary dinner reimbursement for September';
     const longUnstructuredDescription =
       'A long bank description without a provider-specific structure that should use the available counterparty label';
 
@@ -115,6 +117,11 @@ test.describe('bank transactions', () => {
         description: atmCardDescription,
         counterpartyName: null,
       };
+      payload.transactions[6] = {
+        ...payload.transactions[6],
+        description: unrelatedGooglePayDescription,
+        counterpartyName: null,
+      };
       await route.fulfill({response, json: payload});
     });
     await page.route(`**/bank-transactions/${DETAIL_TRANSACTION_ID}`, async (route) => {
@@ -137,6 +144,7 @@ test.describe('bank transactions', () => {
     await expect(
       rows.nth(5).getByText('Betaalpas *Synthetic Bank,PAS601', {exact: true}),
     ).toBeVisible();
+    await expect(rows.nth(6).getByText(unrelatedGooglePayDescription, {exact: true})).toBeVisible();
     await expect(page.getByTestId('bank-transactions-table')).not.toContainText(
       googlePayDescription,
     );

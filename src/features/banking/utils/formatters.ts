@@ -57,7 +57,7 @@ function normalizeBankTransactionText(value: string | null) {
 
 function extractStructuredCounterpartyName(description: string) {
   const match = description.match(
-    /\bnaam:\s*(.+?)(?=\s+(?:omschrijving|kenmerk|machtiging|iban|bic):|$)/i,
+    /^sepa\b.*?\bnaam:\s*(.+?)(?=\s+(?:omschrijving|kenmerk|machtiging|iban|bic):|$)/i,
   );
   return match?.[1]?.trim() || null;
 }

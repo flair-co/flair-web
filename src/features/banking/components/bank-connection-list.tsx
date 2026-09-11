@@ -57,6 +57,14 @@ const MOCK_ASPSP = {
 
 const targetBank = import.meta.env.MODE === 'development' ? MOCK_ASPSP : ABN_AMRO;
 
+const DESTRUCTIVE_CONNECTION_STATUSES = ['AUTHORIZED', 'EXPIRED'] as const;
+const REMOVABLE_CONNECTION_STATUSES = [
+  'PENDING_AUTHORIZATION',
+  'FAILED',
+  'CANCELLED',
+  ...DESTRUCTIVE_CONNECTION_STATUSES,
+] as const;
+
 type ConnectBankButtonProps = {
   onClick: () => void;
   isPending: boolean;
@@ -710,13 +718,15 @@ function formatConnectionStatus(value: string) {
 }
 
 function isRemovableConnection(status: string) {
-  return ['PENDING_AUTHORIZATION', 'FAILED', 'CANCELLED', 'AUTHORIZED', 'EXPIRED'].includes(
-    status.toUpperCase(),
+  return REMOVABLE_CONNECTION_STATUSES.includes(
+    status.toUpperCase() as (typeof REMOVABLE_CONNECTION_STATUSES)[number],
   );
 }
 
 function isDestructiveConnection(status: string) {
-  return ['AUTHORIZED', 'EXPIRED'].includes(status.toUpperCase());
+  return DESTRUCTIVE_CONNECTION_STATUSES.includes(
+    status.toUpperCase() as (typeof DESTRUCTIVE_CONNECTION_STATUSES)[number],
+  );
 }
 
 function formatProvider(value: string) {

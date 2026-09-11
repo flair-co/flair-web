@@ -78,6 +78,44 @@ test.describe('bank transactions', () => {
     await expect(page.getByRole('button', {name: 'Bank accounts'})).toHaveCount(0);
   });
 
+  test('does not count inactive accounts when deciding whether to show the filter', async ({
+    page,
+  }) => {
+    await page.route('**/bank-connections', async (route) => {
+      const response = await route.fetch();
+      const connections = (await response.json()) as BankConnection[];
+      await route.fulfill({
+        response,
+        json: connections.map((connection) => ({
+          ...connection,
+          bankAccounts: connection.bankAccounts.map((account) => ({...account, isActive: false})),
+        })),
+      });
+    });
+
+    await page.goto('/bank-transactions');
+
+    await expect(page.getByRole('button', {name: 'Bank accounts'})).toHaveCount(0);
+  });
+
+  test('keeps the bank account filter visible but disabled when connections cannot be loaded', async ({
+    page,
+  }) => {
+    await page.route('**/bank-connections', (route) =>
+      route.fulfill({
+        status: 500,
+        contentType: 'application/json',
+        body: JSON.stringify({message: 'bank connections unavailable'}),
+      }),
+    );
+
+    await page.goto('/bank-transactions');
+
+    const filter = page.getByRole('button', {name: 'Bank accounts'});
+    await expect(filter).toBeVisible();
+    await expect(filter).toBeDisabled();
+  });
+
   test('uses concise display descriptions while keeping raw descriptions in details', async ({
     page,
   }) => {

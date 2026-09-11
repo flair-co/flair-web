@@ -136,6 +136,64 @@ test.describe('bank connections', () => {
     await expect(pendingCard).toHaveCount(0);
   });
 
+  test('requires explicit confirmation before removing a connected bank connection', async ({
+    page,
+  }) => {
+    const connectedConnectionId = '00000000-0000-4000-8000-000000000097';
+    let connectedConnectionVisible = true;
+    let deleteCalled = false;
+
+    await page.route('**/bank-connections', async (route) => {
+      if (route.request().resourceType() === 'document') {
+        await route.continue();
+        return;
+      }
+
+      const response = await route.fetch();
+      const connections = (await response.json()) as BankConnection[];
+      const connectedConnection = {
+        ...connections[0],
+        id: connectedConnectionId,
+        status: 'AUTHORIZED',
+        lastSyncedAt: null,
+      };
+      await route.fulfill({
+        response,
+        json: connectedConnectionVisible ? [connectedConnection] : [],
+      });
+    });
+    await page.route(`**/bank-connections/${connectedConnectionId}`, async (route) => {
+      if (route.request().method() !== 'DELETE') {
+        await route.continue();
+        return;
+      }
+
+      deleteCalled = true;
+      connectedConnectionVisible = false;
+      expect(route.request().postDataJSON()).toEqual({confirmation: 'DELETE'});
+      await route.fulfill({status: 204, body: ''});
+    });
+
+    await page.goto('/bank-connections');
+
+    const connectedCard = page.getByTestId(`bank-connection-${connectedConnectionId}`);
+    await expect(connectedCard).toBeVisible();
+    await connectedCard.getByRole('button', {name: 'Remove'}).click();
+    await expect(page.getByRole('heading', {name: 'Remove connected bank?'})).toBeVisible();
+    await expect(page.getByText(/all linked bank accounts, and all transactions/)).toBeVisible();
+    expect(deleteCalled).toBe(false);
+
+    const confirmButton = page.getByTestId(`remove-bank-confirm-${connectedConnectionId}`);
+    await expect(confirmButton).toBeDisabled();
+    await page.getByTestId(`remove-bank-confirmation-${connectedConnectionId}`).fill('DELETE');
+    await expect(confirmButton).toBeEnabled();
+    await confirmButton.click();
+
+    await expect(page.getByText('Bank connection removed', {exact: true})).toBeVisible();
+    expect(deleteCalled).toBe(true);
+    await expect(connectedCard).toHaveCount(0);
+  });
+
   test('reopens a connection transaction inspector from its shareable URL', async ({page}) => {
     await page.goto('/bank-connections');
 

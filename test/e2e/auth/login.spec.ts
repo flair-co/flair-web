@@ -31,12 +31,16 @@ test.describe('Login', () => {
     });
 
     test('should isolate transaction cache when switching accounts', async ({page}) => {
-      const transactionUrl = '/bank-transactions?transactionId=00000000-0000-4000-8000-000000000011';
+      const transactionUrl =
+        '/bank-transactions?transactionId=00000000-0000-4000-8000-000000000011';
 
       await loginPage.login(VERIFIED_ACCOUNT_EMAIL, VERIFIED_ACCOUNT_PASSWORD);
       await homePage.expectToBeOnPage();
       await page.goto(transactionUrl);
-      await expect(page.getByRole('heading', {name: 'Coffee shop'})).toBeVisible();
+      const inspector = page.getByTestId('bank-transaction-inspector');
+      await expect(inspector.getByRole('heading', {name: 'Coffee shop'})).toBeVisible();
+      await inspector.getByRole('button', {name: 'Close transaction details'}).click();
+      await expect(inspector).toBeHidden();
 
       await homePage.logOut();
       await loginPage.expectToBeOnPage();

@@ -6,6 +6,9 @@ import {Badge} from '@/components/ui/badge';
 
 import {BankTransaction, BankTransactionSortField} from '../types/bank-transaction';
 import {
+  formatBankTransactionCategory,
+  formatBankTransactionCategorySource,
+  formatBankTransactionCategoryStatus,
   formatBankTransactionDate,
   formatBankTransactionType,
   resolveBankTransactionDisplayTitle,
@@ -44,6 +47,25 @@ export const bankTransactionTableColumns: ColumnDef<BankTransaction>[] = [
                 {counterpartyName}
               </p>
             )}
+        </div>
+      );
+    },
+  },
+  {
+    id: 'category',
+    header: () => <p className='px-3'>Category</p>,
+    cell: ({row}) => {
+      const source = formatBankTransactionCategorySource(row.original.categorySource);
+
+      return (
+        <div className='max-w-[14rem]'>
+          <p className='overflow-hidden text-ellipsis whitespace-nowrap'>
+            {formatBankTransactionCategory(row.original.category)}
+          </p>
+          <p className='overflow-hidden text-ellipsis whitespace-nowrap text-xs text-muted-foreground'>
+            {formatBankTransactionCategoryStatus(row.original.categoryStatus)}
+            {source && ` · ${source}`}
+          </p>
         </div>
       );
     },

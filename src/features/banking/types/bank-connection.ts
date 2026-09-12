@@ -1,3 +1,9 @@
+import type {
+  BankTransactionCategorizationSource,
+  BankTransactionCategorizationStatus,
+  BankTransactionCategory,
+} from './bank-transaction';
+
 export type BankConnectionAuthorizationRequest = {
   aspspName: string;
   aspspCountry: string;
@@ -53,6 +59,10 @@ export type BankTransaction = {
   currency: string;
   creditDebitIndicator: string | null;
   transactionStatus: string | null;
+  category: BankTransactionCategory | null;
+  categoryStatus: BankTransactionCategorizationStatus;
+  categorySource: BankTransactionCategorizationSource | null;
+  categoryConfidence: string | null;
   description: string | null;
   displayDescription?: string | null;
   counterpartyName: string | null;

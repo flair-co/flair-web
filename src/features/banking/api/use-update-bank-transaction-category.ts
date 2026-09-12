@@ -3,7 +3,11 @@ import {toast} from 'sonner';
 
 import {HttpError, api} from '@/utils/api';
 
-import {BankTransaction, BankTransactionCategory} from '../types/bank-transaction';
+import {
+  BankTransaction,
+  BankTransactionCategory,
+  BankTransactionsResponse,
+} from '../types/bank-transaction';
 
 type UpdateBankTransactionCategoryInput = {
   id: BankTransaction['id'];
@@ -23,9 +27,27 @@ export const useUpdateBankTransactionCategory = () => {
         JSON.stringify({category}),
       );
     },
-    onSuccess: async (updatedTransaction, {id}) => {
+    onSuccess: (updatedTransaction, {id}) => {
       queryClient.setQueryData(['bank-transaction', id], updatedTransaction);
-      await queryClient.invalidateQueries({queryKey: ['bank-transactions']});
+      queryClient.setQueriesData<BankTransactionsResponse>(
+        {queryKey: ['bank-transactions']},
+        (current) => {
+          if (
+            !current ||
+            !current.transactions.some(
+              ({id: transactionId}) => transactionId === updatedTransaction.id,
+            )
+          ) {
+            return current;
+          }
+          return {
+            ...current,
+            transactions: current.transactions.map((transaction) =>
+              transaction.id === updatedTransaction.id ? updatedTransaction : transaction,
+            ),
+          };
+        },
+      );
     },
     retry: false,
   });

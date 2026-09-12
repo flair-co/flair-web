@@ -1,8 +1,4 @@
-import type {
-  BankTransactionCategorizationSource,
-  BankTransactionCategorizationStatus,
-  BankTransactionCategory,
-} from './bank-transaction';
+import type {BankTransactionCategorizationFields} from './bank-transaction';
 
 export type BankConnectionAuthorizationRequest = {
   aspspName: string;
@@ -51,7 +47,7 @@ export type BankConnection = {
   bankAccounts: BankAccount[];
 };
 
-export type BankTransaction = {
+export type BankTransaction = BankTransactionCategorizationFields & {
   id: string;
   bookingDate: string | null;
   valueDate: string | null;
@@ -59,10 +55,6 @@ export type BankTransaction = {
   currency: string;
   creditDebitIndicator: string | null;
   transactionStatus: string | null;
-  category: BankTransactionCategory | null;
-  categoryStatus: BankTransactionCategorizationStatus;
-  categorySource: BankTransactionCategorizationSource | null;
-  categoryConfidence: string | null;
   description: string | null;
   displayDescription?: string | null;
   counterpartyName: string | null;

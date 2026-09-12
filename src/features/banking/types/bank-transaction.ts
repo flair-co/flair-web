@@ -113,7 +113,14 @@ export const DEFAULT_BANK_TRANSACTION_SORT: NonNullable<BankTransactionSortParam
   order: BankTransactionSortOrder.DESC,
 };
 
-export type BankTransaction = {
+export type BankTransactionCategorizationFields = {
+  category: BankTransactionCategory | null;
+  categoryStatus: BankTransactionCategorizationStatus;
+  categorySource: BankTransactionCategorizationSource | null;
+  categoryConfidence: string | null;
+};
+
+export type BankTransaction = BankTransactionCategorizationFields & {
   id: string;
   transactionDate: string | null;
   bookingDate: string | null;
@@ -127,10 +134,6 @@ export type BankTransaction = {
   direction: BankTransactionDirection;
   transactionType: string;
   transactionStatus: string | null;
-  category: BankTransactionCategory | null;
-  categoryStatus: BankTransactionCategorizationStatus;
-  categorySource: BankTransactionCategorizationSource | null;
-  categoryConfidence: string | null;
   providerTransactionDescription: string | null;
   merchantCategoryCode: string | null;
   remittanceInformation: string | null;
